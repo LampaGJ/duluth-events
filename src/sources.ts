@@ -11,12 +11,14 @@ import type { Source } from "./schema.js";
  * `enabled: false` sources are wired but not yet fetched (stub adapters / needs work).
  * URLs marked CONFIRMED were fetched during research (2026-07-23) and returned real VCALENDAR.
  */
-export type AdapterKind = "ical" | "html" | "pdf-llm";
+export type AdapterKind = "ical" | "structured-api" | "html" | "pdf-llm";
 
 export interface SourceDef {
   name: string;
   adapter: AdapterKind;
-  /** iCal feed URL, HTML calendar URL, or PDF URL depending on adapter. */
+  /** For adapter="structured-api": which per-source JSON mapper to use. */
+  mapper?: "legistar" | "tribe-rest";
+  /** iCal feed URL, JSON API base, HTML calendar URL, or PDF URL depending on adapter. */
   url?: string;
   type: Source["type"];
   confidence: Source["confidence"];
@@ -42,6 +44,26 @@ export const SOURCES: SourceDef[] = [
     confidence: "high",
     enabled: true,
     notes: "CONFIRMED. LiveWhale. University of Minnesota Duluth campus events (lectures, planetarium, concerts, athletics).",
+  },
+  {
+    name: "Duluth City Meetings (Legistar)",
+    adapter: "structured-api",
+    mapper: "legistar",
+    url: "https://webapi.legistar.com/v1/duluth-mn/events",
+    type: "json-api",
+    confidence: "high",
+    enabled: true,
+    notes: "CONFIRMED. Granicus Legistar Web API (client slug `duluth-mn`), documented OData JSON. City Council + ~18 boards/commissions (incl. Library Board, Parks & Rec Commission). First-party government record → high, verified.",
+  },
+  {
+    name: "Visit Duluth",
+    adapter: "structured-api",
+    mapper: "tribe-rest",
+    url: "https://visitduluth.com/wp-json/tribe/events/v1/events",
+    type: "json-api",
+    confidence: "medium",
+    enabled: true,
+    notes: "CONFIRMED. The Events Calendar REST API (~1158 events). Aggregator that also re-lists DECC → medium (dedupe collapses the overlap). Paginated; v1 pulls the first 50 upcoming.",
   },
   {
     name: "DoDuluth",

@@ -91,11 +91,13 @@ export const AgeSchema = z.object({
  * label a PDF-LLM guess as high-confidence and have it validate.
  */
 const CONFIDENCE_CEILING = {
-  "ics-import": ["high"],
+  "ics-import": ["high"], // first-party .ics feed
+  "structured-api": ["high", "medium"], // documented first-party JSON API (Legistar=high; aggregator REST=medium)
+  jsonld: ["medium"], // spec'd schema.org Event JSON-LD embedded in a page
   manual: ["high", "medium"],
-  "html-scrape": ["medium", "low"],
-  "pdf-parse": ["medium", "low"],
-  "pdf-llm-extract": ["low"],
+  "html-scrape": ["medium", "low"], // stable-selector template parse
+  "pdf-parse": ["medium", "low"], // deterministic pdftotext + table/regex
+  "pdf-llm-extract": ["low"], // LLM read prose — capped, correctness-checked
 } as const satisfies Record<string, readonly ("high" | "medium" | "low")[]>;
 
 /**
@@ -110,7 +112,7 @@ export const SourceSchema = z
     type: z.enum(["ics-feed", "html-calendar", "pdf-brochure", "json-api", "manual"]),
     url: z.url().optional(), // the source page or feed URL
     sourceEventId: z.string().optional(), // native id in the source (stable dedup/update key)
-    extractionMethod: z.enum(["ics-import", "html-scrape", "pdf-parse", "pdf-llm-extract", "manual"]),
+    extractionMethod: z.enum(["ics-import", "structured-api", "jsonld", "html-scrape", "pdf-parse", "pdf-llm-extract", "manual"]),
     retrievedAt: z.iso.datetime({ offset: true }),
     confidence: z.enum(["high", "medium", "low"]),
     verified: z.boolean().default(false),
