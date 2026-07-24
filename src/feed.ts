@@ -9,6 +9,7 @@ export interface FeedFilter {
   confidence?: ("high" | "medium" | "low")[];
   multiDay?: boolean;
   inDuluth?: boolean;
+  corroborated?: boolean; // confirmed by >=1 other source (alsoListedIn non-empty)
 }
 
 const isEventType = (s: string): s is EventType => (EVENT_TYPES as readonly string[]).includes(s);
@@ -33,6 +34,7 @@ export function parseFilter(q: Record<string, unknown>): FeedFilter {
   if (conf.length) f.confidence = conf;
   f.multiDay = bool(q.multiDay ?? q.multiday);
   f.inDuluth = bool(q.inDuluth ?? q.induluth);
+  f.corroborated = bool(q.corroborated);
   return f;
 }
 
@@ -46,6 +48,7 @@ export function filterEvents(events: DuluthEvent[], f: FeedFilter): DuluthEvent[
     if (f.confidence?.length && !f.confidence.includes(e.source.confidence)) return false;
     if (f.multiDay !== undefined && e.multiDay !== f.multiDay) return false;
     if (f.inDuluth !== undefined && e.location.inDuluth !== f.inDuluth) return false;
+    if (f.corroborated !== undefined && e.alsoListedIn.length >= 1 !== f.corroborated) return false;
     return true;
   });
 }
