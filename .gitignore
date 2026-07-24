@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.ics
+!test/fixtures/*.ics
+.env
+.DS_Store
+*.log
