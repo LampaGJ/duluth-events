@@ -2,6 +2,7 @@ import { SOURCES, type AdapterKind } from "./sources.js";
 import type { Adapter } from "./adapters/types.js";
 import { importIcs } from "./adapters/ical-import.js";
 import { importStructuredApi } from "./adapters/structured-api.js";
+import { importJsonLd } from "./adapters/jsonld.js";
 import { importHtml } from "./adapters/html-scrape.js";
 import { importPdfLlm } from "./adapters/pdf-llm.js";
 import { dedupe } from "./dedupe.js";
@@ -13,6 +14,7 @@ import { logger } from "./logger.js";
 const ADAPTERS: Record<AdapterKind, Adapter> = {
   ical: importIcs,
   "structured-api": importStructuredApi,
+  jsonld: importJsonLd,
   html: importHtml,
   "pdf-llm": importPdfLlm,
 };

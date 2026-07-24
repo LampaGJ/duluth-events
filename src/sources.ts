@@ -11,7 +11,7 @@ import type { Source } from "./schema.js";
  * `enabled: false` sources are wired but not yet fetched (stub adapters / needs work).
  * URLs marked CONFIRMED were fetched during research (2026-07-23) and returned real VCALENDAR.
  */
-export type AdapterKind = "ical" | "structured-api" | "html" | "pdf-llm";
+export type AdapterKind = "ical" | "structured-api" | "jsonld" | "html" | "pdf-llm";
 
 export interface SourceDef {
   name: string;
@@ -29,12 +29,12 @@ export interface SourceDef {
 export const SOURCES: SourceDef[] = [
   {
     name: "Perfect Duluth Day",
-    adapter: "ical",
-    url: "https://perfectduluthday.com/duluth-events/?ical=1",
-    type: "ics-feed",
-    confidence: "high",
+    adapter: "jsonld",
+    url: "https://perfectduluthday.com/duluth-events/list/",
+    type: "html-calendar",
+    confidence: "medium",
     enabled: true,
-    notes: "CONFIRMED feed, but the WHOLE ORIGIN sits behind a Cloudflare JS challenge a plain server fetch cannot clear — verified 403 on BOTH ?ical=1 AND the wp-json/tribe/events REST endpoint (2026-07-23), so there is no REST sidestep. Needs a headless-browser fetcher (e.g. Playwright) wired into fetchIcsText, OR subscribe to it directly in your calendar app. Left enabled so its failure is visible in /stats.",
+    notes: "Cloudflare WAF blocks ?ical=1 AND wp-json/tribe even from a cleared browser (verified 2026-07-23), but the rendered list page embeds full schema.org Event JSON-LD. Extracted via headless Chromium (jsonld adapter), paginated. Broad crowd-sourced calendar → medium.",
   },
   {
     name: "UMD Events",
@@ -66,13 +66,24 @@ export const SOURCES: SourceDef[] = [
     notes: "CONFIRMED. The Events Calendar REST API (~1158 events). Aggregator that also re-lists DECC → medium (dedupe collapses the overlap). Paginated; v1 pulls the first 50 upcoming.",
   },
   {
-    name: "DoDuluth",
-    adapter: "ical",
-    url: "https://doduluth.com/events/?ical=1",
-    type: "ics-feed",
-    confidence: "high",
-    enabled: false,
-    notes: "CONFIRMED feed but possibly STALE (rendered 2024 events). Heavy overlap with PDD. Enable only for redundancy.",
+    name: "Do Duluth",
+    adapter: "structured-api",
+    mapper: "tribe-rest",
+    url: "https://doduluth.com/wp-json/tribe/events/v1/events",
+    type: "json-api",
+    confidence: "medium",
+    enabled: true,
+    notes: "CONFIRMED. The Events Calendar REST (wp-json/tribe), HTTP 200 with a browser UA. Broad Twin Ports 'everything happening' aggregator. Overlaps PDD/DECC — dedupe collapses.",
+  },
+  {
+    name: "Whole Foods Co-op",
+    adapter: "structured-api",
+    mapper: "tribe-rest",
+    url: "https://wholefoods.coop/wp-json/tribe/events/v1/events",
+    type: "json-api",
+    confidence: "medium",
+    enabled: true,
+    notes: "CONFIRMED. The Events Calendar REST, HTTP 200 (~19 events). Co-op community calendar (classes, meetups, board meetings). Narrower/civic.",
   },
   {
     name: "Duluth Parks & Recreation (brochure)",
