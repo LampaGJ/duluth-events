@@ -16,8 +16,8 @@ export type AdapterKind = "ical" | "structured-api" | "jsonld" | "html" | "pdf-l
 export interface SourceDef {
   name: string;
   adapter: AdapterKind;
-  /** For adapter="structured-api": which per-source JSON mapper to use. */
-  mapper?: "legistar" | "tribe-rest";
+  /** For adapter="structured-api": which per-source JSON mapper to use. ("rec1" adapter TBD.) */
+  mapper?: "legistar" | "tribe-rest" | "rec1";
   /** iCal feed URL, JSON API base, HTML calendar URL, or PDF URL depending on adapter. */
   url?: string;
   type: Source["type"];
@@ -86,22 +86,32 @@ export const SOURCES: SourceDef[] = [
     notes: "CONFIRMED. The Events Calendar REST, HTTP 200 (~19 events). Co-op community calendar (classes, meetups, board meetings). Narrower/civic.",
   },
   {
-    name: "Duluth Parks & Recreation (brochure)",
-    adapter: "pdf-llm",
-    url: "https://duluthmn.gov/media/3fjdsbwc/parks-and-recreation-summer-2026-brochure-for-web.pdf",
-    type: "pdf-brochure",
-    confidence: "low",
+    name: "Duluth Parks & Recreation",
+    adapter: "structured-api",
+    mapper: "rec1",
+    url: "https://secure.rec1.com/MN/duluthparks/catalog",
+    type: "json-api",
+    confidence: "medium",
     enabled: false,
-    notes: "Seasonal PDF brochure (no ICS feed exists). Needs pdf text extraction + LLM structuring. Adapter is a stub.",
+    notes: "ACCESSIBLE-FORMAT WIN (retires the PDF brochure): the REC1/CivicRec catalog serves the SAME program data as structured JSON — verified. Flow: load the catalog page for a session hash, GET catalog/getTabsFiltersItemsCounts/{hash} for tab ids, then catalog/getItems/{hash}/{tabId} -> {sections[].groups[]} = programs (id, name, description, dates/fee/ages). Deterministic, NO pdf-parse and NO LLM. Needs a `rec1` adapter (session-hash bootstrap + getItems paging). Confidence medium (registration catalog; many entries are dated programs, some are rentals).",
   },
   {
     name: "Duluth Public Library",
-    adapter: "pdf-llm",
-    url: "https://duluthmn.gov/communications/press-releases/duluth-public-library/",
-    type: "pdf-brochure",
-    confidence: "low",
+    adapter: "jsonld",
+    url: "https://duluthlibrary.events.mylibrary.digital/events",
+    type: "html-calendar",
+    confidence: "medium",
     enabled: false,
-    notes: "Library programs are published as City press-release PDFs (no LibCal/ICS found). Needs PDF+LLM extraction. Stub.",
+    notes: "CORRECTION (surfaced via r/duluth): the library runs a real events calendar on the LibraryMarket platform (duluthlibrary.events.mylibrary.digital) — NOT just City press-release PDFs as earlier assumed. Bot-gated (403 to plain fetch) → needs the headless path like PDD; confirm whether it embeds Event JSON-LD or exposes a LibraryMarket iCal/RSS export before wiring. Far better than the PDF route.",
+  },
+  {
+    name: "Twin Ports Nightlife",
+    adapter: "html",
+    url: "https://www.twinportsnightlife.com/",
+    type: "html-calendar",
+    confidence: "medium",
+    enabled: false,
+    notes: "r/duluth-recommended live-music/nightlife listings. NOT WordPress (no wp-json / ?ical=1 / tribe REST — all 404). Custom platform → needs an HTML scrape or JSON-LD from a rendered page. Lead, unwired.",
   },
   {
     name: "The DECC",
