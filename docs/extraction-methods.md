@@ -146,6 +146,22 @@ Not a platform — a wall that sits in front of one. Escalation ladder:
 
 **Dead / closing:** Karpeles Manuscript Library Museum (closing 2026), Superior Public Museums / Fairlawn (site misconfigured/orphaned — periodic recheck).
 
+## Extended sweep — tribal / college / arts / health / sports (2026-07-24)
+
+**New platforms confirmed (need mappers):**
+- **Revize CMS calendar** (tribal/municipal): `GET {base}/_assets_/plugins/revizeCalendar/calendar_data_handler.php?webspace={ws}&relative_revize_url=//cms3.revize.com&protocol=https:` → JSON array (title/start/location/url/desc/allDay). The `webspace`/`relative_revize_url` params live in the page's inline `<script>` (guessing 404s). Plain fetch. → `structured-api`/new `revize-calendar`. **FDL Band** = 428 events.
+- **Sitecore XA + Coveo** (Essentia): `GET https://www.essentiahealth.org/sxa/search/results?s={GUID}&itemid={GUID}&v={GUID}&p=10&o=Event%20Upcoming,Ascending` → JSON (148), each result an `Html` fragment (title/date/location as pre-rendered HTML — mapper must unwrap HTML-in-JSON). Location filterable to "Duluth, MN". Plain fetch, GUIDs are stable. → `structured-api`/new `sitecore-sxa-coveo`.
+- **Embedded public Google Calendar ICS** (DISC): the `/schedule/` page embeds a GCal iframe → its ICS is `https://calendar.google.com/calendar/ical/{calId}%40group.calendar.google.com/public/basic.ics`. Plain fetch → `ical-import` (existing). ⚠ `X-WR-TIMEZONE: America/New_York` but times are Central — handle the tz mismatch (same class as NSSR's `UTC+0`).
+- **WP custom post type** (no TEC): `GET {base}/wp-json/wp/v2/{cpt}` — DSSO `concert`, Ursa Minor `event`. Title/permalink confirmed but the DATE is in body prose (no ACF/JSON-LD) → mapper needs a content-regex or page-render. → `structured-api`/new `wp-custom-cpt`.
+
+**Ready to wire (confirmed real data):**
+- FDL Band (revize, 428, high, net-new tribal) · Essentia (sitecore-coveo, 148, med-high) · DISC (ical, high, tz-gotcha) · FDLTCC (tribe-rest, high) · UWS (tribe-rest, high, Superior WI) · DSSO (wp-cpt, med) · Ursa Minor (wp-cpt, med).
+- Ready TEC, **0 events right now** (re-poll at wire time): Zeitgeist Arts, Minnesota Ballet, Sacred Heart Music Center, Spirit Mountain — all `tribe-rest`, zero new code.
+
+**No feed → html-scrape fallback:** Bayfront Festival Park (Wix, plain-text calendar block — easiest), LSC (`lsc.edu`, REST 401-locked, 1,537 events in one HTML page), Duluth Playhouse/NorShor (Webflow), Heritage Sports Center (Webflow, sparse), CSS/SaintsLife (CampusGroups per-org ICS, ~600 orgs, needs AJAX sniff).
+
+**Social-only / no feed:** AICHO (Weebly blog, index password-gated), 1854 Treaty Authority (Joomla DPCalendar export not locatable), Clyde/Bent Paddle/Blacklist/Pizza Lucé (FB-only), Earth Rider (Wix Events + Eventbrite, unconfirmed), Wussow's (SimpleTix SPA, unconfirmed). **Dead:** The Rex (closed 2023). **Migrating:** St. Luke's→Aspirus (site unstable, recheck later).
+
 ## Reverse-engineering recipe (for a new/unknown site)
 
 1. **Fingerprint by plain fetch** (browser UA): try `/wp-json/`, `/wp-json/tribe/events/v1/events`, `?ical=1`, `/feed/`, `/sitemap.xml`, `?format=json` (Squarespace), and grep the HTML for platform markers (`tribe-events`, `squarespace`, `Event Espresso`, `my-calendar`).

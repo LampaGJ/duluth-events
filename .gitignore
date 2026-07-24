@@ -6,3 +6,4 @@ public/
 .env
 .DS_Store
 *.log
+WORK-STATE.md
