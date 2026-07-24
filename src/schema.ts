@@ -126,6 +126,32 @@ export const SourceSchema = z
 
 export type Source = z.infer<typeof SourceSchema>;
 
+/**
+ * Canonical event typification — the controlled vocabulary every entry (rec1 programs, live music,
+ * meetings, …) is classified into, so users can subscribe to specific kinds via the feed URL.
+ * Duration (single-day vs multi-day class/festival) is carried orthogonally by `multiDay`, so a
+ * "single-day classes" sub-feed is `type=class&multiDay=false`.
+ */
+export const EVENT_TYPES = [
+  "live-music",
+  "performing-arts", // theater, comedy, dance
+  "film",
+  "visual-arts", // galleries, exhibits
+  "class", // programs, workshops, camps, lessons (rec1)
+  "meeting", // government / civic / board
+  "market", // farmers market, makers market
+  "festival",
+  "sports", // leagues, games, athletics
+  "family", // kids / all-ages family programming
+  "food-drink",
+  "education", // lectures, university talks, author events
+  "community", // general community / civic events
+  "other",
+] as const;
+
+export const EVENT_TYPE_SCHEMA = z.enum(EVENT_TYPES);
+export type EventType = (typeof EVENT_TYPES)[number];
+
 // ---------------------------------------------------------------------------
 // The event
 // ---------------------------------------------------------------------------
@@ -149,7 +175,11 @@ export const DuluthEventSchema = z
     location: LocationSchema,
     organizer: OrganizerSchema.optional(),
     cost: CostSchema.default({ kind: "unknown" }),
-    categories: z.array(z.string()).default([]), // CATEGORIES e.g. ["music","festival","all-ages"]
+    categories: z.array(z.string()).default([]), // free-form source CATEGORIES e.g. ["music","all-ages"]
+    /** Canonical typification — the controlled vocabulary users subscribe/filter by. */
+    eventType: EVENT_TYPE_SCHEMA.default("other"),
+    /** true when the event spans more than one calendar day (a multi-week class, a festival run). */
+    multiDay: z.boolean().default(false),
     age: AgeSchema.optional(),
 
     url: z.url().optional(), // canonical event page -> URL

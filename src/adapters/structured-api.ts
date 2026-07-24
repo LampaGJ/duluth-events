@@ -72,6 +72,7 @@ export function mapLegistarEvent(raw: LegistarEvent, source: SourceDef, retrieve
     timezone: DEFAULT_TZ,
     location: { venueName, city: "Duluth", state: "MN", inDuluth: true },
     categories: ["government", "public-meeting"],
+    eventType: "meeting" as const,
     url,
     status: "confirmed" as const,
     source: {

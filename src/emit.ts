@@ -72,6 +72,8 @@ function buildDescription(e: DuluthEvent): string {
 
 function buildXProps(e: DuluthEvent): { key: string; value: string }[] {
   const x: { key: string; value: string }[] = [
+    { key: "X-EVENT-TYPE", value: e.eventType },
+    { key: "X-MULTI-DAY", value: String(e.multiDay) },
     { key: "X-COST", value: formatCost(e.cost) },
     { key: "X-SOURCE-NAME", value: e.source.name },
     { key: "X-SOURCE-CONFIDENCE", value: e.source.confidence },

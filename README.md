@@ -27,7 +27,17 @@ npm run pipeline       # fetch all enabled sources -> write duluth-events.ics
 npm start              # serve the feed at http://localhost:3000/feed.ics (PORT env to change)
 ```
 
-Server routes: `GET /feed.ics` (the subscribable feed), `GET /stats` (last run's per-source counts + failures), `GET /health`.
+### Subscribe / sub-feeds
+
+`GET /feed.ics` is the subscribable calendar. Query params carve a **sub-feed** — subscribe to exactly what you want:
+
+- `?type=live-music,festival` — one or more event types
+- `?type=class&multiDay=false` — single-day classes (`multiDay=true` for multi-week)
+- `?source=legistar` — by source (substring of the source slug: `legistar`, `pdd`, `parks`…)
+- `?confidence=high` · `?inDuluth=true` — quality / scope filters
+- combine freely: `/feed.ics?type=live-music&inDuluth=true&confidence=high`
+
+Every event is typed into a controlled `eventType` vocabulary (`live-music`, `class`, `meeting`, `market`, `festival`, `sports`, `performing-arts`, `film`, `visual-arts`, `family`, `food-drink`, `education`, `community`, `other`) and flagged `multiDay`. `GET /types` and `GET /sources` list what's available (with counts); `GET /stats` shows the last run; `GET /health` is a probe.
 
 ## Sources (`src/sources.ts`)
 

@@ -11,7 +11,7 @@ import type { Source } from "./schema.js";
  * `enabled: false` sources are wired but not yet fetched (stub adapters / needs work).
  * URLs marked CONFIRMED were fetched during research (2026-07-23) and returned real VCALENDAR.
  */
-export type AdapterKind = "ical" | "structured-api" | "jsonld" | "html" | "pdf-llm";
+export type AdapterKind = "ical" | "structured-api" | "jsonld" | "rec1" | "html" | "pdf-llm";
 
 export interface SourceDef {
   name: string;
@@ -87,13 +87,12 @@ export const SOURCES: SourceDef[] = [
   },
   {
     name: "Duluth Parks & Recreation",
-    adapter: "structured-api",
-    mapper: "rec1",
+    adapter: "rec1",
     url: "https://secure.rec1.com/MN/duluthparks/catalog",
     type: "json-api",
     confidence: "medium",
-    enabled: false,
-    notes: "ACCESSIBLE-FORMAT WIN (retires the PDF brochure): the REC1/CivicRec catalog serves the SAME program data as structured JSON — verified. Flow: load the catalog page for a session hash, GET catalog/getTabsFiltersItemsCounts/{hash} for tab ids, then catalog/getItems/{hash}/{tabId} -> {sections[].groups[]} = programs (id, name, description, dates/fee/ages). Deterministic, NO pdf-parse and NO LLM. Needs a `rec1` adapter (session-hash bootstrap + getItems paging). Confidence medium (registration catalog; many entries are dated programs, some are rentals).",
+    enabled: true,
+    notes: "REC1/CivicRec catalog as structured JSON (retires the PDF brochure). hash from catalog HTML -> getItems (program groups) -> getActivitySessions (dated sessions with date/time/location/fee/age). eventType=class; multi-week ranges -> multiDay. Deterministic, no LLM.",
   },
   {
     name: "Duluth Public Library",
