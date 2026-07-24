@@ -67,24 +67,38 @@ async function fetchViaHeadless(url: string): Promise<string> {
  * Prefers a residential render proxy (`SCRAPER_PROXY`) — the only thing that reliably clears
  * Cloudflare from CI datacenter IPs — and falls back to local headless Chromium otherwise.
  */
+/** Cheapest-first: proxy if configured, else a plain fetch (works for non-gated JSON-LD like the
+ *  Children's Museum), falling back to headless only when plain is challenged or yields no events. */
+async function fetchPageSmart(url: string, proxy?: string): Promise<string> {
+  if (proxy) return fetchViaProxy(proxy, url);
+  try {
+    const r = await fetch(url, { headers: { "User-Agent": BROWSER_UA, Accept: "text/html,*/*" }, redirect: "follow" });
+    const html = await r.text();
+    const challenged = /just a moment|cf-chl|challenge-platform|sgcaptcha|robot challenge/i.test(html);
+    if (r.ok && !challenged && extractJsonLdEvents(html).length > 0) return html;
+  } catch {
+    /* fall through to headless */
+  }
+  return fetchViaHeadless(url);
+}
+
 export async function fetchJsonLdEvents(startUrl: string, maxPages = 3, tzDate?: string): Promise<JsonLdEvent[]> {
   const proxy = process.env.SCRAPER_PROXY?.trim();
-  const getHtml = proxy ? (u: string) => fetchViaProxy(proxy, u) : fetchViaHeadless;
   const collected: JsonLdEvent[] = [];
   let url: string | null = tzDate ? `${startUrl}?tribe-bar-date=${tzDate}` : startUrl;
 
   for (let i = 0; i < maxPages && url; i++) {
     let html: string;
     try {
-      html = await getHtml(url);
+      html = await fetchPageSmart(url, proxy);
     } catch (err) {
-      logger.warn({ url, err: err instanceof Error ? err.message : String(err) }, "headless/proxy page fetch failed");
+      logger.warn({ url, err: err instanceof Error ? err.message : String(err) }, "JSON-LD page fetch failed");
       break;
     }
     collected.push(...extractJsonLdEvents(html));
     url = findNextPage(html);
   }
 
-  logger.info({ startUrl, events: collected.length, via: proxy ? "proxy" : "headless" }, "JSON-LD extraction complete");
+  logger.info({ startUrl, events: collected.length, via: proxy ? "proxy" : "plain/headless" }, "JSON-LD extraction complete");
   return collected;
 }

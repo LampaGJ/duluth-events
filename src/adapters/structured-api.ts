@@ -7,9 +7,16 @@ import { DEFAULT_TZ, makeUid, nowIso, parseClockTime, safeTimezone, toIsoOffset,
 const BROWSER_UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36";
 
-async function fetchJson<T>(url: string): Promise<T> {
+async function fetchJson<T>(url: string, retries = 1): Promise<T> {
   const res = await fetch(url, { headers: { "User-Agent": BROWSER_UA, Accept: "application/json, */*" }, redirect: "follow" });
-  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  if (!res.ok) {
+    // Retry once on transient / rate / bot-throttle responses (e.g. duluthart.org 422 from CI IPs).
+    if (retries > 0 && (res.status === 422 || res.status === 429 || res.status >= 500)) {
+      await new Promise((r) => setTimeout(r, 1500));
+      return fetchJson<T>(url, retries - 1);
+    }
+    throw new Error(`HTTP ${res.status} for ${url}`);
+  }
   return (await res.json()) as T;
 }
 

@@ -165,6 +165,15 @@ export const SOURCES: SourceDef[] = [
     notes: "CONFIRMED working (returned a real past event) but 0 upcoming posted right now — birding/nature programming ~40mi north of Duluth. Harmless when empty; contributes when populated.",
   },
   {
+    name: "Duluth Children's Museum",
+    adapter: "jsonld",
+    url: "https://www.duluthchildrensmuseum.org/events/",
+    type: "html-calendar",
+    confidence: "medium",
+    enabled: true,
+    notes: "CONFIRMED. Modern Events Calendar (wp-json/mec empty) but the /events/ page embeds schema.org Event JSON-LD — PLAIN-fetchable (no wall, no headless). ~15 events (Story Time, Staff Pick, recurring daily programming). NOTE Great Lakes Aquarium + Lake Superior Zoo were re-checked: SiteGround-gated with NO structured events (0 JSON-LD even after clearing) — prose-only, so aggregator-covered (Visit Duluth/Do Duluth), not wired.",
+  },
+  {
     name: "Duluth Public Library",
     adapter: "jsonld",
     url: "https://duluthlibrary.events.mylibrary.digital/events",
