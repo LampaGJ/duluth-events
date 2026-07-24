@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { mapLegistarEvent, mapTribeEvent } from "../src/adapters/structured-api.js";
+import { mapLegistarEvent, mapTribeEvent, mapSquarespaceEvent } from "../src/adapters/structured-api.js";
 import type { SourceDef } from "../src/sources.js";
 
 const AT = "2026-07-20T09:00:00-05:00";
@@ -96,5 +96,47 @@ describe("mapTribeEvent", () => {
     const unknown = mapTribeEvent({ id: 2, title: "Mystery", start_date: "2026-07-25 12:00:00" }, visitDuluthSource, AT);
     expect(free!.cost.kind).toBe("free");
     expect(unknown!.cost.kind).toBe("unknown");
+  });
+});
+
+describe("mapSquarespaceEvent", () => {
+  const sqSource: SourceDef = {
+    name: "St. Louis River Alliance",
+    adapter: "structured-api",
+    mapper: "squarespace",
+    url: "https://www.stlouisriver.org/events",
+    type: "json-api",
+    confidence: "high",
+    enabled: true,
+  };
+
+  it("maps a Squarespace event (epoch ms) and tags an across-the-bridge venue inDuluth:false", () => {
+    const e = mapSquarespaceEvent(
+      {
+        id: "abc",
+        title: "Volunteer Day @ Piping Plover Habitat",
+        startDate: 1786046400998,
+        endDate: 1786057200998,
+        fullUrl: "/events/volunteer-day",
+        location: { addressTitle: "", addressLine2: "Wisconsin Point, Superior WI", mapLat: 46.7, mapLng: -91.99 },
+        excerpt: "<p>Help the plovers.</p>",
+        tags: ["volunteer"],
+      },
+      sqSource,
+      AT,
+      "https://www.stlouisriver.org",
+    );
+    expect(e).not.toBeNull();
+    expect(e!.title).toBe("Volunteer Day @ Piping Plover Habitat");
+    expect(e!.start).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[-+]\d{2}:\d{2}$/);
+    expect(e!.url).toBe("https://www.stlouisriver.org/events/volunteer-day");
+    expect(e!.location.inDuluth).toBe(false);
+    expect(e!.location.city).toBe("Superior");
+    expect(e!.description).toContain("Help the plovers");
+    expect(e!.source.confidence).toBe("high");
+  });
+
+  it("drops an item with no title or startDate", () => {
+    expect(mapSquarespaceEvent({ title: "No date" }, sqSource, AT, "https://x.org")).toBeNull();
   });
 });

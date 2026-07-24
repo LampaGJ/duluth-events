@@ -34,4 +34,15 @@ describe("dedupe (fuzzy merge)", () => {
     expect(out).toHaveLength(1);
     expect(out[0]!.alsoListedIn).toEqual([]);
   });
+
+  it("dedupes corroborators by source name (no repeated X-ALSO-LISTED-IN)", () => {
+    const doD = { name: "Do Duluth", type: "json-api" as const, url: "https://doduluth.com/wp-json/tribe/events/v1/events", extractionMethod: "structured-api" as const, retrievedAt: "2026-04-20T09:00:00-05:00", confidence: "medium" as const };
+    const pdd = makeEvent();
+    const doD1 = makeEvent({ uid: "a@x", source: doD });
+    const doD2 = makeEvent({ uid: "b@x", source: doD }); // same event, same source, twice
+    const out = dedupe([pdd, doD1, doD2]);
+    expect(out).toHaveLength(1);
+    expect(out[0]!.source.name).toBe("Perfect Duluth Day");
+    expect(out[0]!.alsoListedIn.map((s) => s.name)).toEqual(["Do Duluth"]); // once, not twice
+  });
 });

@@ -16,8 +16,8 @@ export type AdapterKind = "ical" | "structured-api" | "jsonld" | "rec1" | "html"
 export interface SourceDef {
   name: string;
   adapter: AdapterKind;
-  /** For adapter="structured-api": which per-source JSON mapper to use. ("rec1" adapter TBD.) */
-  mapper?: "legistar" | "tribe-rest" | "rec1";
+  /** For adapter="structured-api": which per-source JSON mapper to use. */
+  mapper?: "legistar" | "tribe-rest" | "squarespace" | "rec1";
   /** iCal feed URL, JSON API base, HTML calendar URL, or PDF URL depending on adapter. */
   url?: string;
   type: Source["type"];
@@ -93,6 +93,76 @@ export const SOURCES: SourceDef[] = [
     confidence: "medium",
     enabled: true,
     notes: "REC1/CivicRec catalog as structured JSON (retires the PDF brochure). hash from catalog HTML -> getItems (program groups) -> getActivitySessions (dated sessions with date/time/location/fee/age). eventType=class; multi-week ranges -> multiDay. Deterministic, no LLM.",
+  },
+  // --- Nature centers & museums (venue-own calendars; multisample -> corroborate/merge) ---
+  {
+    name: "Duluth Art Institute",
+    adapter: "structured-api",
+    mapper: "tribe-rest",
+    url: "https://duluthart.org/wp-json/tribe/events/v1/events",
+    type: "json-api",
+    confidence: "high",
+    enabled: true,
+    notes: "CONFIRMED. The Events Calendar REST — venue's own calendar, ~102 upcoming events (art classes, camps, exhibitions). First-party -> high.",
+  },
+  {
+    name: "North Shore Scenic Railroad",
+    adapter: "structured-api",
+    mapper: "tribe-rest",
+    url: "https://duluthtrains.com/wp-json/tribe/events/v1/events",
+    type: "json-api",
+    confidence: "high",
+    enabled: true,
+    notes: "CONFIRMED. The Events Calendar REST — ~7 events (dinner trains, excursions).",
+  },
+  {
+    name: "Glensheen",
+    adapter: "ical",
+    url: "https://calendar.d.umn.edu/live/ical/events/group/Glensheen",
+    type: "ics-feed",
+    confidence: "high",
+    enabled: true,
+    notes: "CONFIRMED. LiveWhale GROUP-scoped ICS (Glensheen-only). ~9 VEVENTs (concerts on the pier, lectures). Also appears in the main UMD feed -> dedupe corroborates/merges (multisample).",
+  },
+  {
+    name: "St. Louis River Alliance",
+    adapter: "structured-api",
+    mapper: "squarespace",
+    url: "https://www.stlouisriver.org/events",
+    type: "json-api",
+    confidence: "high",
+    enabled: true,
+    notes: "CONFIRMED. Squarespace Events collection via ?format=json (upcoming[] with epoch-ms startDate). ~6 upcoming (volunteer days, paddling workshops, River Revival). Some events across the bridge (Superior WI) -> tagged inDuluth:false.",
+  },
+  {
+    name: "Friends of the Lake Superior Reserve",
+    adapter: "structured-api",
+    mapper: "squarespace",
+    url: "https://folsr.org/events",
+    type: "json-api",
+    confidence: "high",
+    enabled: true,
+    notes: "CONFIRMED. Squarespace ?format=json (runs the Lake Superior Estuarium, Barker's Island, Superior WI). ~33 upcoming (Estuarium open hours, Everyone Can Bird). Superior-WI venue -> inDuluth:false.",
+  },
+  {
+    name: "Richard I. Bong Veterans Historical Center",
+    adapter: "structured-api",
+    mapper: "tribe-rest",
+    url: "https://bongcenter.org/wp-json/tribe/events/v1/events",
+    type: "json-api",
+    confidence: "high",
+    enabled: true,
+    notes: "CONFIRMED. The Events Calendar REST — Superior, WI (across the bridge; mapper tags inDuluth:false via venue city). Thin (~3 upcoming). Use a >=12-month window.",
+  },
+  {
+    name: "Friends of Sax-Zim Bog",
+    adapter: "structured-api",
+    mapper: "tribe-rest",
+    url: "https://saxzim.org/wp-json/tribe/events/v1/events",
+    type: "json-api",
+    confidence: "high",
+    enabled: true,
+    notes: "CONFIRMED working (returned a real past event) but 0 upcoming posted right now — birding/nature programming ~40mi north of Duluth. Harmless when empty; contributes when populated.",
   },
   {
     name: "Duluth Public Library",

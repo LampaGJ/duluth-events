@@ -134,6 +134,18 @@ Not a platform — a wall that sits in front of one. Escalation ladder:
 
 ---
 
+## Nature centers & museums (sweep 2026-07-23)
+
+**Wired (enabled):** Duluth Art Institute (TEC, ~102 events — biggest venue find), North Shore Scenic Railroad (TEC; its feed sends a non-IANA `UTC+0` tz → `safeTimezone` falls back), **Glensheen** (LiveWhale *group*-scoped ICS `…/live/ical/events/group/Glensheen` — corroborates/merges with the main UMD feed, a live demo of multisampling), **St. Louis River Alliance** + **Friends of the Lake Superior Reserve / Estuarium** (Squarespace `?format=json` → new `squarespace` mapper), Bong Center (TEC, Superior WI → `inDuluth:false`), Friends of Sax-Zim Bog (TEC, empty right now).
+
+**SiteGround "Robot Challenge"-gated WordPress with NO event plugin** — headless clears the wall in ~5s (escalation step 2, not Turnstile) but there is no feed to extract; aggregator-only (they cross-post to Visit Duluth/PDD/Do Duluth): **Hartley Nature Center, Great Lakes Aquarium, Lake Superior Zoo**.
+
+**No structured feed:** Boulder Lake ELC (Drupal prose), Lake Superior Maritime Visitor Center (ClubExpress, no events), Hawk Ridge (no plugin; its "Everyone Can Bird" comes via FOLSR), Chester Bowl (no plugin), NRRI/Tweed (UMD Drupal, no LiveWhale widget — Tweed worth a headless follow-up on `/exhibitions`).
+
+**Covered by existing sources:** Bagley Nature Area → UMD LiveWhale; SS William A. Irvin → DECC.
+
+**Dead / closing:** Karpeles Manuscript Library Museum (closing 2026), Superior Public Museums / Fairlawn (site misconfigured/orphaned — periodic recheck).
+
 ## Reverse-engineering recipe (for a new/unknown site)
 
 1. **Fingerprint by plain fetch** (browser UA): try `/wp-json/`, `/wp-json/tribe/events/v1/events`, `?ical=1`, `/feed/`, `/sitemap.xml`, `?format=json` (Squarespace), and grep the HTML for platform markers (`tribe-events`, `squarespace`, `Event Espresso`, `my-calendar`).

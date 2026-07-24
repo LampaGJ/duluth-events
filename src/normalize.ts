@@ -66,6 +66,17 @@ export function wallTimeToIso(year: number, month: number, day: number, hour: nu
   return toIsoOffset(new Date(wallAsUtc - off * 60000), tz);
 }
 
+/** Return `tz` if it's a valid IANA zone Intl accepts, else the default (some feeds send "UTC+0"). */
+export function safeTimezone(tz: string | undefined): string {
+  if (!tz) return DEFAULT_TZ;
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: tz });
+    return tz;
+  } catch {
+    return DEFAULT_TZ;
+  }
+}
+
 /** Parse a clock string ("6:00 PM", "6 pm", "19:00", "19:00:00") -> parts, or null if unparseable. */
 export function parseClockTime(s: string): { hour: number; minute: number; second: number } | null {
   const m = s.trim().match(/^(\d{1,2})(?::(\d{2}))?(?::(\d{2}))?\s*([AaPp][Mm])?$/);

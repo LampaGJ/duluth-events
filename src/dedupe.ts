@@ -43,8 +43,16 @@ export function dedupe(events: DuluthEvent[]): DuluthEvent[] {
     }
     const sorted = [...group].sort((a, b) => CONFIDENCE_RANK[b.source.confidence] - CONFIDENCE_RANK[a.source.confidence]);
     const primary = sorted[0]!;
-    const corroborators = sorted.slice(1).map((e) => e.source);
-    merged.push({ ...primary, alsoListedIn: [...primary.alsoListedIn, ...corroborators] });
+    // Corroborators = every other copy's source, deduped by source name, excluding the primary's own.
+    const seen = new Set([primary.source.name]);
+    const corroborators: Source[] = [];
+    for (const s of [...primary.alsoListedIn, ...sorted.slice(1).map((e) => e.source)]) {
+      if (!seen.has(s.name)) {
+        seen.add(s.name);
+        corroborators.push(s);
+      }
+    }
+    merged.push({ ...primary, alsoListedIn: corroborators });
   }
   return merged;
 }

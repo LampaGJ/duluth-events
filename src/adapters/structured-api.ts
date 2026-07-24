@@ -2,7 +2,7 @@ import { DuluthEventSchema, type DuluthEvent } from "../schema.js";
 import type { SourceDef } from "../sources.js";
 import type { Adapter } from "./types.js";
 import { logger } from "../logger.js";
-import { DEFAULT_TZ, makeUid, nowIso, parseClockTime, wallTimeToIso } from "../normalize.js";
+import { DEFAULT_TZ, makeUid, nowIso, parseClockTime, safeTimezone, toIsoOffset, wallTimeToIso } from "../normalize.js";
 
 const BROWSER_UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36";
@@ -140,7 +140,7 @@ function tribeCost(cd: TribeEvent["cost_details"]): DuluthEvent["cost"] {
 
 export function mapTribeEvent(raw: TribeEvent, source: SourceDef, retrievedAt: string): DuluthEvent | null {
   if (!raw.start_date || !raw.title) return null;
-  const tz = raw.timezone || DEFAULT_TZ;
+  const tz = safeTimezone(raw.timezone);
   const start = parseTribeWall(raw.start_date, tz);
   if (!start) return null;
   const end = raw.end_date ? parseTribeWall(raw.end_date, tz) : undefined;
@@ -194,6 +194,76 @@ async function tribeRestMapper(source: SourceDef): Promise<DuluthEvent[]> {
 }
 
 // ---------------------------------------------------------------------------
+// Squarespace Events collection JSON — {events page}?format=json -> { upcoming: [...] }.
+// confidence: source-dependent (a venue's own calendar = high).
+// ---------------------------------------------------------------------------
+
+interface SqEvent {
+  id?: string | number;
+  title?: string;
+  body?: string;
+  excerpt?: string;
+  fullUrl?: string;
+  startDate?: number; // epoch ms
+  endDate?: number;
+  location?: { addressTitle?: string; addressLine1?: string; addressLine2?: string; mapLat?: number; mapLng?: number };
+  tags?: string[];
+  categories?: string[];
+}
+
+export function mapSquarespaceEvent(raw: SqEvent, source: SourceDef, retrievedAt: string, origin: string): DuluthEvent | null {
+  const title = raw.title?.trim();
+  if (!title || typeof raw.startDate !== "number") return null;
+  const loc = raw.location ?? {};
+  const addr = [loc.addressTitle, loc.addressLine1, loc.addressLine2].filter(Boolean).join(" ");
+  const superior = /\bsuperior\b/i.test(addr);
+  const venueName = loc.addressTitle?.trim() || loc.addressLine2?.trim() || loc.addressLine1?.trim() || "See listing";
+  const geo = typeof loc.mapLat === "number" && typeof loc.mapLng === "number" ? { lat: loc.mapLat, lon: loc.mapLng } : undefined;
+
+  const candidate = {
+    uid: makeUid(source.name, raw.id != null ? String(raw.id) : undefined, title, toIsoOffset(new Date(raw.startDate)), venueName),
+    title,
+    description: raw.excerpt || raw.body ? stripHtml(raw.excerpt || raw.body || "").slice(0, 1500) : undefined,
+    start: toIsoOffset(new Date(raw.startDate)),
+    end: typeof raw.endDate === "number" ? toIsoOffset(new Date(raw.endDate)) : undefined,
+    timezone: DEFAULT_TZ,
+    location: {
+      venueName,
+      street: loc.addressLine1?.trim() || undefined,
+      city: superior ? "Superior" : "Duluth",
+      state: superior ? "WI" : "MN",
+      geo,
+      inDuluth: !superior,
+    },
+    categories: [...(raw.tags ?? []), ...(raw.categories ?? [])].filter(Boolean),
+    url: raw.fullUrl ? origin + raw.fullUrl : undefined,
+    status: "confirmed" as const,
+    source: {
+      name: source.name,
+      type: source.type,
+      url: source.url,
+      sourceEventId: raw.id != null ? String(raw.id) : undefined,
+      extractionMethod: "structured-api" as const,
+      retrievedAt,
+      confidence: source.confidence,
+      verified: false,
+    },
+  };
+
+  const parsed = DuluthEventSchema.safeParse(candidate);
+  if (parsed.success) return parsed.data;
+  logger.warn({ source: source.name, title, issues: parsed.error.issues.slice(0, 3) }, "dropped invalid squarespace event");
+  return null;
+}
+
+async function squarespaceMapper(source: SourceDef): Promise<DuluthEvent[]> {
+  const origin = new URL(source.url!).origin;
+  const body = await fetchJson<{ upcoming?: SqEvent[] }>(`${source.url}?format=json`);
+  const retrievedAt = nowIso();
+  return (body.upcoming ?? []).map((r) => mapSquarespaceEvent(r, source, retrievedAt, origin)).filter((e): e is DuluthEvent => e !== null);
+}
+
+// ---------------------------------------------------------------------------
 
 /** Structured first-party JSON API adapter, dispatched by `source.mapper`. */
 export const importStructuredApi: Adapter = async (source: SourceDef): Promise<DuluthEvent[]> => {
@@ -203,6 +273,8 @@ export const importStructuredApi: Adapter = async (source: SourceDef): Promise<D
       return legistarMapper(source);
     case "tribe-rest":
       return tribeRestMapper(source);
+    case "squarespace":
+      return squarespaceMapper(source);
     default:
       throw new Error(`structured-api: source "${source.name}" has unknown mapper "${source.mapper ?? "(none)"}"`);
   }
