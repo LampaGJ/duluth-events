@@ -18,6 +18,9 @@ export interface SourceDef {
   adapter: AdapterKind;
   /** For adapter="structured-api": which per-source JSON mapper to use. */
   mapper?: "legistar" | "tribe-rest" | "squarespace" | "rec1";
+  /** Route this source's fetch through SCRAPER_PROXY (residential IP) — for datacenter-IP-blocked
+   *  hosts. No-op when SCRAPER_PROXY is unset (falls back to a direct fetch). */
+  viaProxy?: boolean;
   /** iCal feed URL, JSON API base, HTML calendar URL, or PDF URL depending on adapter. */
   url?: string;
   type: Source["type"];
@@ -103,7 +106,8 @@ export const SOURCES: SourceDef[] = [
     type: "json-api",
     confidence: "high",
     enabled: true,
-    notes: "CONFIRMED. The Events Calendar REST — venue's own calendar, ~102 upcoming events (art classes, camps, exhibitions). First-party -> high.",
+    viaProxy: true,
+    notes: "CONFIRMED. The Events Calendar REST — venue's own calendar, ~102 upcoming events. First-party -> high. NOTE: its host 422s datacenter IPs (works local/residential, fails from CI) -> viaProxy routes it through SCRAPER_PROXY (same secret PDD needs).",
   },
   {
     name: "North Shore Scenic Railroad",

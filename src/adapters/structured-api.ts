@@ -7,17 +7,36 @@ import { DEFAULT_TZ, makeUid, nowIso, parseClockTime, safeTimezone, toIsoOffset,
 const BROWSER_UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36";
 
-async function fetchJson<T>(url: string, retries = 1): Promise<T> {
-  const res = await fetch(url, { headers: { "User-Agent": BROWSER_UA, Accept: "application/json, */*" }, redirect: "follow" });
+/** Route a JSON URL through SCRAPER_PROXY on a residential IP, stripping any render flag (render is
+ *  only for HTML pages — a JSON endpoint should return raw JSON). Used for datacenter-IP-blocked
+ *  sources (e.g. duluthart.org 422s CI IPs) via a per-source `viaProxy` flag. */
+function jsonProxyUrl(proxy: string, url: string): string {
+  let base = proxy.replace(/[?&](render|render_js|js_render)=true/gi, (m) => (m[0] === "?" ? "?" : ""));
+  base = base.replace(/\?&/, "?").replace(/&&+/g, "&");
+  return base.includes("{url}") ? base.replace("{url}", encodeURIComponent(url)) : base + encodeURIComponent(url);
+}
+
+async function fetchJson<T>(url: string, viaProxy = false, retries = 1): Promise<T> {
+  const proxy = viaProxy ? process.env.SCRAPER_PROXY?.trim() : undefined;
+  const target = proxy ? jsonProxyUrl(proxy, url) : url;
+  const res = await fetch(target, { headers: { "User-Agent": BROWSER_UA, Accept: "application/json, */*" }, redirect: "follow" });
   if (!res.ok) {
-    // Retry once on transient / rate / bot-throttle responses (e.g. duluthart.org 422 from CI IPs).
+    // Retry once on transient / rate / bot-throttle responses.
     if (retries > 0 && (res.status === 422 || res.status === 429 || res.status >= 500)) {
       await new Promise((r) => setTimeout(r, 1500));
-      return fetchJson<T>(url, retries - 1);
+      return fetchJson<T>(url, viaProxy, retries - 1);
     }
     throw new Error(`HTTP ${res.status} for ${url}`);
   }
-  return (await res.json()) as T;
+  const text = await res.text();
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    // A proxy may wrap JSON in an HTML viewer; salvage the JSON body.
+    const m = text.match(/[[{][\s\S]*[\]}]/);
+    if (m) return JSON.parse(m[0]) as T;
+    throw new Error(`non-JSON response for ${url}`);
+  }
 }
 
 function stripHtml(s: string): string {
@@ -103,7 +122,7 @@ export function mapLegistarEvent(raw: LegistarEvent, source: SourceDef, retrieve
 async function legistarMapper(source: SourceDef): Promise<DuluthEvent[]> {
   const from = isoDaysAgo(30);
   const url = `${source.url}?$filter=EventDate+ge+datetime'${from}'&$orderby=EventDate&$top=200`;
-  const rows = await fetchJson<LegistarEvent[]>(url);
+  const rows = await fetchJson<LegistarEvent[]>(url, source.viaProxy);
   const retrievedAt = nowIso();
   return rows.map((r) => mapLegistarEvent(r, source, retrievedAt)).filter((e): e is DuluthEvent => e !== null);
 }
@@ -195,7 +214,7 @@ export function mapTribeEvent(raw: TribeEvent, source: SourceDef, retrievedAt: s
 
 async function tribeRestMapper(source: SourceDef): Promise<DuluthEvent[]> {
   const url = `${source.url}?per_page=50&start_date=${isoDaysAgo(0)}`;
-  const body = await fetchJson<TribeResponse>(url);
+  const body = await fetchJson<TribeResponse>(url, source.viaProxy);
   const retrievedAt = nowIso();
   return (body.events ?? []).map((r) => mapTribeEvent(r, source, retrievedAt)).filter((e): e is DuluthEvent => e !== null);
 }
@@ -265,7 +284,7 @@ export function mapSquarespaceEvent(raw: SqEvent, source: SourceDef, retrievedAt
 
 async function squarespaceMapper(source: SourceDef): Promise<DuluthEvent[]> {
   const origin = new URL(source.url!).origin;
-  const body = await fetchJson<{ upcoming?: SqEvent[] }>(`${source.url}?format=json`);
+  const body = await fetchJson<{ upcoming?: SqEvent[] }>(`${source.url}?format=json`, source.viaProxy);
   const retrievedAt = nowIso();
   return (body.upcoming ?? []).map((r) => mapSquarespaceEvent(r, source, retrievedAt, origin)).filter((e): e is DuluthEvent => e !== null);
 }
