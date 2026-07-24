@@ -34,7 +34,7 @@ export const SOURCES: SourceDef[] = [
     type: "ics-feed",
     confidence: "high",
     enabled: true,
-    notes: "CONFIRMED feed, but the endpoint sits behind a Cloudflare JS challenge that a plain server fetch (any User-Agent) CANNOT clear — verified 403. Needs a headless-browser fetcher (e.g. Playwright) wired into fetchIcsText, OR subscribe to it directly in your calendar app. Left enabled so its failure is visible in /stats.",
+    notes: "CONFIRMED feed, but the WHOLE ORIGIN sits behind a Cloudflare JS challenge a plain server fetch cannot clear — verified 403 on BOTH ?ical=1 AND the wp-json/tribe/events REST endpoint (2026-07-23), so there is no REST sidestep. Needs a headless-browser fetcher (e.g. Playwright) wired into fetchIcsText, OR subscribe to it directly in your calendar app. Left enabled so its failure is visible in /stats.",
   },
   {
     name: "UMD Events",
