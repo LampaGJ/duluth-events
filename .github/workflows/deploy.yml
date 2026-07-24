@@ -37,6 +37,10 @@ jobs:
       - run: npm run build:feeds
         env:
           PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
+          # Optional: a residential render/anti-bot proxy so the Cloudflare-gated source (PDD)
+          # works from CI's datacenter IP. URL template ending in `url=` (or containing {url}).
+          # Set repo secret SCRAPER_PROXY to enable; unset -> falls back to headless (PDD=0 in CI).
+          SCRAPER_PROXY: ${{ secrets.SCRAPER_PROXY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
