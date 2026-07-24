@@ -60,6 +60,45 @@ Shared fetch seams: `fetchIcsText` (ical), `fetchJsonLdEvents` (`fetchers/headle
 - **Access:** headless Playwright (`fetchers/headless.ts`). **Adapter:** `jsonld`. **Confidence:** `medium`.
 - **Source:** Perfect Duluth Day (`/duluth-events/list/`).
 
+### Joomla + iCagenda — native RSS feed
+- **Fingerprint:** Joomla markup + `mod_icagenda_calendar` CSS/JS, `com_icagenda` URL slugs.
+- **Endpoint:** Joomla's feed dispatcher on an iCagenda list view: `{base}/{list-view}?format=feed&type=rss` (e.g. `/music?format=feed&type=rss`, `/the-nightlife/calendar?format=feed&type=rss`) → RSS 2.0 (`application/rss+xml`), `<item>` per event with `title`, `link`, `pubDate` (date+time), `category`, `description` (HTML: venue + thumbnail).
+- **Access:** plain `fetch`, no bot-wall. **⚠ Gotcha:** Joomla caps the feed at **10 items** (not client-overridable). Secondary richer source: `index.php?option=com_ajax&module=icagenda_calendar&method=events&format=raw&modid={id}&year=&month=` (chattier per-month HTML).
+- **Adapter:** `rss` (new — RSS 2.0 parse; sits beside `ical-import`). **Confidence:** `medium`.
+- **Source:** Twin Ports Nightlife (`twinportsnightlife.com`).
+
+### `swim-events-calendar` (bespoke WordPress plugin) — HTML fragment endpoint
+- **Fingerprint:** WordPress, but NOT The Events Calendar (its `tribe` REST 404s — a red herring). Calendar rendered by the `swim-events-calendar` plugin.
+- **Endpoint:** `{base}/wp-content/plugins/swim-events-calendar/events-template.php?cat=All` (optionally `&startMo=YYYYMM01&endMo=YYYYMM01`; cats: `All,Broadway,Comedy,Conventions,Dance,DSSO,Expos,Hockey,Music`) → an HTML **fragment** (not JSON): `<section class="event-list-item">` blocks with `.entry-title a` (title+permalink), `.event-date` (`Jul <span>26</span> | 6:00 pm` — infer year from the query month), `.slide-venue`, category classes, thumbnail, Ticketmaster link.
+- **Access:** plain `fetch`, no bot-wall, no headless. One request returns the full list (94 events observed).
+- **Adapter:** `html-scrape` (deterministic, stable semantic classes) against the fragment endpoint — NOT the full rendered `/events-calendar/` page. **Confidence:** `medium`.
+- **Source:** DECC.
+
+### My Calendar (WordPress plugin, joedolson) — ICS
+- **Fingerprint:** WordPress + `my-calendar` markup; a `/my-calendar/` page.
+- **Endpoint:** `{base}/feed/my-calendar-google/` → real `text/calendar` (`PRODID:spatie/icalendar-generator`), `VEVENT`s with `SUMMARY/LOCATION/DTSTART/DTEND(TZID)/RRULE/URL`. (The documented `?my-calendar-api=json|ical|csv` export is often **not enabled** — confirm empirically; it silently falls through to the homepage when off.)
+- **Access:** plain `fetch`. **⚠ Gotcha:** the TLS cert may lack a `www` SAN (CN = apex only) → fetch the **apex** host (`duluthfarmersmarket.com`, not `www.`) to avoid a cert error; do NOT disable cert validation.
+- **Adapter:** `ical-import` (existing). **Confidence:** `high` (first-party ICS).
+- **Source:** Duluth Farmers Market (thin — ~2 recurring VEVENTs currently).
+
+### Custom server-rendered calendar (per-day HTML)
+- **Fingerprint:** no feed, no wp-json; a JS `component?...&json=...` AJAX shell that returns empty (red herring) while the real content is server-rendered inline.
+- **Endpoint pattern:** one plain `GET` per day, e.g. `{base}/events/calendar/YYYY/MM/DD?city=duluth` → `<article class="result event_time">` per event: `.date .time`, `.title a`, `.teaser`, `.location_text`, `.cost` ("Cost: FREE"), `.age`.
+- **Access:** plain `fetch`, no bot-wall. Requires **date-range iteration** (no single "all upcoming" endpoint).
+- **Adapter:** `html-scrape` (deterministic). **Confidence:** `medium`.
+- **Source:** Duluth Reader.
+
+### Squarespace — `?format=` (only if an Events collection exists)
+- **Fingerprint:** `squarespace` in markup; `?format=json` returns structured JSON on ANY page.
+- **Trick:** an Events **collection** page serves `?format=json`, `?format=ical`, and `?format=rss`. Useful in general.
+- **⚠ Negative (On The Record):** the site has NO events collection — its "shows listing" is only **scanned page images** of the print zine (plus a Google-Drive PDF archive). No feed/API/JSON-LD tier applies; extraction would require OCR/`pdf-llm` over images. Under feed-first discipline, **do not build** — "high priority" here is print-zine value, not web-extractable value.
+
+### LibraryMarket (`*.events.mylibrary.digital`) — BLOCKED (Cloudflare Turnstile)
+- **Fingerprint:** `{lib}.events.mylibrary.digital`; a real events calendar (`/search?c=…`), NOT PDF-only.
+- **Status:** whole-zone Cloudflare **Turnstile managed challenge** — even `/robots.txt` is gated. Bundled Playwright/Chrome (headless AND headed, `navigator.webdriver` patched, `--disable-blink-features=AutomationControlled`, real-Chrome `channel:"chrome"`) all stay stuck: it's the **CDP automation itself** that's flagged, not the UA.
+- **Path if prioritized:** anti-detect tooling (`patchright`, or `playwright-extra` + stealth), OR a human solves the Turnstile once and we harvest the short-lived `cf_clearance` cookie for reuse (needs periodic refresh). Defer.
+- **Source:** Duluth Public Library.
+
 ---
 
 ## Access technique: Cloudflare / bot walls
@@ -69,6 +108,7 @@ Not a platform — a wall that sits in front of one. Escalation ladder:
 2. **403 "Just a moment…" / "whoa there pardner"** → headless Chromium: `page.goto(htmlPage)`, `waitForFunction(() => !/just a moment/i.test(document.title))`. The HTML page usually clears.
 3. **A specific endpoint still 403s even from the cleared browser** (PDD `?ical=1` + `wp-json`; a WAF rule on the export): don't fight it — either **in-page same-origin fetch** `page.evaluate(async () => (await fetch("/endpoint")).json())` (works when it's UA/fingerprint filtering, e.g. reddit's `about.json`/`search.json` on `www.reddit.com`), or **extract embedded JSON-LD from the DOM** (PDD).
 4. Reddit note: `old.reddit.com` gates to a "Welcome to Reddit" wall; `www.reddit.com` loads headless and its same-origin JSON endpoints (`/r/<sub>/about.json`, `/wiki/index.json`, `/search.json`, `{permalink}.json`) return data.
+5. **Cloudflare Turnstile (managed challenge) — the hard wall.** Distinct from the basic "Just a moment…" that step 2 clears. Turnstile fingerprints the **CDP automation itself** — bundled Playwright/Chrome cannot pass even headed, with `navigator.webdriver` patched and `--disable-blink-features=AutomationControlled`, or via real-Chrome `channel:"chrome"`. It can gate a whole zone (even `/robots.txt`). Options: anti-detect forks (`patchright`), `playwright-extra` + stealth, or **harvest a human-solved `cf_clearance` cookie** and replay it (short-lived, needs refresh). Seen on: Duluth Public Library (`*.events.mylibrary.digital`).
 
 ---
 
@@ -83,13 +123,14 @@ Not a platform — a wall that sits in front of one. Escalation ladder:
 | Whole Foods Co-op | The Events Calendar | `structured-api`/tribe-rest | medium | ✅ live (19) |
 | Perfect Duluth Day | Cloudflare + JSON-LD | `jsonld` (headless) | medium | ✅ live (25) |
 | Duluth Parks & Rec | REC1/CivicRec | `rec1` | medium | ✅ live (29) |
-| Duluth Public Library | LibraryMarket (`*.events.mylibrary.digital`) | TBD (headless) | medium | ⏳ sniffing |
-| On The Record (zine) | Squarespace | TBD (`?format=json`/`ical`) | medium | ⏳ sniffing |
-| DECC | WordPress (no tribe REST) | TBD | medium | ⏳ sniffing |
-| Twin Ports Nightlife | custom | TBD | medium | ⏳ sniffing |
-| Duluth Reader | JS-rendered custom | TBD | medium | ⏳ sniffing |
-| Duluth Farmers Market | WP My Calendar | TBD (ICS/RSS) | medium | ⏳ sniffing |
-| Duluth Folk School | Event Espresso | TBD (`/wp-json/ee/v4.8.36/events`) | medium | lead |
+| Twin Ports Nightlife | Joomla / iCagenda | `rss` (new) | medium | ✅ cracked — RSS feed (10-cap) |
+| DECC | swim-events-calendar (WP) | `html-scrape` | medium | ✅ cracked — plugin fragment (94) |
+| Duluth Farmers Market | WP My Calendar | `ical-import` | high | ✅ cracked — `/feed/my-calendar-google/` (thin) |
+| Duluth Reader | custom server-rendered | `html-scrape` | medium | ✅ cracked — per-day HTML |
+| Duluth Folk School | Event Espresso | `structured-api` (new mapper) | medium | lead (`/wp-json/ee/v4.8.36/events`) |
+| Duluth Public Library | LibraryMarket | headless + anti-detect | medium | ⛔ blocked — CF Turnstile |
+| On The Record (zine) | Squarespace | — | — | ⛔ no data — shows are scanned images |
+| transistormag | — | — | — | 💀 dead (folded 2019, DNS gone) |
 
 ---
 
@@ -103,6 +144,16 @@ Not a platform — a wall that sits in front of one. Escalation ladder:
 
 ---
 
-## Open leads (being sniffed)
+## Buildable next (cracked, awaiting adapters)
 
-`agent-web-data-extraction-engineer` is network-sniffing: On The Record (Squarespace `?format=`), Duluth Public Library (LibraryMarket, headless), DECC (hidden ajax/REST), Twin Ports Nightlife (custom), Duluth Reader (JS XHR), Duluth Farmers Market (My Calendar ICS), transistormag. Confirmed endpoints get appended to the playbook + source map above.
+Ranked by value; all endpoints CONFIRMED returning real data (sniffed 2026-07-23):
+1. **Twin Ports Nightlife** — new `rss` adapter (Joomla/iCagenda RSS). Live-music value; trivial parse; 10-item cap.
+2. **DECC** — `html-scrape` of the `swim-events-calendar` fragment (94 events in one request). Needs `cheerio`/`node-html-parser`.
+3. **Duluth Farmers Market** — existing `ical-import` + the apex-host TLS handling. High confidence but thin (~2 events).
+4. **Duluth Reader** — `html-scrape` with per-day iteration.
+5. **Duluth Folk School** — new `structured-api` Event-Espresso mapper (`/wp-json/ee/v4.8.36/events`).
+
+## Deferred / dead
+- **Duluth Public Library** — Cloudflare Turnstile blocks bundled automation; needs anti-detect tooling or a harvested `cf_clearance`. Real calendar exists; revisit if prioritized.
+- **On The Record** — no web-extractable events (scanned print-zine images). Not buildable under feed-first.
+- **transistermag** — publication folded 2019; domain dead. Dropped.
