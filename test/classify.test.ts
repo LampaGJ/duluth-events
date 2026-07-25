@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { classifyEventType, isMultiDay, finalizeEvent } from "../src/classify.js";
+import { classifyEventType, isMultiDay, finalizeEvent, resolveLocation } from "../src/classify.js";
 import { makeEvent } from "./factory.js";
 
 describe("classifyEventType", () => {
@@ -17,15 +17,65 @@ describe("classifyEventType", () => {
   it("uses categories as a hint", () => {
     expect(classifyEventType("Untitled", ["live music"])).toBe("live-music");
   });
+
+  // --- corpus regressions (docs/tagging-rubrics.md) ---
+  it("prefers an unambiguous source category over the title regex", () => {
+    // 137 UMD athletics rows carry these categories; the away-game titles have no "vs".
+    expect(classifyEventType("University of Minnesota Duluth Soccer at Michigan Tech", ["Athletics", "Sports and Recreation"])).toBe("sports");
+    expect(classifyEventType("Anything at all", ["Board Meetings"])).toBe("meeting");
+  });
+  it("types away games as sports even without categories", () => {
+    // sports vocabulary previously lacked soccer/volleyball/football -> 36 games fell through to education
+    expect(classifyEventType("University of Minnesota Duluth Volleyball at Bemidji State University")).toBe("sports");
+    expect(classifyEventType("University of Minnesota Duluth Football at Wayne State College")).toBe("sports");
+    expect(classifyEventType("University of Minnesota Duluth Men's Cross Country at River Town Invitational")).toBe("sports");
+  });
+  it("decodes HTML entities in categories before matching", () => {
+    expect(classifyEventType("Untitled", ["Food &amp; Drink"])).toBe("food-drink");
+  });
+  it("does not let an audience category become a type", () => {
+    // "Family-Friendly" is a facet; keying the type to it is what emptied family.ics
+    expect(classifyEventType("Sunset Dinner Cruise on Lake Superior", ["Family-Friendly", "Food &amp; Drink"])).toBe("food-drink");
+  });
+  it("resists the corpus false positives", () => {
+    expect(classifyEventType("Rumours: The Ultimate Fleetwood Mac Tribute Show")).not.toBe("sports");
+    expect(classifyEventType("Board Games")).not.toBe("meeting");
+    expect(classifyEventType("Crip Camp: A Disability Revolution")).not.toBe("class");
+  });
 });
 
 describe("isMultiDay", () => {
   it("is false for a same-day event", () => {
     expect(isMultiDay("2026-08-10T16:00:00-05:00", "2026-08-10T20:00:00-05:00")).toBe(false);
   });
-  it("is true when the span crosses days, or it recurs", () => {
+  it("is true when the span crosses days", () => {
     expect(isMultiDay("2026-08-10T16:00:00-05:00", "2026-09-14T20:00:00-05:00")).toBe(true);
-    expect(isMultiDay("2026-08-10T16:00:00-05:00", undefined, "FREQ=WEEKLY;COUNT=4")).toBe(true);
+  });
+  it("is NOT driven by recurrence — weekly karaoke is 52 single evenings", () => {
+    const e = finalizeEvent(makeEvent({ title: "Karaoke", rrule: "FREQ=WEEKLY", start: "2026-08-10T22:00:00-05:00", end: "2026-08-11T02:00:00-05:00" }));
+    expect(e.facets.recurring).toBe(true);
+    const sameDay = finalizeEvent(makeEvent({ title: "Karaoke", rrule: "FREQ=WEEKLY", start: "2026-08-10T18:00:00-05:00", end: "2026-08-10T21:00:00-05:00" }));
+    expect(sameDay.multiDay).toBe(false);
+    expect(sameDay.facets.recurring).toBe(true);
+  });
+});
+
+describe("resolveLocation", () => {
+  it("recovers an away city packed into the venue string", () => {
+    const loc = resolveLocation({ venueName: "Bismarck, ND, MDU Resources Community Bowl", city: "Duluth", state: "MN", inDuluth: true });
+    expect(loc.city).toBe("Bismarck");
+    expect(loc.state).toBe("ND");
+    expect(loc.venueName).toBe("MDU Resources Community Bowl");
+    expect(loc.inDuluth).toBe(false);
+  });
+  it("handles a bare city+state venue and AP-style abbreviations", () => {
+    expect(resolveLocation({ venueName: "River Falls, WI", city: "Duluth", state: "MN", inDuluth: true }).city).toBe("River Falls");
+    expect(resolveLocation({ venueName: "St. Cloud, Minn., Herb Brooks National Hockey Center", city: "Duluth", state: "MN", inDuluth: true }).state).toBe("MN");
+  });
+  it("leaves an ordinary Duluth venue alone", () => {
+    const loc = resolveLocation({ venueName: "Lake Superior Estuarium", city: "Superior", state: "WI", inDuluth: false });
+    expect(loc.venueName).toBe("Lake Superior Estuarium");
+    expect(loc.city).toBe("Superior");
   });
 });
 
@@ -38,5 +88,31 @@ describe("finalizeEvent", () => {
   it("does not override an explicit eventType", () => {
     const e = finalizeEvent(makeEvent({ title: "Anything", eventType: "meeting" }));
     expect(e.eventType).toBe("meeting");
+  });
+  it("keeps an out-of-town game out of Duluth proper", () => {
+    const e = finalizeEvent(
+      makeEvent({
+        title: "University of Minnesota Duluth Volleyball at Colorado State University Pueblo",
+        categories: ["Athletics", "Sports and Recreation"],
+        location: { venueName: "Pueblo, CO, Massari Arena", city: "Duluth", state: "MN" },
+      }),
+    );
+    expect(e.eventType).toBe("sports");
+    expect(e.location.inDuluth).toBe(false);
+    expect(e.facets.geoScope).toBe("distant");
+    expect(e.facets.homeAway).toBe("away");
+  });
+  it("backfills age and ticketUrl the source only stated in prose", () => {
+    const e = finalizeEvent(
+      makeEvent({ title: "Kids Clay Camp", description: "For ages 6-10. Tickets at https://www.eventbrite.com/e/clay-123456 — space is limited." }),
+    );
+    expect(e.age).toEqual({ allAges: false, minAge: 6, maxAge: 10 });
+    expect(e.ticketUrl).toBe("https://www.eventbrite.com/e/clay-123456");
+    expect(e.facets.registration).toBe("required");
+  });
+  it("marks a rescheduled title tentative", () => {
+    const e = finalizeEvent(makeEvent({ title: "Concerts on the Pier (Rescheduled date)" }));
+    expect(e.facets.rescheduled).toBe(true);
+    expect(e.status).toBe("tentative");
   });
 });

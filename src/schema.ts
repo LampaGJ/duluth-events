@@ -81,6 +81,7 @@ export const CostSchema = z.discriminatedUnion("kind", [
 export const AgeSchema = z.object({
   allAges: z.boolean().default(true),
   minAge: z.number().int().nonnegative().optional(), // 18, 21
+  maxAge: z.number().int().nonnegative().optional(), // "ages 3-5", "ages 14 & under"
   note: z.string().optional(), // "21+ after 9pm"
 });
 
@@ -153,6 +154,87 @@ export const EVENT_TYPE_SCHEMA = z.enum(EVENT_TYPES);
 export type EventType = (typeof EVENT_TYPES)[number];
 
 // ---------------------------------------------------------------------------
+// Facets — the orthogonal axes
+// ---------------------------------------------------------------------------
+
+/**
+ * @displayName Event Facets
+ * @strategicPurpose `eventType` answers exactly one question — WHAT is it. Everything else a
+ *   subscriber filters on (who it's for, what it costs, whether they can get in the door, whether
+ *   it's even in town) is an INDEPENDENT question, and cramming those into a single enum is what
+ *   left `family.ics` empty while 103 events carried an explicit age signal. Facets are
+ *   multi-valued, orthogonal, and derived by named deterministic rubrics (docs/tagging-rubrics.md),
+ *   so sub-feeds are a cross-product instead of a forever-growing enum.
+ * @tacticalObjective Carry, per event, the audience / cost tier / registration / setting / access /
+ *   admission / timing / recurrence signals that the rubrics could prove from the source text —
+ *   each defaulting to an explicit "unknown" rather than a guess, so a filter can distinguish
+ *   "we know this is free" from "the source never said".
+ */
+
+/** WHO it is for. Multi-valued: a program can be both `kids` and `all-ages`. */
+export const AUDIENCES = [
+  "all-ages", // explicitly "all ages" / "family friendly" / Family-Friendly category
+  "kids", // stated upper bound <= 12, or storytime/toddler/preschool vocabulary
+  "teen", // stated band overlapping 13–17, or teen/tween vocabulary
+  "adults-only", // stated 18+ / 21+ minimum
+  "students", // institutional student-life programming (UMD "Student Activities")
+  "seniors", // 55+ / "older adults"
+] as const;
+export const AUDIENCE_SCHEMA = z.enum(AUDIENCES);
+export type Audience = (typeof AUDIENCES)[number];
+
+/** HOW MUCH. Mirrors `cost.kind` but is also inferable from prose when the source has no field. */
+export const COST_TIERS = ["free", "donation", "paid", "unknown"] as const;
+export type CostTier = (typeof COST_TIERS)[number];
+
+/** HOW you get in. `open` = attend by just showing up; `drop-in` = explicitly no registration. */
+export const REGISTRATIONS = ["required", "drop-in", "open", "unknown"] as const;
+export type Registration = (typeof REGISTRATIONS)[number];
+
+/** WHERE, physically. `virtual` is not a place — it must never count as Duluth-proper. */
+export const SETTINGS = ["indoor", "outdoor", "virtual", "unknown"] as const;
+export type Setting = (typeof SETTINGS)[number];
+
+/** WHERE, geographically — replaces the boolean `inDuluth` for anything finer than in/out. */
+export const GEO_SCOPES = ["duluth", "twin-ports", "regional", "distant", "virtual"] as const;
+export type GeoScope = (typeof GEO_SCOPES)[number];
+
+/** Stated accommodations. Absence means the source was silent, NOT that the event is inaccessible. */
+export const ACCESS_FEATURES = ["wheelchair", "asl", "sensory-friendly"] as const;
+export const ACCESS_FEATURE_SCHEMA = z.enum(ACCESS_FEATURES);
+export type AccessFeature = (typeof ACCESS_FEATURES)[number];
+
+/** WHEN, bucketed from the local start hour. */
+export const TIMES_OF_DAY = ["morning", "afternoon", "evening", "late-night", "all-day"] as const;
+export type TimeOfDay = (typeof TIMES_OF_DAY)[number];
+
+export const FacetsSchema = z.object({
+  audience: z.array(AUDIENCE_SCHEMA).default([]),
+  costTier: z.enum(COST_TIERS).default("unknown"),
+  registration: z.enum(REGISTRATIONS).default("unknown"),
+  setting: z.enum(SETTINGS).default("unknown"),
+  geoScope: z.enum(GEO_SCOPES).default("duluth"),
+  access: z.array(ACCESS_FEATURE_SCHEMA).default([]),
+  timeOfDay: z.enum(TIMES_OF_DAY).default("all-day"),
+  /** Saturday or Sunday in the event's own timezone. */
+  weekend: z.boolean().default(false),
+  /** Has an RRULE. Orthogonal to `multiDay` — weekly karaoke recurs but each night is one evening. */
+  recurring: z.boolean().default(false),
+  /** Alcohol is served / it is a licensed venue. Deliberately NOT an age inference. */
+  alcohol: z.boolean().default(false),
+  /** Anyone may attend, vs. restricted to an institution's own members/students. */
+  publicAdmission: z.enum(["public", "restricted", "unknown"]).default("unknown"),
+  /** Athletics only: is the team playing here or travelling. */
+  homeAway: z.enum(["home", "away"]).optional(),
+  /** An institutional calendar row that is not a public event ("Final exams", "Faculty appointments begin"). */
+  institutionalNotice: z.boolean().default(false),
+  /** Title says the date moved / the event was called off, while the source's STATUS still says confirmed. */
+  rescheduled: z.boolean().default(false),
+});
+
+export type Facets = z.infer<typeof FacetsSchema>;
+
+// ---------------------------------------------------------------------------
 // The event
 // ---------------------------------------------------------------------------
 
@@ -181,6 +263,10 @@ export const DuluthEventSchema = z
     /** true when the event spans more than one calendar day (a multi-week class, a festival run). */
     multiDay: z.boolean().default(false),
     age: AgeSchema.optional(),
+    /** Orthogonal deterministic facets — see FacetsSchema. Derived in finalizeEvent().
+     *  `.prefault` (not `.default`): the fallback is INPUT to be parsed, so every nested field
+     *  default inside FacetsSchema is applied rather than requiring a fully-built object here. */
+    facets: FacetsSchema.prefault({}),
 
     url: z.url().optional(), // canonical event page -> URL
     ticketUrl: z.url().optional(), // -> X-TICKET-URL + DESCRIPTION line
