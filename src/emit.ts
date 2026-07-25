@@ -85,6 +85,23 @@ function buildXProps(e: DuluthEvent): { key: string; value: string }[] {
   if (e.age) x.push({ key: "X-AGE-RESTRICTION", value: formatAge(e.age) });
   if (e.ticketUrl) x.push({ key: "X-TICKET-URL", value: e.ticketUrl });
   if (e.alsoListedIn.length) x.push({ key: "X-ALSO-LISTED-IN", value: e.alsoListedIn.map((s) => s.name).join(", ") });
+
+  // Facets — machine-readable so a downstream consumer can re-filter without re-deriving.
+  const f = e.facets;
+  if (f.audience.length) x.push({ key: "X-AUDIENCE", value: f.audience.join(",") });
+  x.push({ key: "X-COST-TIER", value: f.costTier });
+  x.push({ key: "X-GEO-SCOPE", value: f.geoScope });
+  x.push({ key: "X-TIME-OF-DAY", value: f.timeOfDay });
+  x.push({ key: "X-WEEKEND", value: String(f.weekend) });
+  x.push({ key: "X-RECURRING", value: String(f.recurring) });
+  if (f.registration !== "unknown") x.push({ key: "X-REGISTRATION", value: f.registration });
+  if (f.setting !== "unknown") x.push({ key: "X-SETTING", value: f.setting });
+  if (f.access.length) x.push({ key: "X-ACCESS", value: f.access.join(",") });
+  if (f.publicAdmission !== "unknown") x.push({ key: "X-PUBLIC-ADMISSION", value: f.publicAdmission });
+  if (f.alcohol) x.push({ key: "X-ALCOHOL", value: "true" });
+  if (f.homeAway) x.push({ key: "X-HOME-AWAY", value: f.homeAway });
+  if (f.institutionalNotice) x.push({ key: "X-INSTITUTIONAL-NOTICE", value: "true" });
+  if (f.rescheduled) x.push({ key: "X-RESCHEDULED", value: "true" });
   return x;
 }
 

@@ -91,6 +91,50 @@ export function parseClockTime(s: string): { hour: number; minute: number; secon
   return { hour, minute, second };
 }
 
+/**
+ * Decode the HTML entities that arrive from JSON/REST sources (WordPress and Squarespace both
+ * double-escape). The corpus carries `Food &amp; Drink`, `Whole Foods Co-op &#8211; Hillside` and
+ * `Wussow&#8217;s` — left encoded, every category-equality and venue rubric silently misses.
+ * Deliberately small and total: named entities we actually observe, plus numeric/hex escapes.
+ */
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+  nbsp: " ",
+  hellip: "…",
+  ndash: "–",
+  mdash: "—",
+  lsquo: "‘",
+  rsquo: "’",
+  ldquo: "“",
+  rdquo: "”",
+};
+
+export function decodeEntities(s: string): string {
+  // Loop so double-encoded input (`&amp;#8217;` -> `&#8217;` -> `’`) fully resolves. Bounded at 3
+  // passes: real feeds never nest deeper, and an unbounded loop on adversarial input would spin.
+  let out = s;
+  for (let pass = 0; pass < 3; pass++) {
+    const next = out.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, body: string) => {
+      const b = body.toLowerCase();
+      if (b.startsWith("#x")) return String.fromCodePoint(parseInt(b.slice(2), 16));
+      if (b.startsWith("#")) return String.fromCodePoint(Number(b.slice(1)));
+      return NAMED_ENTITIES[b] ?? whole;
+    });
+    if (next === out) break;
+    out = next;
+  }
+  return out;
+}
+
+/** Collapse whitespace and decode entities — the canonical form every text rubric matches against. */
+export function cleanText(s: string): string {
+  return decodeEntities(s).replace(/\s+/g, " ").trim();
+}
+
 /** kebab-ish slug for building UIDs / keys. */
 export function slug(s: string): string {
   return s
