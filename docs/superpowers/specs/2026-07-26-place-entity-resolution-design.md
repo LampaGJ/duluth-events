@@ -46,9 +46,16 @@ on raw strings separates true from false merges. String matching is the wrong pr
 
 ### The decisive measurement
 
-Across both corpora (live CI build, and the local build that still contains Perfect Duluth Day),
-every cross-source pair sharing a start instant and a same-venue reference is a true duplicate:
-**8 of 8, no counterexamples.** The lowest title similarity among them is 0.25 — for
+Two distinct measurements, easily confused, so stated separately:
+
+**Candidate duplicates.** Scoring cross-source pairs that share a start instant by title- and
+venue-token overlap surfaces **18 candidate duplicate pairs** in the corpus that still contains
+Perfect Duluth Day, and **3** in the live CI build. None are currently merged.
+
+**The safety test.** Narrowing to pairs that share a start instant *and* a same-venue reference
+(venue-token similarity ≥ 0.5) yields 6 pairs in the local corpus and 2 in the live build. **All 8
+are true duplicates. There are no counterexamples.** The lowest title similarity among them is 0.25 —
+for
 `High Key Mondays &#038; Industry Nights` vs `HighKey Mondays + Industry Night!` — and that figure
 is depressed entirely by the undecoded HTML entity and the `HighKey`/`High Key` split, both of which
 normalization fixes.
@@ -226,8 +233,9 @@ Two passes, so nothing currently working regresses:
 2. **Title fallback** — the existing fuzzy key, now entity-decoded, applied only to events the place
    pass did not merge.
 
-Pass 2 preserves today's 11 corroborations while some venues remain unregistered. Pass 1 adds the 18
-misses.
+Pass 2 preserves today's 11 corroborations while some venues remain unregistered. Pass 1 adds the
+candidate duplicates whose venues resolve — up to 18 in the PDD-present corpus, 3 in the live build,
+bounded by how much of the registry is seeded.
 
 Only cross-source merging is permitted. Two events from the same source at the same place and instant
 are two genuinely different events.
@@ -281,8 +289,12 @@ greppable after the fact rather than invisible.
 
 ## Success criteria
 
-- The 18 known cross-source duplicates merge; zero false merges in the phase-3 diff review.
-- Corroborated events rise from 11 toward ~29 on the live corpus, and substantially higher once
-  Perfect Duluth Day returns (it is the largest overlapper and currently absent from CI).
+- All 8 same-instant same-venue pairs merge. **Zero false merges in the phase-3 diff review** — this
+  is the binding criterion; a single false merge fails the phase regardless of how many true merges
+  it achieved.
+- Corroborated events rise from 11 as registry coverage grows, and substantially further once
+  Perfect Duluth Day returns (it is the largest overlapper and currently absent from CI). No fixed
+  target is claimed: the ceiling is set by how many venues are registered, which is a review-effort
+  decision rather than a property of the design.
 - Geo coverage rises materially from 7.8%.
 - `resolveLocation()` is deleted with its away-game regression tests still passing.
