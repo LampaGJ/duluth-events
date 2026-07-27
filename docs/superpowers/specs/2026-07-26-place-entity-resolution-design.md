@@ -191,11 +191,53 @@ Unknown venues never throw.
 
 ## Seeding: research-assisted, human-confirmed
 
-### Measured OSM coverage
+### Measured coverage: two complementary OSM surfaces
 
-A single Overpass query over the Duluth bounding box returns **369 named venues, 180 with full street
-addresses, all with geo**. Naive name-matching against our 135 distinct real venue strings covers
-**29% of events** — a floor, not a ceiling. The failure classes:
+Both were probed against all 134 distinct non-sentinel venue strings (330 events). Script:
+`scripts/probe-geocoder.mjs`; raw results in `reports/geocode-probe.json`.
+
+**Overpass** (bulk query by bounding box + tag) returns 369 named Duluth-area venues, 180 with full
+street addresses, all with geo. Name-matching covers **29% of events**.
+
+**Nominatim** (geocode a name string) covers **49% of events** at name-similarity ≥ 0.5. It does
+*not* always answer — it returned nothing for 81 of 134 strings, which corrected an early assumption
+that a geocoder's always-answers behaviour would make hit-rate meaningless.
+
+**Union: 56% of events, 43% of strings**, and the two are genuinely complementary — 28 strings
+resolve only via Nominatim, 9 only via Overpass. Layering is worth the complexity.
+
+**56% is a floor with three known causes, all defects in the probe rather than in the sources:**
+
+1. Away-game venues were queried against the wrong city — the probe's city regex matched only
+   `MN|WI`, so `Massari Arena` (Pueblo, CO) was queried as "Duluth, MN". This accounts for most of
+   the top-20 gap list: Vandament, Gutterson, Midco, Ed Robson, MDU Resources, Mattke Field.
+2. ICS escaping defeats entity decoding — `Vista Fleet Sightseeing &#038\; Dining Cruises` escapes
+   `;` as `\;`, so the entity regex never fired and the raw string was sent to the geocoder.
+3. Room suffixes were not stripped — `Glensheen Mansion (G)`.
+
+**The real proposer must unescape ICS, then decode entities, then strip room suffixes, then query
+with the correct city.** The true ceiling is unmeasured; the design does not depend on a specific
+number, only on the human gate that follows.
+
+### Reliability, not hit rate, is the risk
+
+Nominatim returns a best guess rather than an error, so the proposer scores name-similarity between
+query and result and flags anything weak. Two genuine failures were observed:
+`Restaurant 301 → Perkins` and `Sioux Falls → South Duluth Avenue`.
+
+But similarity is itself a lossy guard, and two of the four flagged "mismatches" were **correct
+matches the metric mislabelled**:
+
+- `DECC → Duluth Entertainment Convention Center` — a correct acronym expansion scoring 0 on token
+  overlap.
+- `805 E Superior St Duluth → Sir Benedict's Tavern on the Lake` — a correct *address-form* query;
+  name-similarity is simply the wrong test for those.
+
+So the proposer needs acronym handling and a separate evaluation path for address-form queries, and
+**neither similarity score may auto-accept without review.** A geocoder's confident wrong answer is
+more dangerous than a miss, because it looks like data.
+
+### Failure classes in the residue
 
 - **Out of scope by construction** — `Romano Gymnasium`, `Massari Arena`, `Vandament Arena`,
   `Sanford Center` are away-game venues in other cities. Correctly outside the box; stay provisional.
@@ -206,18 +248,33 @@ addresses, all with geo**. Naive name-matching against our 135 distinct real ven
 - **Genuine gaps** — `Lake Superior Estuarium` (30 events) and `Whole Foods Co-op – Hillside` (11)
   are real venues OSM lacks or names differently.
 
-The distribution is long-tailed favourably: the top ~20 venues carry most event volume, so confirming
-a few dozen entries covers the large majority of events.
+The distribution is long-tailed favourably: the top ~20 venues carry most event volume. **All
+distinct venue strings are registered regardless, including the 80 singletons** — a place feed with
+one event is still the only way to find that event, and a venue seen once today recurs tomorrow. This
+is the same reasoning that keeps the 1-event `sensory-friendly.ics` on the landing page.
 
 ### Pipeline
 
+0. **Normalize first** — unescape ICS, decode entities, strip room suffixes, resolve the correct
+   city. Skipping this is what produced three of the probe's failure classes.
 1. **Overpass bulk fetch**, cached to a committed JSON artifact so seeding is reproducible offline
    and does not re-hit the API.
-2. **Match** corpus strings against the cache on both name and address.
-3. **Rank the gaps by event count** and research those individually — currently Lake Superior
-   Estuarium (30), Whole Foods Co-op Hillside (11), Vista Fleet (9), Glensheen (9), Duluth Depot (4).
-4. **Emit a proposal file** of paste-ready `Place` literals with provenance filled in.
-5. **Human review** → `src/places.ts`.
+2. **Nominatim per-string** for what Overpass misses, at ≤1 req/s per its usage policy.
+3. **Match** on both name and address; score similarity; classify confident / weak / mismatch.
+4. **Rank the residue by event count** and research those individually — tier 3, websearch.
+5. **Emit a proposal file** of paste-ready `Place` literals with provenance and similarity score.
+6. **Human review** → `src/places.ts`.
+
+Tier 3 (websearch) is deliberately last: it returns a page to interpret rather than structured
+fields, reintroducing the non-determinism the doctrine pushes latest. Measured against the residue it
+is a small tier — much of what remains is non-places (`Zoom`, `Sioux Falls`, `Romeoville`) and rooms,
+which the design handles by declining to make them places at all.
+
+**Resolvers considered and rejected for this stage:** Photon (typo-tolerant, OSM-backed) is a good
+future complement for messy strings. Overture Maps is the strongest fallback if OSM coverage
+disappoints, at the cost of a bulk parquet download. Wikidata suits the handful of landmarks.
+**Google Places was rejected on licensing, not quality** — its terms restrict retaining place data
+outside a Google map context, which conflicts directly with committing addresses to a git registry.
 
 `places:propose` **never writes the registry.** That is the whole mechanism by which ids stay stable.
 
@@ -281,8 +338,6 @@ greppable after the fact rather than invisible.
 
 ## Open questions
 
-- **Seed breadth.** Register only venues appearing 2+ times (~55 entries, most event volume), or all
-  135? Recommendation: start at 2+, let singletons ride as provisional until they recur.
 - **`places.html`.** A generated static list, or defer until the place feeds prove useful?
 - **Away-game venues.** Permanently provisional, or a second Overpass pass over opponent cities so
   road games get real addresses? They need no feeds, so this is enrichment-only value.
