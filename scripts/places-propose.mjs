@@ -137,6 +137,30 @@ const isAcronym = (short, long) => {
 const stripRoomSuffix = (s) => s.replace(/\(.*?\)/g, " ").replace(/\s+/g, " ").trim();
 const osmIdx = osm.map((o) => ({ o, t: tk(o.name) }));
 
+// --- tier 0: the first-party curated Homegrown venue list (see data/homegrown-venues.SOURCE.md) ---
+// Hand-curated, geocoded, and scoped to exactly this project's domain (Duluth-area music venues) —
+// outranks OSM's machine-tagged extract precisely because it's first-party and already vetted by a
+// human for THIS corpus, not a general-purpose map database. Checked before tier 1 (OSM) and tier 2
+// (Nominatim) in the SAME loop below, sharing the same score/tiedWith accumulator, so a tier-0 hit
+// that clears the LIKELY threshold (score >= 0.5) makes the `score < 0.5` gates on tier 1/2 false and
+// they never run at all — a strong tier-0 signal cannot be overridden by a weaker OSM or Nominatim
+// guess, and it costs zero Nominatim calls to boot.
+const homegrown = existsSync("data/homegrown-venues.json") ? JSON.parse(readFileSync("data/homegrown-venues.json", "utf8")).venues : [];
+const hgIdx = homegrown.map((v) => ({
+  o: {
+    name: v.name,
+    // "1931 W Michigan St, Duluth, MN 55806" -> street is everything before the first comma; the
+    // entry's own `city`/`state` fields are used directly rather than re-parsed out of the same string.
+    street: (v.address ?? "").split(",")[0]?.trim() || null,
+    city: v.city ?? null,
+    state: v.state ?? null,
+    lat: v.lat ?? null,
+    lon: v.lon ?? null,
+    ref: `homegrown:${v.name}`,
+  },
+  t: tk(v.name),
+}));
+
 /**
  * `data/osm-duluth.json` is a Duluth-BOUNDING-BOX extract (see scripts/fetch-osm.mjs's QUERY), not a
  * general venue database. An away-game venue (city="Sioux Falls, SD") can never legitimately match
@@ -180,10 +204,23 @@ for (const t of targets) {
   // venue). A tie means the tokenizer genuinely cannot distinguish two candidates; that ambiguity must
   // reach the reviewer, not get silently resolved into a confident-looking single answer.
   let tiedWith = [];
+  // tier 0: the curated Homegrown list, same locality gate as tier 1 (it's also a Duluth-area-only
+  // extract) and the same bbox belt-and-braces. Runs FIRST so an exact-name Homegrown hit (score 1.0
+  // for 10 of the 41 entries against this corpus) is locked in before tier 1/2 ever see the target.
+  if (isLocalToOsmCache(t.city, t.state)) {
+    for (const x of hgIdx) {
+      const s = Math.max(jac(tk(t.raw), x.t), isAcronym(t.raw, x.o.name) ? 0.9 : 0);
+      if (s > score) { score = s; best = x.o; src = "homegrown"; tiedWith = []; }
+      else if (s === score && s > 0) { tiedWith.push(x.o); }
+    }
+    if (best && src === "homegrown" && !withinDuluthBbox(best.lat, best.lon)) { best = null; score = 0; src = null; tiedWith = []; }
+  }
   // tier 1 only for targets the parsed city says are actually near Duluth — see isLocalToOsmCache's
   // doc comment. A non-local target skips straight to tier 2 (score stays 0, so the `< 0.5` gate
-  // below fires unconditionally for it).
-  if (isLocalToOsmCache(t.city, t.state)) {
+  // below fires unconditionally for it). Also only runs when tier 0 was unconvincing (score < 0.5),
+  // same gate tier 2 already used against tier 1 — see the tier-0 comment above for why a strong
+  // tier-0 hit can never be overridden here.
+  if (score < 0.5 && isLocalToOsmCache(t.city, t.state)) {
     for (const x of osmIdx) {
       // Same acronym boost tier 2 gets, applied symmetrically so DECC-style names can resolve from the
       // committed cache without a network call at all when the cache already has the long-form entry.
@@ -259,6 +296,12 @@ const englishList = (items) =>
 // A tied score is FORCED to WEAK regardless of its numeric value — a tie at sim=1.0 is less
 // trustworthy than a clean, untied 0.6, because it means the tokenizer had no basis to prefer the
 // winner over its tied alternative(s); see the tiedWith doc comment in the matching loop above.
+// `r.src` carries "homegrown" for display/stats (distinct from "osm"/"web"), but PlaceProvenanceSchema's
+// `source` enum only accepts "osm" | "web" | "manual" — a Homegrown hit is curated, human-checked data,
+// not a machine geocode, so it maps to "manual" (with the `homegrown:<name>` ref carrying the real
+// provenance) at the point the literal is actually written, not upstream where "homegrown" is still
+// useful for telling tiers apart.
+const provenanceSource = (r) => (r.src === "homegrown" ? "manual" : (r.src ?? "manual"));
 const isLikely = (r) => !r.tied && r.best && r.score >= 0.5;
 const verdict = (r) => (!r.best ? "NO MATCH — research by hand" : isLikely(r) ? "LIKELY" : "WEAK — verify or reject");
 const notAVenueRows = [...notAVenue.values()].sort((a, b) => b.n - a.n);
@@ -359,7 +402,7 @@ for (const r of finalRows) {
   out += `  address: { ${r.best?.street ? `street: ${JSON.stringify(r.best.street)}, ` : ""}city: ${JSON.stringify(city)}, state: ${JSON.stringify(state)}`;
   if (r.best?.lat) out += `, geo: { lat: ${r.best.lat}, lon: ${r.best.lon} }`;
   out += `, inDuluth: ${/^duluth$/i.test(city)} },\n`;
-  out += `  provenance: { source: ${JSON.stringify(r.src ?? "manual")}${r.best?.ref ? `, ref: ${JSON.stringify(r.best.ref)}` : ""} },\n`;
+  out += `  provenance: { source: ${JSON.stringify(provenanceSource(r))}${r.best?.ref ? `, ref: ${JSON.stringify(r.best.ref)}` : ""} },\n`;
   out += "},\n```\n\n";
 }
 mkdirSync("reports", { recursive: true });
@@ -370,5 +413,6 @@ console.log(`  LIKELY:      ${finalRows.filter((r) => isLikely(r)).length}`);
 console.log(`  WEAK:        ${finalRows.filter((r) => r.best && !isLikely(r)).length}`);
 console.log(`  NO MATCH:    ${finalRows.filter((r) => !r.best).length}`);
 console.log(`  tied (forced WEAK): ${finalRows.filter((r) => r.tied).length}`);
+console.log(`  tier-0 Homegrown hits: ${finalRows.filter((r) => r.src === "homegrown").length}`);
 console.log(`  duplicate proposed ids: ${duplicateIds.length}${duplicateIds.length ? ` (${duplicateIds.map(([id]) => id).join(", ")})` : ""}`);
 console.log(`\nreports/places-proposal.md is NOT the registry. Review, then paste into src/places.ts.`);

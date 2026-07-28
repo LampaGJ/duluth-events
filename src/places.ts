@@ -36,7 +36,10 @@ export const PLACES: PlaceInput[] = [
     addressAliases: ["1832 W Michigan St", "1832 W Michigan St, Duluth, MN, United States, Minnesota 55806"],
     address: { street: "1832 W Michigan St", city: "Duluth", state: "MN", inDuluth: true },
     rooms: ["The Yard"],
-    provenance: { source: "manual", ref: "corpus + nominatim; street taken from the corpus listing, not the OSM 1912 result" },
+    provenance: {
+      source: "manual",
+      ref: "corpus + nominatim; street taken from the corpus listing, not the OSM 1912 result — corroborated by homegrown:Bent Paddle Brewing Company Taproom (1832 W Michigan St, Duluth, MN 55806); address left unchanged",
+    },
   },
   {
     id: "lake-superior-estuarium",
@@ -467,7 +470,11 @@ export const PLACES: PlaceInput[] = [
     id: "sir-benedicts-tavern-on-the-lake",
     name: "Sir Benedict's Tavern on the Lake",
     nameAliases: ["Sir Benedict’s Tavern on the Lake"],
-    addressAliases: ["805 East Superior Street"],
+    // "805 E Superior St Duluth" (3 events, left provisional in Task 9 as unverified) is this venue's
+    // corpus street address, per Homegrown's `address` field for "Sir Benedict's Tavern on the Lake"
+    // (data/homegrown-venues.json) — confirms the proposer's earlier WEAK/TIED guess of the
+    // Duluth-Superior Friends Meeting was wrong.
+    addressAliases: ["805 East Superior Street", "805 E Superior St Duluth"],
     address: { street: "805 East Superior Street", city: "Duluth", state: "MN", geo: { lat: 46.7948942, lon: -92.0883328 }, inDuluth: true },
     provenance: { source: "osm", ref: "way/745160361" },
   },
@@ -510,5 +517,76 @@ export const PLACES: PlaceInput[] = [
     addressAliases: ["318 North Central Avenue"],
     address: { street: "318 North Central Avenue", city: "Duluth", state: "MN", geo: { lat: 46.7383439, lon: -92.1661835 }, inDuluth: true },
     provenance: { source: "manual", ref: "way/874210411" },
+  },
+  // --- Task 9b: TIER-0 Homegrown-resolved registrations (see reports/places-review.md) ---
+  //
+  // data/homegrown-venues.json (LampaGJ/duluth-homegrown-map, first-party curated Duluth-area music
+  // venues) added as TIER 0 in scripts/places-propose.mjs, checked before the OSM cache. Every entry
+  // below matched sim=1.0 (exact name, except Chester Bowl Park at 0.5), untied, no id collision —
+  // exactly the venues OSM's machine-tagged extract either lacked or handled worse.
+  {
+    id: "spirit-of-the-lake-community-arts",
+    name: "Spirit of the Lake Community Arts",
+    addressAliases: ["5401 E Superior St"],
+    address: { street: "5401 E Superior St", city: "Duluth", state: "MN", geo: { lat: 46.836579604547, lon: -92.015789835914 }, inDuluth: true },
+    provenance: { source: "manual", ref: "homegrown:Spirit of the Lake Community Arts" },
+  },
+  {
+    id: "sacred-heart-music-center",
+    name: "Sacred Heart Music Center",
+    addressAliases: ["201 W 4th St"],
+    address: { street: "201 W 4th St", city: "Duluth", state: "MN", geo: { lat: 46.787692520158, lon: -92.105160925143 }, inDuluth: true },
+    provenance: { source: "manual", ref: "homegrown:Sacred Heart Music Center" },
+  },
+  {
+    id: "carmody-irish-pub",
+    name: "Carmody Irish Pub",
+    addressAliases: ["308 E Superior St"],
+    address: { street: "308 E Superior St", city: "Duluth", state: "MN", geo: { lat: 46.789843285431, lon: -92.094266192385 }, inDuluth: true },
+    provenance: { source: "manual", ref: "homegrown:Carmody Irish Pub" },
+  },
+  {
+    id: "lake-superior-zoo",
+    name: "Lake Superior Zoo",
+    addressAliases: ["7210 Fremont St"],
+    address: { street: "7210 Fremont St", city: "Duluth", state: "MN", geo: { lat: 46.726102758099, lon: -92.189541282372 }, inDuluth: true },
+    provenance: { source: "manual", ref: "homegrown:Lake Superior Zoo" },
+  },
+  {
+    id: "blacklist-brewing-company",
+    name: "Blacklist Brewing Company",
+    addressAliases: ["206 E Superior St"],
+    address: { street: "206 E Superior St", city: "Duluth", state: "MN", geo: { lat: 46.788905821481, lon: -92.095530643692 }, inDuluth: true },
+    provenance: { source: "manual", ref: "homegrown:Blacklist Brewing Company" },
+  },
+  {
+    id: "dubh-linn-irish-pub",
+    name: "Dubh Linn Irish Pub",
+    addressAliases: ["109 W Superior St"],
+    address: { street: "109 W Superior St", city: "Duluth", state: "MN", geo: { lat: 46.785920458056, lon: -92.099647079258 }, inDuluth: true },
+    provenance: { source: "manual", ref: "homegrown:Dubh Linn Irish Pub" },
+  },
+  {
+    id: "duluth-flame-nightclub",
+    name: "Duluth Flame Nightclub",
+    nameAliases: ["Flame Nightclub Duluth"],
+    addressAliases: ["28 N 1st Ave W"],
+    address: { street: "28 N 1st Ave W", city: "Duluth", state: "MN", geo: { lat: 46.786240293161, lon: -92.099719402185 }, inDuluth: true },
+    provenance: { source: "manual", ref: "homegrown:Duluth Flame Nightclub" },
+  },
+  {
+    id: "ritual-marketplace",
+    name: "Ritual Marketplace",
+    addressAliases: ["1323 Broadway St"],
+    address: { street: "1323 Broadway St", city: "Superior", state: "WI", geo: { lat: 46.726653970121, lon: -92.096711820575 }, inDuluth: false },
+    provenance: { source: "manual", ref: "homegrown:Ritual Marketplace" },
+  },
+  {
+    id: "chester-bowl-park",
+    name: "Chester Bowl Park",
+    nameAliases: ["Chester Bowl Park, 1801 E Skyline Parkway"],
+    addressAliases: ["1800 E Skyline Pkwy"],
+    address: { street: "1800 E Skyline Pkwy", city: "Duluth", state: "MN", geo: { lat: 46.812726321548, lon: -92.09157600947 }, inDuluth: true },
+    provenance: { source: "manual", ref: "homegrown:Chester Bowl Park" },
   },
 ];
