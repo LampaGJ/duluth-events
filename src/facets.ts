@@ -302,7 +302,7 @@ export function extractTicketUrl(text: string): string | undefined {
 export function deriveFacets(e: DuluthEvent, opts: { isAthletics?: boolean } = {}): Facets {
   const hay = haystack(e);
   const cats = normalizedCategories(e.categories);
-  const venue = cleanText([e.location.venueName, e.location.room, e.location.city].filter(Boolean).join(", "));
+  const venue = cleanText([e.place?.name, e.venueRaw, e.location.city].filter(Boolean).join(", "));
 
   const { audience } = deriveAudience(hay, cats);
   const setting = deriveSetting(hay, venue);

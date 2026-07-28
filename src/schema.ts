@@ -29,24 +29,6 @@ export const GeoSchema = z.object({
 });
 
 /**
- * Where the event happens.
- * @tacticalObjective Emit a clean VEVENT LOCATION string + optional GEO, and enforce the Duluth
- *   scope discipline: `inDuluth=false` marks an across-the-bridge (Superior, WI) or
- *   otherwise-adjacent venue so the merged feed can be filtered to Duluth-proper if desired.
- */
-export const LocationSchema = z.object({
-  venueName: z.string().min(1), // "NorShor Theatre", "Bayfront Festival Park"
-  room: z.string().optional(), // "AMSOIL Arena", "Symphony Hall", "Teatro Zuccone"
-  street: z.string().optional(),
-  city: z.string().default("Duluth"),
-  state: z.string().default("MN"),
-  zip: z.string().optional(),
-  geo: GeoSchema.optional(),
-  /** false => Superior WI / Iron Range / North Shore etc. (adjacent, not Duluth proper). */
-  inDuluth: z.boolean().default(true),
-});
-
-/**
  * Who runs it (VEVENT ORGANIZER needs a mailto CAL-ADDRESS; without an email we fall back to
  * X-HOST + a DESCRIPTION line rather than fabricating an address).
  */
@@ -256,6 +238,13 @@ export const AddressSchema = z.object({
   inDuluth: z.boolean().default(true),
 });
 export type Address = z.infer<typeof AddressSchema>;
+
+/**
+ * Where the event happens, geographically. The venue's NAME lives on `place` (see PlaceRefSchema) —
+ * keeping them separate is what stopped `venueName` carrying strings like
+ * "Bismarck, ND, MDU Resources Community Bowl".
+ */
+export const LocationSchema = AddressSchema;
 
 /** Where a registry fact came from. Required: a fetched address and a typed one are not the same. */
 export const PlaceProvenanceSchema = z.object({

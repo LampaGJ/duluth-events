@@ -1,6 +1,7 @@
 import type { DuluthEvent, EventType } from "./schema.js";
-import { deriveFacets, extractLeadingCity, extractTicketUrl, haystack, normalizedCategories, parseAgeBand } from "./facets.js";
+import { deriveFacets, extractTicketUrl, haystack, normalizedCategories, parseAgeBand } from "./facets.js";
 import { cleanText } from "./normalize.js";
+import { parseVenueString } from "./place-resolve.js";
 import { resolvePlace } from "./place-registry.js";
 
 /**
@@ -155,41 +156,32 @@ export function isMultiDay(startIso: string, endIso?: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// Location resolution
-// ---------------------------------------------------------------------------
-
-/**
- * Recover the true city when a source packed it into the venue string. UMD athletics writes away
- * games as `"Bismarck, ND, MDU Resources Community Bowl"` in the venue while the city field keeps
- * the default "Duluth" — which shipped 59 out-of-state games inside `duluth-proper.ics`.
- */
-export function resolveLocation(loc: DuluthEvent["location"]): DuluthEvent["location"] {
-  const found = extractLeadingCity(loc.venueName);
-  if (!found) return loc;
-  return {
-    ...loc,
-    venueName: found.rest || found.city,
-    city: found.city,
-    state: found.state,
-    inDuluth: /^duluth$/i.test(found.city),
-  };
-}
-
-// ---------------------------------------------------------------------------
 // Finalization
 // ---------------------------------------------------------------------------
 
 /**
- * The one place an event becomes fully tagged: resolve location, assign the type, recompute
- * duration, derive every facet, and backfill `age`/`ticketUrl` when the source stated them in prose
- * but carried no field. Adapters that already KNOW the type (Legistar meetings, rec1 classes) set it
- * explicitly and keep it.
+ * The one place an event becomes fully tagged: resolve the venue string into a place + an address,
+ * assign the type, recompute duration, derive every facet, and backfill `age`/`ticketUrl` when the
+ * source stated them in prose but carried no field. Adapters that already KNOW the type (Legistar
+ * meetings, rec1 classes) set it explicitly and keep it.
+ *
+ * The old `resolveLocation()` lived here to un-pack `"<City>, <ST>, <Venue>"` strings a source had
+ * crammed into `venueName`. It is gone: `parseVenueString` now splits the raw claim into the RIGHT
+ * fields — the city/state land on `location`, the name lands on `place` — instead of rewriting one
+ * conflated field. A leading city in the raw venue string is authoritative over the adapter's
+ * default, which is what keeps 59 out-of-state games out of `duluth-proper.ics`.
  */
 export function finalizeEvent(e: DuluthEvent): DuluthEvent {
-  const location = resolveLocation(e.location);
-  const place = resolvePlace(e.venueRaw ?? e.location.venueName);
-  const eventType = e.eventType !== "other" ? e.eventType : classifyEventType(e.title, e.categories, "community", [location.venueName, location.room].filter(Boolean).join(" "));
-  const withLoc: DuluthEvent = { ...e, location, eventType, multiDay: isMultiDay(e.start, e.end) };
+  const parsed = parseVenueString(e.venueRaw ?? "");
+  const location: DuluthEvent["location"] = {
+    ...e.location,
+    ...(parsed.city ? { city: parsed.city, state: parsed.state ?? e.location.state, inDuluth: /^duluth$/i.test(parsed.city) } : {}),
+  };
+  const place = resolvePlace(e.venueRaw);
+  const eventType = e.eventType !== "other" ? e.eventType : classifyEventType(e.title, e.categories, "community", place?.name ?? e.venueRaw ?? "");
+  // `place` is folded in HERE, not at the return, because deriveFacets reads `e.place?.name` —
+  // leaving it for the return would make that read permanently undefined.
+  const withLoc: DuluthEvent = { ...e, location, place, eventType, multiDay: isMultiDay(e.start, e.end) };
 
   const facets = deriveFacets(withLoc, { isAthletics: eventType === "sports" });
 
@@ -205,7 +197,6 @@ export function finalizeEvent(e: DuluthEvent): DuluthEvent {
 
   return {
     ...withLoc,
-    place,
     facets,
     age,
     ticketUrl: e.ticketUrl ?? extractTicketUrl(e.description ?? ""),

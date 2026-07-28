@@ -27,16 +27,18 @@ function decodeAndStrip(s: string): string {
     .trim();
 }
 
-function mapLocation(loc: unknown): DuluthEvent["location"] {
+function mapLocation(loc: unknown): { venueRaw: string; location: DuluthEvent["location"] } {
   const o = loc && typeof loc === "object" ? (loc as Record<string, unknown>) : {};
   const addr = o.address && typeof o.address === "object" ? (o.address as Record<string, unknown>) : {};
   const city = str(addr.addressLocality) ?? "Duluth";
   return {
-    venueName: str(o.name) ?? "See listing",
-    street: str(addr.streetAddress),
-    city,
-    state: str(addr.addressRegion) ?? "MN",
-    inDuluth: !/\bsuperior\b/i.test(city),
+    venueRaw: str(o.name) ?? "See listing",
+    location: {
+      street: str(addr.streetAddress),
+      city,
+      state: str(addr.addressRegion) ?? "MN",
+      inDuluth: !/\bsuperior\b/i.test(city),
+    },
   };
 }
 
@@ -84,14 +86,15 @@ export function mapJsonLdEvent(raw: JsonLdEvent, source: SourceDef, retrievedAt:
   const end = rawEnd && rawEnd.includes("T") ? rawEnd : undefined;
 
   const candidate = {
-    uid: makeUid(source.name, str(raw.url), name, start, loc.venueName),
+    uid: makeUid(source.name, str(raw.url), name, start, loc.venueRaw),
     title: decodeAndStrip(name),
     description: str(raw.description) ? decodeAndStrip(str(raw.description)!).slice(0, 1500) : undefined,
     start,
     end,
     allDay,
     timezone: DEFAULT_TZ,
-    location: loc,
+    venueRaw: loc.venueRaw,
+    location: loc.location,
     cost: mapCost(raw.offers),
     url: str(raw.url),
     imageUrl: str(raw.image),

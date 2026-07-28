@@ -1,4 +1,5 @@
 import type { DuluthEvent, Source } from "./schema.js";
+import { normalizeVenueKey } from "./place-resolve.js";
 
 const CONFIDENCE_RANK: Record<Source["confidence"], number> = { high: 3, medium: 2, low: 1 };
 
@@ -17,7 +18,7 @@ export function fuzzyKey(e: DuluthEvent): string {
     .slice(0, 6)
     .join(" ");
   const day = e.start.slice(0, 10); // YYYY-MM-DD
-  const venue = e.location.venueName.toLowerCase().replace(/[^a-z0-9]+/g, "").slice(0, 12);
+  const venue = normalizeVenueKey(e.place?.name ?? e.venueRaw ?? "").replace(/\s+/g, "").slice(0, 12);
   return `${day}|${titleTokens}|${venue}`;
 }
 

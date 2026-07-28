@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { classifyEventType, isMultiDay, finalizeEvent, resolveLocation } from "../src/classify.js";
+import { classifyEventType, isMultiDay, finalizeEvent } from "../src/classify.js";
 import { makeEvent } from "./factory.js";
 
 describe("classifyEventType", () => {
@@ -60,22 +60,35 @@ describe("isMultiDay", () => {
   });
 });
 
-describe("resolveLocation", () => {
-  it("recovers an away city packed into the venue string", () => {
-    const loc = resolveLocation({ venueName: "Bismarck, ND, MDU Resources Community Bowl", city: "Duluth", state: "MN", inDuluth: true });
-    expect(loc.city).toBe("Bismarck");
-    expect(loc.state).toBe("ND");
-    expect(loc.venueName).toBe("MDU Resources Community Bowl");
-    expect(loc.inDuluth).toBe(false);
+describe("away-game location (formerly resolveLocation)", () => {
+  it("puts an out-of-state game outside Duluth proper", () => {
+    const e = finalizeEvent(
+      makeEvent({
+        title: "University of Minnesota Duluth Volleyball at Colorado State University Pueblo",
+        categories: ["Athletics", "Sports and Recreation"],
+        venueRaw: "Pueblo, CO, Massari Arena",
+        location: { city: "Duluth", state: "MN" },
+      }),
+    );
+    expect(e.eventType).toBe("sports");
+    expect(e.location.city).toBe("Pueblo");
+    expect(e.location.state).toBe("CO");
+    expect(e.location.inDuluth).toBe(false);
+    expect(e.facets.geoScope).toBe("distant");
+    expect(e.facets.homeAway).toBe("away");
+    expect(e.place?.name).toBe("Massari Arena");
   });
-  it("handles a bare city+state venue and AP-style abbreviations", () => {
-    expect(resolveLocation({ venueName: "River Falls, WI", city: "Duluth", state: "MN", inDuluth: true }).city).toBe("River Falls");
-    expect(resolveLocation({ venueName: "St. Cloud, Minn., Herb Brooks National Hockey Center", city: "Duluth", state: "MN", inDuluth: true }).state).toBe("MN");
+
+  it("handles AP-style abbreviations", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "St. Cloud, Minn., Herb Brooks National Hockey Center", location: { city: "Duluth", state: "MN" } }));
+    expect(e.location.city).toBe("St. Cloud");
+    expect(e.location.state).toBe("MN");
   });
-  it("leaves an ordinary Duluth venue alone", () => {
-    const loc = resolveLocation({ venueName: "Lake Superior Estuarium", city: "Superior", state: "WI", inDuluth: false });
-    expect(loc.venueName).toBe("Lake Superior Estuarium");
-    expect(loc.city).toBe("Superior");
+
+  it("leaves an ordinary venue's stated address alone", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "Lake Superior Estuarium", location: { city: "Superior", state: "WI", inDuluth: false } }));
+    expect(e.location.city).toBe("Superior");
+    expect(e.place?.id).toBe("lake-superior-estuarium");
   });
 });
 
@@ -94,7 +107,8 @@ describe("finalizeEvent", () => {
       makeEvent({
         title: "University of Minnesota Duluth Volleyball at Colorado State University Pueblo",
         categories: ["Athletics", "Sports and Recreation"],
-        location: { venueName: "Pueblo, CO, Massari Arena", city: "Duluth", state: "MN" },
+        venueRaw: "Pueblo, CO, Massari Arena",
+        location: { city: "Duluth", state: "MN" },
       }),
     );
     expect(e.eventType).toBe("sports");

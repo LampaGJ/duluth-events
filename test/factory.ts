@@ -7,7 +7,8 @@ export function makeEvent(overrides: Record<string, unknown> = {}): DuluthEvent 
     title: "Homegrown Kickoff Show",
     start: "2026-05-01T19:00:00-05:00",
     end: "2026-05-01T22:00:00-05:00",
-    location: { venueName: "Pizza Lucé" },
+    location: { city: "Duluth", state: "MN" },
+    venueRaw: "Pizza Lucé",
     source: {
       name: "Perfect Duluth Day",
       type: "ics-feed",

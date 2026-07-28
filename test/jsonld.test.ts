@@ -34,7 +34,8 @@ describe("mapJsonLdEvent", () => {
     expect(e!.title).toBe("Karaoke");
     expect(e!.start).toBe("2026-07-23T22:00:00-05:00");
     expect(e!.end).toBe("2026-07-24T02:00:00-05:00");
-    expect(e!.location).toMatchObject({ venueName: "Flame Nightclub Duluth", street: "1 W Superior St", city: "Duluth" });
+    expect(e!.venueRaw).toBe("Flame Nightclub Duluth");
+    expect(e!.location).toMatchObject({ street: "1 W Superior St", city: "Duluth" });
     expect(e!.description).toBe("The Flame Nightclub in Duluth hosts karaoke every Thursday night.");
     expect(e!.cost.kind).toBe("free");
     expect(e!.imageUrl).toContain("Flame-Karaoke.jpg");

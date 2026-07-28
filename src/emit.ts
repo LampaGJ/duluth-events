@@ -1,10 +1,9 @@
 import ical, { ICalEventStatus, type ICalCalendar } from "ical-generator";
-import type { AgeSchema, CostSchema, DuluthEvent, FeedMeta, LocationSchema } from "./schema.js";
+import type { AgeSchema, CostSchema, DuluthEvent, FeedMeta } from "./schema.js";
 import type { z } from "zod";
 
 type Cost = z.infer<typeof CostSchema>;
 type Age = z.infer<typeof AgeSchema>;
-type Loc = z.infer<typeof LocationSchema>;
 
 /**
  * DuluthEvent -> RFC 5545 VEVENT property mapping:
@@ -39,9 +38,10 @@ function formatAge(age: Age): string {
   return `${base}${age.note ? ` (${age.note})` : ""}`;
 }
 
-function formatLocation(loc: Loc): string {
+function formatLocation(e: DuluthEvent): string {
+  const loc = e.location;
   const cityLine = `${loc.city}, ${loc.state}${loc.zip ? ` ${loc.zip}` : ""}`;
-  return [loc.venueName, loc.room, loc.street, cityLine].filter(Boolean).join(", ");
+  return [e.place?.name ?? e.venueRaw, e.place?.room, loc.street, cityLine].filter(Boolean).join(", ");
 }
 
 function mapStatus(s: DuluthEvent["status"]): ICalEventStatus {
@@ -134,7 +134,7 @@ export function emitFeed(events: DuluthEvent[], meta: FeedMeta): string {
       summary: e.title,
       description: buildDescription(e),
       location: {
-        title: formatLocation(e.location),
+        title: formatLocation(e),
         geo: e.location.geo ? { lat: e.location.geo.lat, lon: e.location.geo.lon } : undefined,
       },
       status: mapStatus(e.status),

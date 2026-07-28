@@ -37,7 +37,7 @@ describe("mapRec1Session", () => {
     expect(e.end).toBe("2026-08-10T20:00:00-05:00");
     expect(e.eventType).toBe("class");
     expect(e.cost.kind).toBe("free");
-    expect(e.location.venueName).toBe("Munger Landing");
+    expect(e.venueRaw).toBe("Munger Landing");
     expect(e.age).toMatchObject({ allAges: false, minAge: 8 });
     expect(e.source.extractionMethod).toBe("structured-api");
     expect(finalizeEvent(e).multiDay).toBe(false);
