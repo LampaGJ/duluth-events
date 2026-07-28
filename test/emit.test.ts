@@ -60,8 +60,11 @@ describe("place properties", () => {
   });
 
   it("marks an unregistered venue provisional with a ~-prefixed id", () => {
-    const ics = unfold(emitFeed([finalizeEvent(makeEvent({ venueRaw: "Wild State Cider" }))], META));
-    expect(ics).toContain("X-PLACE-ID:~wild-state-cider");
+    // Deliberately fictional: this test asserts the PROVISIONAL path, so its fixture must be a
+    // venue the registry will never contain. (It used to say "Wild State Cider", which stopped
+    // being unregistered the moment Task 9 populated PLACES.)
+    const ics = unfold(emitFeed([finalizeEvent(makeEvent({ venueRaw: "Nonexistent Taproom" }))], META));
+    expect(ics).toContain("X-PLACE-ID:~nonexistent-taproom");
     expect(ics).toContain("X-PLACE-PROVISIONAL:true");
   });
 
