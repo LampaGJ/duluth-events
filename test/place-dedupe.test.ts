@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { dedupe, titleSimilarity } from "../src/dedupe.js";
+import { dedupe, fuzzyKey, titleSimilarity } from "../src/dedupe.js";
 import { finalizeEvent } from "../src/classify.js";
 import { makeEvent } from "./factory.js";
 import type { DuluthEvent } from "../src/schema.js";
@@ -87,6 +87,25 @@ describe("place-first dedupe", () => {
     const out = dedupe([pdd1, pdd2, umd]);
     expect(out).toHaveLength(1);
     expect(out[0]!.alsoListedIn.map((s) => s.name)).toEqual(["UMD Events"]);
+  });
+
+  it("does NOT fold two same-source titles that merely share a 6-token prefix", () => {
+    // The fold keys on the EXACT title, not `fuzzyKey` (which truncates to 6 title tokens). These two
+    // DSSO programmes share their first six tokens and differ only in the soloist, so a fuzzyKey-based
+    // fold would treat them as one listing — and then merge that phantom across sources, deleting TWO
+    // events. Correct behaviour: the source stays repeated, refusal (b) fires, and pass 2 handles the
+    // pair exactly as it does today (2 out, not 1).
+    const dsso = "Duluth Superior Symphony Orchestra Summer Series";
+    const a = at({ uid: "a", title: `${dsso}: Beethoven`, venueRaw: "Wussow's Concert Cafe", source: src("Perfect Duluth Day") });
+    const b = at({ uid: "b", title: `${dsso}: Mozart`, venueRaw: "Wussow's Concert Cafe", source: src("Perfect Duluth Day") });
+    const c = at({ uid: "c", title: `Summer Series with the ${dsso}`, venueRaw: "Wussow's Concert Cafe", source: src("Visit Duluth") });
+    // Preconditions: the two PDD titles ARE fuzzyKey-identical (6-token truncation) while c's is not,
+    // and c clears the veto against both — so the fold key is the only thing that can decide this case.
+    expect(fuzzyKey(a)).toBe(fuzzyKey(b));
+    expect(fuzzyKey(c)).not.toBe(fuzzyKey(a));
+    expect(titleSimilarity(a.title, c.title)).toBeGreaterThan(0.15);
+    expect(titleSimilarity(b.title, c.title)).toBeGreaterThan(0.15);
+    expect(dedupe([a, b, c])).toHaveLength(2);
   });
 
   it("does NOT fold a source's two DIFFERENT titles — that refuses the whole group", () => {

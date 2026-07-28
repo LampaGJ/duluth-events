@@ -154,19 +154,26 @@ export function dedupe(events: DuluthEvent[]): DuluthEvent[] {
       continue;
     }
 
-    // Fold same-source copies the LEGACY key already merges — one source publishing one title twice
-    // at one place and instant is one listing emitted twice, and pass 2 collapses it regardless. Doing
-    // it here first is what keeps refusal (b) from over-firing: Perfect Duluth Day emits the
-    // planetarium show twice, and without this fold that internal duplicate would veto the genuine
-    // cross-source merge with UMD's listing of the same show.
-    const byLegacyKey = new Map<string, DuluthEvent[]>();
+    // Fold a source's own repeated listing — one source publishing the SAME TITLE twice at one place
+    // and instant is one listing emitted twice (25 events in the live corpus arrive this way, several
+    // under a duplicate UID), and pass 2 collapses it regardless. Doing it here first is what keeps
+    // refusal (b) from over-firing: Perfect Duluth Day emits the planetarium show twice, and without
+    // this fold that internal duplicate would veto the genuine cross-source merge with UMD's listing.
+    //
+    // The key is the EXACT title, deliberately NOT `fuzzyKey`. fuzzyKey truncates to the first 6 title
+    // tokens, so two genuinely different events sharing a 6-token prefix ("Duluth Superior Symphony
+    // Orchestra Summer Series: Beethoven" / "…: Mozart") would fold — which is harmless on its own
+    // (pass 2 merges them either way) but here would defeat refusal (b) and let the folded pair merge
+    // ACROSS sources, deleting two events instead of one. Exact-title folding cannot amplify: a title
+    // that differs at all leaves the source repeated, and refusal (b) fires.
+    const bySourceTitle = new Map<string, DuluthEvent[]>();
     for (const e of group) {
-      const k = `${e.source.name}|${fuzzyKey(e)}`;
-      const arr = byLegacyKey.get(k);
+      const k = `${e.source.name}|${e.title}`;
+      const arr = bySourceTitle.get(k);
       if (arr) arr.push(e);
-      else byLegacyKey.set(k, [e]);
+      else bySourceTitle.set(k, [e]);
     }
-    const collapsed = [...byLegacyKey.values()].map((g) => (g.length === 1 ? g[0]! : mergeGroup(g)));
+    const collapsed = [...bySourceTitle.values()].map((g) => (g.length === 1 ? g[0]! : mergeGroup(g)));
 
     // (b) a source STILL appearing twice is publishing two different events (UMD lists the men's and
     // women's cross-country races at one meet, one instant, one place). Refuse the whole group, not
