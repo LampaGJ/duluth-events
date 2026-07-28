@@ -104,16 +104,25 @@ console.log(`${targets.length} unresolved venue strings (+ ${notAVenue.size} pre
 
 // --- tier 1: the committed OSM cache ---
 const osm = existsSync("data/osm-duluth.json") ? JSON.parse(readFileSync("data/osm-duluth.json", "utf8")) : [];
-// "duluth" is the single most common token in this corpus (a Duluth-venue registry, mostly Duluth
-// addresses) — leaving it a scoring token inflates Jaccard similarity between genuinely unrelated
-// venues that merely both mention the city ("Duluth East High School" and "Duluth River Train" both
-// token-matched "Duluth Grill" on "duluth" alone). Geographic and address-boilerplate words carry no
-// venue IDENTITY, so they're stopped the same way "the"/"and" already were. Deliberately NOT stopping
-// "building" — "Lincoln Park Building" uses it as a distinguishing word, not boilerplate.
+// Round 3 stopped "duluth"/"superior"/"minnesota"/"wisconsin" as boilerplate, on the theory that they
+// carry no venue identity. WRONG in a two-city corpus: round 4 found `data/osm-duluth.json` contains
+// BOTH "Superior Public Library" AND "Duluth Public Library" — real, different venues — and stopping
+// "duluth"/"superior" made them tokenize identically to {public, library}, so the tier-1 loop's
+// `if (s > score)` tie-break silently kept whichever happened to come first in Overpass's element
+// order (Superior), regardless of which city the raw string actually asked for. That is same-tier
+// IDENTITY CORRUPTION at sim=1.0, worse than the noise it was meant to fix: noise lands in WEAK
+// (visible, costs review time); this landed in LIKELY (invisible). `duluth`/`superior` are NOT
+// boilerplate here — they are the discriminator between two cities' otherwise-identically-named
+// institutions, and stay scoring tokens. `minnesota`/`wisconsin` reverted with them (same failure
+// mode risk, no evidence they were ever the noise source). Kept: pure address-boilerplate words that
+// never distinguish one VENUE from another regardless of city (a street suffix or "usa" tells you
+// nothing about which building this is). Added "suites" (plural) alongside "suite" — the corpus uses
+// "Holiday Inn & Suites", "Hampton Inn & Suites". Deliberately NOT stopping "building" — "Lincoln
+// Park Building" uses it as a distinguishing word, not boilerplate.
 const STOP = new Set([
   "the", "and", "of", "at", "inc", "llc", "co",
-  "duluth", "superior", "minnesota", "wisconsin", "usa", "united", "states",
-  "ave", "avenue", "street", "road", "drive", "blvd", "boulevard", "suite",
+  "usa", "united", "states",
+  "ave", "avenue", "street", "road", "drive", "blvd", "boulevard", "suite", "suites",
 ]);
 const tk = (s) => new Set(normalizeVenueKey(s).split(" ").filter((w) => w.length > 2 && !STOP.has(w)));
 const jac = (a, b) => { if (!a.size || !b.size) return 0; let i = 0; for (const x of a) if (b.has(x)) i++; return i / (a.size + b.size - i); };
@@ -166,6 +175,11 @@ let done = 0;
 
 for (const t of targets) {
   let best = null, score = 0, src = null;
+  // Candidates that TIE the current leader's score (score > 0) — the `if (s > score)` below silently
+  // resolves ties by array order, which is arbitrary (Overpass element order, not anything about the
+  // venue). A tie means the tokenizer genuinely cannot distinguish two candidates; that ambiguity must
+  // reach the reviewer, not get silently resolved into a confident-looking single answer.
+  let tiedWith = [];
   // tier 1 only for targets the parsed city says are actually near Duluth — see isLocalToOsmCache's
   // doc comment. A non-local target skips straight to tier 2 (score stays 0, so the `< 0.5` gate
   // below fires unconditionally for it).
@@ -174,11 +188,12 @@ for (const t of targets) {
       // Same acronym boost tier 2 gets, applied symmetrically so DECC-style names can resolve from the
       // committed cache without a network call at all when the cache already has the long-form entry.
       const s = Math.max(jac(tk(t.raw), x.t), isAcronym(t.raw, x.o.name) ? 0.9 : 0);
-      if (s > score) { score = s; best = x.o; src = "osm"; }
+      if (s > score) { score = s; best = x.o; src = "osm"; tiedWith = []; }
+      else if (s === score && s > 0) { tiedWith.push(x.o); }
     }
     // Belt-and-braces (see withinDuluthBbox's doc comment): reject the tier-1 hit outright if its own
     // coordinates somehow fall outside the cache's bbox.
-    if (best && !withinDuluthBbox(best.lat, best.lon)) { best = null; score = 0; src = null; }
+    if (best && !withinDuluthBbox(best.lat, best.lon)) { best = null; score = 0; src = null; tiedWith = []; }
   }
   // tier 2: Nominatim, only when OSM was unconvincing (or skipped entirely as non-local)
   if (score < 0.5) {
@@ -194,7 +209,10 @@ for (const t of targets) {
         const name = r.name || String(r.display_name).split(",")[0];
         const s = Math.max(jac(tk(t.raw), tk(name)), isAcronym(t.raw, name) ? 0.9 : 0);
         if (s > score) {
-          score = s; src = "web";
+          // Nominatim returns exactly one candidate per query, so tier 2 itself has no internal
+          // array-order ambiguity — but it just beat whatever tier 1 had (tied or not), so that tie
+          // is moot now: the winner is unambiguously this single web result.
+          score = s; src = "web"; tiedWith = [];
           best = {
             name, street: [a.house_number, a.road].filter(Boolean).join(" ") || null,
             city: a.city ?? a.town ?? a.village ?? null, state: a.state ?? null, zip: a.postcode ?? null,
@@ -205,7 +223,7 @@ for (const t of targets) {
       await new Promise((r) => setTimeout(r, 1150)); // Nominatim policy: <= 1 req/s
     } catch { /* leave whatever OSM gave */ }
   }
-  rows.push({ ...t, best, score: +score.toFixed(2), src });
+  rows.push({ ...t, best, score: +score.toFixed(2), src, tied: tiedWith.length > 0, tiedNames: tiedWith.map((o) => o.name) });
   p.tick(++done);
 }
 
@@ -226,8 +244,23 @@ const finalRows = keptRows;
 p.done({ total: finalRows.length, notAVenue: notAVenue.size });
 
 // --- emit paste-ready literals, ranked, with the verdict a human must check ---
-const slug = (s) => normalizeVenueKey(s).replace(/\s+/g, "-").slice(0, 48).replace(/-+$/, "");
-const verdict = (r) => (!r.best ? "NO MATCH — research by hand" : r.score >= 0.5 ? "LIKELY" : "WEAK — verify or reject");
+// normalizeVenueKey's char class is [a-z0-9] only, so an accented letter is dropped as punctuation
+// rather than folded to its base letter ("Café" -> "caf", not "cafe") — fine for the MATCHING key
+// (accents are rare and inconsistent across sources, so dropping them there is harmless noise), but
+// NOT fine for a hand-set id that appears in feed URLs forever. Transliterate the common Latin
+// accents BEFORE normalizing, for `slug()` only — display fields (`name`, `nameAliases`) keep the
+// real accented text.
+const ACCENTS = { é: "e", ñ: "n", ü: "u", ö: "o", á: "a", í: "i", ó: "o", ú: "u", ç: "c" };
+const transliterate = (s) => s.replace(/[éñüöáíóúç]/gi, (c) => ACCENTS[c.toLowerCase()] ?? c);
+const slug = (s) => normalizeVenueKey(transliterate(s)).replace(/\s+/g, "-").slice(0, 48).replace(/-+$/, "");
+/** "a" / "a and b" / "a, b, and c" — for readably listing 1+ tied alternatives in prose. */
+const englishList = (items) =>
+  items.length <= 1 ? (items[0] ?? "") : items.length === 2 ? items.join(" and ") : `${items.slice(0, -1).join(", ")}, and ${items.at(-1)}`;
+// A tied score is FORCED to WEAK regardless of its numeric value — a tie at sim=1.0 is less
+// trustworthy than a clean, untied 0.6, because it means the tokenizer had no basis to prefer the
+// winner over its tied alternative(s); see the tiedWith doc comment in the matching loop above.
+const isLikely = (r) => !r.tied && r.best && r.score >= 0.5;
+const verdict = (r) => (!r.best ? "NO MATCH — research by hand" : isLikely(r) ? "LIKELY" : "WEAK — verify or reject");
 const notAVenueRows = [...notAVenue.values()].sort((a, b) => b.n - a.n);
 const anyAcronymHit = finalRows.some((r) => r.best && r.score === 0.9);
 
@@ -303,6 +336,20 @@ out += `correct in isolation (\`isAcronym("DECC", "Duluth Entertainment Conventi
 out += `but undemonstrated on live data in this run; see the Task 8 report for detail.\n\n`;
 for (const r of finalRows) {
   out += `## ${r.raw}  (${r.n} event${r.n === 1 ? "" : "s"}) — ${verdict(r)}${r.best ? `, sim=${r.score}` : ""}\n\n`;
+  if (r.tied) {
+    // State three things explicitly and in a fixed order — the RAW string being resolved, the
+    // candidate that WON, and the candidate(s) it tied with — so a reviewer never has to guess which
+    // name plays which role. The previous wording interpolated raw/winner/alternative into the wrong
+    // slots ("cannot distinguish these from <winner>" reads as winner-vs-itself when there's only one
+    // alternative and it happens to share the winner's name, e.g. two "Duluth Public Library" cache
+    // entries).
+    const altsList = englishList(r.tiedNames.map((n) => `"${n}"`));
+    out += `**TIED** — "${r.raw}" scored sim=${r.score} against BOTH\n`;
+    out += `"${r.best.name}" (proposed below) and ${altsList}.\n`;
+    out += `The tokenizer cannot separate them, so the winner was chosen by arbitrary\n`;
+    out += `cache order. Forced to WEAK regardless of score — research by hand which\n`;
+    out += `is correct before pasting.\n\n`;
+  }
   out += "```ts\n{\n";
   out += `  id: ${JSON.stringify(r.id)},\n`;
   out += `  name: ${JSON.stringify(r.best?.name ?? r.raw)},\n`;
@@ -319,8 +366,9 @@ mkdirSync("reports", { recursive: true });
 writeFileSync("reports/places-proposal.md", out);
 console.log(`\nwrote reports/places-proposal.md`);
 console.log(`  NOT-A-VENUE: ${notAVenueRows.length}`);
-console.log(`  LIKELY:      ${finalRows.filter((r) => r.best && r.score >= 0.5).length}`);
-console.log(`  WEAK:        ${finalRows.filter((r) => r.best && r.score < 0.5).length}`);
+console.log(`  LIKELY:      ${finalRows.filter((r) => isLikely(r)).length}`);
+console.log(`  WEAK:        ${finalRows.filter((r) => r.best && !isLikely(r)).length}`);
 console.log(`  NO MATCH:    ${finalRows.filter((r) => !r.best).length}`);
+console.log(`  tied (forced WEAK): ${finalRows.filter((r) => r.tied).length}`);
 console.log(`  duplicate proposed ids: ${duplicateIds.length}${duplicateIds.length ? ` (${duplicateIds.map(([id]) => id).join(", ")})` : ""}`);
 console.log(`\nreports/places-proposal.md is NOT the registry. Review, then paste into src/places.ts.`);
