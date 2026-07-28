@@ -65,6 +65,25 @@ describe("place properties", () => {
     expect(ics).toContain("X-PLACE-PROVISIONAL:true");
   });
 
+  // formatLocation changed both signature and semantics in the AddressSchema migration
+  // (Loc -> DuluthEvent; loc.venueName -> e.place?.name ?? e.venueRaw; loc.room -> e.place?.room).
+  // Nothing asserted on LOCATION before this, so dropping the canonical name or the street silently
+  // passed. NB: e.place?.room is inert today — no adapter populates PlaceRefSchema.room, exactly as
+  // none populated the old location.room. It is reserved, not covered.
+  it("renders LOCATION as the canonical place name plus the stated address", () => {
+    const ics = unfold(
+      emitFeed([finalizeEvent(makeEvent({ venueRaw: "Bent Paddle Brewing", location: { city: "Duluth", state: "MN", street: "1832 W Michigan St" } }))], META),
+    );
+    // Canonical registry name, NOT the raw "Bent Paddle Brewing" the source claimed, then
+    // street, then the city line. Commas inside the value are RFC 5545 escaped.
+    expect(ics).toContain("LOCATION:Bent Paddle Brewing Co. — Brewery + Taproom\\, 1832 W Michigan St\\, Duluth\\, MN");
+  });
+
+  it("falls back to venueRaw in LOCATION when the venue resolves to no place", () => {
+    const ics = unfold(emitFeed([finalizeEvent(makeEvent({ venueRaw: "See listing", location: { city: "Duluth", state: "MN" } }))], META));
+    expect(ics).toContain("LOCATION:See listing\\, Duluth\\, MN");
+  });
+
   it("wraps a long X-PLACE-NAME with RFC 5545 line folding, and unfold() recovers the logical line", () => {
     const longName = "Greater Downtown Duluth Multi-Purpose Community Event and Gathering Center";
     const raw = emitFeed([finalizeEvent(makeEvent({ venueRaw: longName }))], META);
