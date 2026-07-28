@@ -17,7 +17,8 @@
     "test": "vitest run",
     "places:osm": "node scripts/fetch-osm.mjs",
     "places:propose": "tsx scripts/places-propose.mjs",
-    "aliases:harvest": "tsx scripts/harvest-aliases.mjs"
+    "aliases:harvest": "tsx scripts/harvest-aliases.mjs",
+    "merge:diff": "tsx scripts/merge-diff.mjs"
   },
   "dependencies": {
     "fastify": "^5.10.0",

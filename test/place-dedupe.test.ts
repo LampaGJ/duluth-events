@@ -224,4 +224,15 @@ describe("titleSimilarity (veto scorer only — never a matcher)", () => {
     expect(titleSimilarity("", "Zenith Bookstore Reading")).toBe(0);
     expect(titleSimilarity("The Night Music", "Zenith Bookstore Reading")).toBe(0); // all-stopword title
   });
+
+  it("pins the corroborator count when near-identical listings collapse", () => {
+    // Four sources listing the SAME event. Titles overlap, so the veto does not fire and all four
+    // collapse to one with three corroborators. Pins the count so a future widening is visible.
+    const evs = ["Visit Duluth", "Do Duluth", "Perfect Duluth Day", "Duluth Reader"].map((s, i) =>
+      at({ uid: `u${i}`, title: "Buffalo Galaxy Live at the Taproom", venueRaw: "Wussow's Concert Cafe", source: src(s) }),
+    );
+    const merged = dedupe(evs);
+    expect(merged).toHaveLength(1);
+    expect(merged[0]!.alsoListedIn).toHaveLength(3);
+  });
 });

@@ -81,7 +81,7 @@ export function titleSimilarity(a: string, b: string): number {
  * Measured margin is real but thin: the tightest observed unrelated pair ("Fall Volunteer and
  * Engagement Fair" vs "Two Harbors Fall Colors Tour", which share the token "fall") scores 0.125.
  */
-const TITLE_VETO = 0.15;
+export const TITLE_VETO = 0.15;
 
 /** Merge one group into a primary + corroborators. Highest confidence wins; ties keep first-seen order. */
 function mergeGroup(group: DuluthEvent[]): DuluthEvent {
