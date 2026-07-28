@@ -48,14 +48,30 @@ describe("formatCost", () => {
 
 describe("place properties", () => {
   it("emits place id, name, and provisional flag when resolved", () => {
-    const ics = emitFeed([finalizeEvent(makeEvent({ venueRaw: "Wussow's Concert Cafe" }))], META);
+    const ics = unfold(emitFeed([finalizeEvent(makeEvent({ venueRaw: "Wussow's Concert Cafe" }))], META));
     expect(ics).toContain("X-PLACE-ID:wussows-concert-cafe");
     expect(ics).toContain("X-PLACE-NAME:Wussow's Concert Cafe");
     expect(ics).toContain("X-PLACE-PROVISIONAL:false");
   });
 
   it("emits nothing when the venue is a sentinel", () => {
-    const ics = emitFeed([finalizeEvent(makeEvent({ venueRaw: "See listing" }))], META);
+    const ics = unfold(emitFeed([finalizeEvent(makeEvent({ venueRaw: "See listing" }))], META));
     expect(ics).not.toContain("X-PLACE-ID");
+  });
+
+  it("marks an unregistered venue provisional with a ~-prefixed id", () => {
+    const ics = unfold(emitFeed([finalizeEvent(makeEvent({ venueRaw: "Wild State Cider" }))], META));
+    expect(ics).toContain("X-PLACE-ID:~wild-state-cider");
+    expect(ics).toContain("X-PLACE-PROVISIONAL:true");
+  });
+
+  it("wraps a long X-PLACE-NAME with RFC 5545 line folding, and unfold() recovers the logical line", () => {
+    const longName = "Greater Downtown Duluth Multi-Purpose Community Event and Gathering Center";
+    const raw = emitFeed([finalizeEvent(makeEvent({ venueRaw: longName }))], META);
+    // Prove this test actually exercises folding rather than passing vacuously: the RAW
+    // (unfolded) output must NOT contain the logical line unbroken.
+    expect(raw).not.toContain(`X-PLACE-NAME:${longName}`);
+    const ics = unfold(raw);
+    expect(ics).toContain(`X-PLACE-NAME:${longName}`);
   });
 });
