@@ -160,17 +160,25 @@ describe("resolvePlace", () => {
   // parseVenueString to strip, so key === fullKey and the fallback is never the thing that found the
   // hit. This is the one case where it diverges and does the work: an away-game venue whose alias is
   // the literal, un-split "City, ST, Venue" corpus string.
+  //
+  // The canonical `name` is deliberately DIFFERENT from the parsed venue name ("Massari Arena at CSU
+  // Pueblo" vs. parsed "Massari Arena"). buildPlaceIndex self-registers every place's canonical name
+  // as a byNameAlias key, so if `name` were literally "Massari Arena", the FIRST lookup (on
+  // parsed.name's key "massari arena") would already hit via that self-alias and the fallback would
+  // never be reached — which is exactly what happened in the prior version of this test (see the
+  // round-2 fix report for the proof: removing the packed alias made no difference with that
+  // fixture). With `name` differing, the first lookup key "massari arena" cannot match the
+  // self-alias "massari arena at csu pueblo", so ONLY the fullKey re-normalization of the untouched
+  // raw string ("pueblo co massari arena") — matched against the packed nameAlias below — can find
+  // it. Removing that alias must make this test fail; see the fix report for the before/after run.
   it("resolves via the literal packed alias when a curator pasted the raw 'City, ST, Venue' string", () => {
     const awayIdx = buildPlaceIndex([
       {
-        id: "massari-arena", name: "Massari Arena",
+        id: "massari-arena", name: "Massari Arena at CSU Pueblo",
         nameAliases: ["Pueblo, CO, Massari Arena"], // pasted verbatim, city prefix and all
         address: { city: "Pueblo", state: "CO" }, provenance: { source: "manual" as const },
       },
     ]);
-    // parsed.name is "Massari Arena" (extractLeadingCity strips "Pueblo, CO,"), whose key
-    // "massari arena" does NOT match the registered alias — only re-normalizing the untouched raw
-    // string (fullKey "pueblo co massari arena") finds it.
-    expect(resolvePlace("Pueblo, CO, Massari Arena", awayIdx)).toEqual({ id: "massari-arena", name: "Massari Arena", provisional: false });
+    expect(resolvePlace("Pueblo, CO, Massari Arena", awayIdx)).toEqual({ id: "massari-arena", name: "Massari Arena at CSU Pueblo", provisional: false });
   });
 });
