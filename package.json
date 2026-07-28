@@ -16,7 +16,8 @@
     "dev": "tsx watch src/server.ts",
     "test": "vitest run",
     "places:osm": "node scripts/fetch-osm.mjs",
-    "places:propose": "tsx scripts/places-propose.mjs"
+    "places:propose": "tsx scripts/places-propose.mjs",
+    "aliases:harvest": "tsx scripts/harvest-aliases.mjs"
   },
   "dependencies": {
     "fastify": "^5.10.0",

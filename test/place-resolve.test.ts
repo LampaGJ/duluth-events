@@ -4,7 +4,9 @@ import { normalizeVenueKey, isSentinelVenue, parseVenueString } from "../src/pla
 describe("normalizeVenueKey", () => {
   it("unescapes ICS, then decodes entities, then normalizes", () => {
     // Verbatim corpus strings. ICS escapes `;` as `\;`, which defeated entity decoding in the probe.
-    expect(normalizeVenueKey("Vista Fleet Sightseeing &#038\\; Dining Cruises")).toBe("vista fleet sightseeing dining cruises");
+    // &#038; decodes to a literal "&", which now folds to "and" (the ampersand-normalization gap
+    // fix) rather than vanishing as stripped punctuation — see the "&"/"and" convergence tests below.
+    expect(normalizeVenueKey("Vista Fleet Sightseeing &#038\\; Dining Cruises")).toBe("vista fleet sightseeing and dining cruises");
     expect(normalizeVenueKey("Whole Foods Co-op &#8211; Hillside")).toBe("whole foods co op hillside");
     expect(normalizeVenueKey("Wussow&#8217;s Concert Cafe")).toBe("wussows concert cafe");
   });
@@ -23,6 +25,45 @@ describe("normalizeVenueKey", () => {
   it("is idempotent", () => {
     const once = normalizeVenueKey("Whole Foods Co-op &#8211; Hillside");
     expect(normalizeVenueKey(once)).toBe(once);
+  });
+
+  it("transliterates accented Latin letters instead of dropping them — the truncated-key bug", () => {
+    // Task 9b fixed the slug generator's OWN copy of this transliteration but not normalizeVenueKey,
+    // so "lake-avenue-cafe" (the id) and "lake avenue caf" (the old matching key) disagreed.
+    expect(normalizeVenueKey("Lake Avenue Café")).toBe("lake avenue cafe");
+    expect(normalizeVenueKey("Lake Avenue Cafe")).toBe(normalizeVenueKey("Lake Avenue Café"));
+    // NFD-decomposable accents plus the three that don't decompose (æ, ø, ß), upper- and lower-case.
+    expect(normalizeVenueKey("Ändré's Bistro")).toBe("andres bistro");
+    expect(normalizeVenueKey("Grønland Café & Bakehus")).toBe("gronland cafe and bakehus");
+    expect(normalizeVenueKey("Straße Haus")).toBe("strasse haus");
+  });
+
+  it("folds & to and, so ampersand and spelled-out forms converge", () => {
+    expect(normalizeVenueKey("Sports & Health Center")).toBe(normalizeVenueKey("Sports and Health Center"));
+    expect(normalizeVenueKey("Sports & Health Center")).toBe("sports and health center");
+  });
+
+  it("strips a leading article, so 'The X' and 'X' converge", () => {
+    expect(normalizeVenueKey("The Rex")).toBe(normalizeVenueKey("Rex"));
+    expect(normalizeVenueKey("The Rex")).toBe("rex");
+  });
+
+  it("strips a trailing legal/company suffix, so Company/Co./bare-name converge", () => {
+    expect(normalizeVenueKey("Bent Paddle Brewing Company")).toBe(normalizeVenueKey("Bent Paddle Brewing Co."));
+    expect(normalizeVenueKey("Bent Paddle Brewing Company")).toBe(normalizeVenueKey("Bent Paddle Brewing"));
+    expect(normalizeVenueKey("Bent Paddle Brewing Company")).toBe("bent paddle brewing");
+  });
+
+  it("does not orphan 'op' out of Co-op — trailing-suffix strip only ever touches the LAST token", () => {
+    expect(normalizeVenueKey("Whole Foods Co-op")).toBe("whole foods co op");
+    expect(normalizeVenueKey("Co-op Deli")).toBe("co op deli");
+  });
+
+  it("remains idempotent under every new step (accents, &, article, legal suffix)", () => {
+    for (const raw of ["The Bent Paddle Brewing Co.", "Lake Avenue Café", "Sports & Health Center", "Whole Foods Co-op"]) {
+      const once = normalizeVenueKey(raw);
+      expect(normalizeVenueKey(once)).toBe(once);
+    }
   });
 });
 
