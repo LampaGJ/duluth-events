@@ -27,7 +27,12 @@ export const PLACES: PlaceInput[] = [
   {
     id: "bent-paddle-taproom",
     name: "Bent Paddle Brewing Co. — Brewery + Taproom",
-    nameAliases: ["Bent Paddle Brewing", "Bent Paddle Taproom", "Bent Paddle Taproom 1832 W Michigan St."],
+    nameAliases: [
+      "Bent Paddle Brewing",
+      "Bent Paddle Taproom",
+      "Bent Paddle Taproom 1832 W Michigan St.",
+      "Bent Paddle Taproom // 1832 W Michigan St. // Duluth",
+    ],
     addressAliases: ["1832 W Michigan St", "1832 W Michigan St, Duluth, MN, United States, Minnesota 55806"],
     address: { street: "1832 W Michigan St", city: "Duluth", state: "MN", inDuluth: true },
     rooms: ["The Yard"],

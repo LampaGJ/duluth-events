@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { normalizeVenueKey, isSentinelVenue, parseVenueString, resolvePlace } from "../src/place-resolve.js";
-import { buildPlaceIndex } from "../src/place-registry.js";
+import { normalizeVenueKey, isSentinelVenue, parseVenueString } from "../src/place-resolve.js";
 
 describe("normalizeVenueKey", () => {
   it("unescapes ICS, then decodes entities, then normalizes", () => {
@@ -78,58 +77,5 @@ describe("parseVenueString", () => {
   it("leaves an ordinary venue untouched", () => {
     expect(parseVenueString("Lake Superior Estuarium")).toEqual({ name: "Lake Superior Estuarium" });
     expect(parseVenueString("Council Chambers-3rd Floor of City Hall")).toEqual({ name: "Council Chambers-3rd Floor of City Hall" });
-  });
-});
-
-// Fixture note: nameAliases below list every OBSERVED corpus variant verbatim — including the two
-// compound "name + address" forms — exactly as a human curator pastes them from `places:propose`
-// output. resolvePlace does exact normalized-map lookup only (no fuzzy/substring matching), so a
-// compound string only resolves once its literal form is a claimed alias; this mirrors how the
-// shipped registry (src/places.ts) already carries "Bent Paddle Taproom 1832 W Michigan St." as a
-// nameAlias for the same reason.
-const IDX = buildPlaceIndex([
-  {
-    id: "bent-paddle-taproom", name: "Bent Paddle Taproom",
-    nameAliases: [
-      "Bent Paddle Brewing",
-      "Bent Paddle Taproom // 1832 W Michigan St. // Duluth",
-      "Bent Paddle Taproom 1832 W Michigan St.",
-    ],
-    addressAliases: ["1832 W Michigan St"],
-    address: { city: "Duluth", state: "MN" }, provenance: { source: "manual" as const },
-  },
-]);
-
-describe("resolvePlace", () => {
-  it("resolves every corpus variant of one venue to the same id", () => {
-    const variants = [
-      "Bent Paddle Brewing",
-      "Bent Paddle Taproom // 1832 W Michigan St. // Duluth",
-      "Bent Paddle Taproom 1832 W Michigan St.",
-      "1832 W Michigan St",
-    ];
-    const ids = variants.map((v) => resolvePlace(v, IDX)?.id);
-    expect(ids).toEqual(Array(4).fill("bent-paddle-taproom"));
-    expect(resolvePlace("Bent Paddle Brewing", IDX)?.provisional).toBe(false);
-  });
-
-  it("returns undefined for a sentinel — the false-merge guard", () => {
-    for (const s of ["See listing", "Not specified", "Sign in to download the location", ""]) {
-      expect(resolvePlace(s, IDX)).toBeUndefined();
-    }
-    expect(resolvePlace(undefined, IDX)).toBeUndefined();
-  });
-
-  it("mints a provisional place for an unregistered real venue", () => {
-    const p = resolvePlace("Wild State Cider", IDX);
-    expect(p).toEqual({ id: "~wild-state-cider", name: "Wild State Cider", provisional: true });
-  });
-
-  it("gives a provisional place a stable id across calls and across spelling variants", () => {
-    expect(resolvePlace("Wild State Cider", IDX)?.id).toBe(resolvePlace("wild  state   cider", IDX)?.id);
-  });
-
-  it("resolves an away-game venue by its name, not the packed city prefix", () => {
-    expect(resolvePlace("Pueblo, CO, Massari Arena", IDX)?.id).toBe("~massari-arena");
   });
 });

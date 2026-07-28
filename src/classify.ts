@@ -1,7 +1,7 @@
 import type { DuluthEvent, EventType } from "./schema.js";
 import { deriveFacets, extractLeadingCity, extractTicketUrl, haystack, normalizedCategories, parseAgeBand } from "./facets.js";
 import { cleanText } from "./normalize.js";
-import { resolvePlace } from "./place-resolve.js";
+import { resolvePlace } from "./place-registry.js";
 
 /**
  * Deterministic typification: source categories first, then title/description vocabulary.

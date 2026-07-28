@@ -1,18 +1,24 @@
 import { cleanText } from "./normalize.js";
 import { extractLeadingCity } from "./facets.js";
-import type { PlaceRef } from "./schema.js";
-import { PLACE_INDEX, type PlaceIndex } from "./place-registry.js";
 
 /**
- * Venue-string normalization and resolution.
+ * Venue-string normalization.
  *
- * @displayName Place Resolver
+ * @displayName Venue Normalizer
  * @strategicPurpose Cross-source duplicates cannot be found by comparing venue strings — the same
  *   physical place appears as "Bent Paddle Brewing", "Bent Paddle Taproom // 1832 W Michigan St. //
- *   Duluth", and "1832 W Michigan St, Duluth, MN, United States, Minnesota 55806". Resolution turns
- *   all three into one identity.
+ *   Duluth", and "1832 W Michigan St, Duluth, MN, United States, Minnesota 55806". This module turns
+ *   any of those into a stable lookup key so `resolvePlace` (in `place-registry.ts`) can find them
+ *   all under one identity.
  * @tacticalObjective Normalize a raw venue string to a stable lookup key, reject sentinels, and
  *   split packed "City, ST, Venue" forms — deterministically, with no fuzzy matching and no I/O.
+ *
+ * Import direction is deliberately one-way: this file imports NOTHING from `place-registry.ts`, not
+ * even a type. `place-registry.ts` imports these normalizers, never the other way around — a prior
+ * version of this file imported `PLACE_INDEX` back for `resolvePlace`, which closed a cycle and
+ * crashed on module load the moment any module-scope `const` here was read during that cycle's
+ * eager index build. `resolvePlace` now lives in `place-registry.ts`, where the graph is strictly
+ * `classify -> place-registry -> place-resolve`.
  */
 
 /**
@@ -34,31 +40,26 @@ export function normalizeVenueKey(raw: string): string {
 }
 
 /**
- * Placeholder strings sources emit when they have no venue, and words that plausibly continue a
- * sentinel phrase rather than start a real venue name.
- *
- * Declared INSIDE the function, not at module scope: `place-resolve.ts` and `place-registry.ts`
- * import each other (the registry imports these normalizers; `resolvePlace` below imports
- * `PLACE_INDEX`), and `place-registry.ts` eagerly builds `PLACE_INDEX` at module load. When this
- * module is the entry point, that eager build calls back into `isSentinelVenue` before this
- * module's OWN top-level statements have run — a module-scope `const` here would still be in its
- * temporal dead zone at that point and throw. A function-local const has no such ordering
- * dependency: it is freshly created on every call, cycle or not.
+ * Placeholder strings sources emit when they have no venue. These must NEVER resolve to a place:
+ * two events at the same instant both reading "See listing" are demonstrably different events, and
+ * merging them would DELETE one. 129 of 461 live events (28%) carry one.
  */
-export function isSentinelVenue(raw: string): boolean {
-  const SENTINELS = [
-    "see listing",
-    "see catalog",
-    "see agenda",
-    "not specified",
-    "sign in to download the location",
-    "tbd",
-    "to be determined",
-    "various",
-    "varies",
-  ];
-  const SENTINEL_CONTINUATIONS = ["for", "see", "check", "tbd"];
+const SENTINELS = [
+  "see listing",
+  "see catalog",
+  "see agenda",
+  "not specified",
+  "sign in to download the location",
+  "tbd",
+  "to be determined",
+  "various",
+  "varies",
+];
 
+/** Words that plausibly continue a sentinel phrase rather than start a real venue name. */
+const SENTINEL_CONTINUATIONS = ["for", "see", "check", "tbd"];
+
+export function isSentinelVenue(raw: string): boolean {
   const key = normalizeVenueKey(raw ?? "");
   if (!key) return true;
   return SENTINELS.some((s) => {
@@ -86,36 +87,4 @@ export function parseVenueString(raw: string): { name: string; city?: string; st
   const found = extractLeadingCity(raw);
   if (!found) return { name: cleanText(raw) };
   return { name: found.rest || found.city, city: found.city, state: found.state };
-}
-
-/** kebab slug for a provisional id. Prefixed "~" so provisional ids can never collide with curated ones. */
-function provisionalId(key: string): string {
-  return `~${key.replace(/\s+/g, "-")}`;
-}
-
-/**
- * Resolve a raw venue string to a canonical place.
- *
- * Three outcomes, deliberately distinct:
- *   sentinel      -> undefined     never merges, never gets a feed
- *   registered    -> stable id     public feed URL, id guaranteed not to move
- *   anything else -> provisional   usable for dedupe, no feed, no stability promise
- */
-export function resolvePlace(venueRaw: string | undefined, index: PlaceIndex = PLACE_INDEX): PlaceRef | undefined {
-  if (!venueRaw || isSentinelVenue(venueRaw)) return undefined;
-
-  const parsed = parseVenueString(venueRaw);
-  const key = normalizeVenueKey(parsed.name);
-  if (!key) return undefined;
-
-  const hit = index.byNameAlias.get(key) ?? index.byAddressAlias.get(key);
-  if (hit) return { id: hit.id, name: hit.name, provisional: false };
-
-  // Also try the FULL raw string: sources like Do Duluth put the whole address in the venue field,
-  // and that form is registered as an address alias.
-  const fullKey = normalizeVenueKey(venueRaw);
-  const fullHit = index.byNameAlias.get(fullKey) ?? index.byAddressAlias.get(fullKey);
-  if (fullHit) return { id: fullHit.id, name: fullHit.name, provisional: false };
-
-  return { id: provisionalId(key), name: parsed.name, provisional: true };
 }

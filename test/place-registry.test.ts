@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildPlaceIndex, PLACE_INDEX } from "../src/place-registry.js";
+import { buildPlaceIndex, PLACE_INDEX, resolvePlace } from "../src/place-registry.js";
 import { PLACES } from "../src/places.js";
 
 const base = {
@@ -85,5 +85,92 @@ describe("the shipped registry", () => {
   it("has unique ids", () => {
     const ids = PLACE_INDEX.all.map((p) => p.id);
     expect(ids).toEqual([...new Set(ids)]);
+  });
+
+  it("resolves every observed Bent Paddle corpus variant to the same id", () => {
+    // Confirms the flagship claim in place-resolve.ts's module doc: these three raw forms plus the
+    // canonical address all converge on one identity — against the REAL shipped PLACE_INDEX, not a
+    // test fixture. "Bent Paddle Taproom // 1832 W Michigan St. // Duluth" only resolves because
+    // src/places.ts carries it verbatim as a nameAlias (I2 fix) — resolvePlace does no splitting of
+    // a compound name+address string; it only ever does an exact normalized-map lookup.
+    const variants = [
+      "Bent Paddle Brewing",
+      "Bent Paddle Taproom // 1832 W Michigan St. // Duluth",
+      "Bent Paddle Taproom 1832 W Michigan St.",
+      "1832 W Michigan St",
+    ];
+    for (const v of variants) expect(resolvePlace(v)?.id).toBe("bent-paddle-taproom");
+  });
+});
+
+// Fixture note: nameAliases below list every OBSERVED corpus variant verbatim — including the two
+// compound "name + address" forms — exactly as a human curator pastes them from `places:propose`
+// output. resolvePlace does exact normalized-map lookup only (no fuzzy/substring matching), so a
+// compound string only resolves once its literal form is a claimed alias; this mirrors how the
+// shipped registry (src/places.ts) already carries "Bent Paddle Taproom 1832 W Michigan St." as a
+// nameAlias for the same reason.
+const IDX = buildPlaceIndex([
+  {
+    id: "bent-paddle-taproom", name: "Bent Paddle Taproom",
+    nameAliases: [
+      "Bent Paddle Brewing",
+      "Bent Paddle Taproom // 1832 W Michigan St. // Duluth",
+      "Bent Paddle Taproom 1832 W Michigan St.",
+    ],
+    addressAliases: ["1832 W Michigan St"],
+    address: { city: "Duluth", state: "MN" }, provenance: { source: "manual" as const },
+  },
+]);
+
+describe("resolvePlace", () => {
+  it("resolves every corpus variant of one venue to the same id", () => {
+    const variants = [
+      "Bent Paddle Brewing",
+      "Bent Paddle Taproom // 1832 W Michigan St. // Duluth",
+      "Bent Paddle Taproom 1832 W Michigan St.",
+      "1832 W Michigan St",
+    ];
+    const ids = variants.map((v) => resolvePlace(v, IDX)?.id);
+    expect(ids).toEqual(Array(4).fill("bent-paddle-taproom"));
+    expect(resolvePlace("Bent Paddle Brewing", IDX)?.provisional).toBe(false);
+  });
+
+  it("returns undefined for a sentinel — the false-merge guard", () => {
+    for (const s of ["See listing", "Not specified", "Sign in to download the location", ""]) {
+      expect(resolvePlace(s, IDX)).toBeUndefined();
+    }
+    expect(resolvePlace(undefined, IDX)).toBeUndefined();
+  });
+
+  it("mints a provisional place for an unregistered real venue", () => {
+    const p = resolvePlace("Wild State Cider", IDX);
+    expect(p).toEqual({ id: "~wild-state-cider", name: "Wild State Cider", provisional: true });
+  });
+
+  it("gives a provisional place a stable id across calls and across spelling variants", () => {
+    expect(resolvePlace("Wild State Cider", IDX)?.id).toBe(resolvePlace("wild  state   cider", IDX)?.id);
+  });
+
+  it("resolves an away-game venue by its name, not the packed city prefix", () => {
+    expect(resolvePlace("Pueblo, CO, Massari Arena", IDX)?.id).toBe("~massari-arena");
+  });
+
+  // I3: the fullKey fallback's own success path had zero coverage — every variant above resolves
+  // via the FIRST lookup (parsed-name key), because none of them has a leading city prefix for
+  // parseVenueString to strip, so key === fullKey and the fallback is never the thing that found the
+  // hit. This is the one case where it diverges and does the work: an away-game venue whose alias is
+  // the literal, un-split "City, ST, Venue" corpus string.
+  it("resolves via the literal packed alias when a curator pasted the raw 'City, ST, Venue' string", () => {
+    const awayIdx = buildPlaceIndex([
+      {
+        id: "massari-arena", name: "Massari Arena",
+        nameAliases: ["Pueblo, CO, Massari Arena"], // pasted verbatim, city prefix and all
+        address: { city: "Pueblo", state: "CO" }, provenance: { source: "manual" as const },
+      },
+    ]);
+    // parsed.name is "Massari Arena" (extractLeadingCity strips "Pueblo, CO,"), whose key
+    // "massari arena" does NOT match the registered alias — only re-normalizing the untouched raw
+    // string (fullKey "pueblo co massari arena") finds it.
+    expect(resolvePlace("Pueblo, CO, Massari Arena", awayIdx)).toEqual({ id: "massari-arena", name: "Massari Arena", provisional: false });
   });
 });
