@@ -291,6 +291,8 @@ export const PlaceSchema = z.object({
   provenance: PlaceProvenanceSchema,
 });
 export type Place = z.infer<typeof PlaceSchema>;
+/** Hand-authored registry input — defaults not yet applied. See PLACES in places.ts. */
+export type PlaceInput = z.input<typeof PlaceSchema>;
 
 /**
  * What an event carries. `provisional` = auto-derived from an unregistered string: usable for

@@ -27,6 +27,15 @@ describe("buildPlaceIndex", () => {
     expect(idx.byNameAlias.get("glensheen mansion")?.id).toBe("glensheen");
   });
 
+  it("accepts a minimal entry that omits nameAliases/addressAliases/rooms entirely — the Task 9 paste ergonomics", () => {
+    const idx = buildPlaceIndex([{ ...base, id: "minimal-venue", name: "Minimal Venue" }]);
+    const place = idx.byNameAlias.get("minimal venue");
+    expect(place?.id).toBe("minimal-venue");
+    expect(place?.rooms).toEqual([]);
+    expect(place?.nameAliases).toEqual([]);
+    expect(place?.addressAliases).toEqual([]);
+  });
+
   // --- fail-fast invariants: a broken registry must stop the build, not mis-resolve ---
 
   it("throws on a duplicate id", () => {

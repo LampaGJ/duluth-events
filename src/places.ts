@@ -1,4 +1,4 @@
-import type { Place } from "./schema.js";
+import type { PlaceInput } from "./schema.js";
 
 /**
  * The canonical venue registry — the SOURCE OF TRUTH for place identity.
@@ -16,9 +16,14 @@ import type { Place } from "./schema.js";
  *      "Restaurant 301" resolved to "Perkins", "Sioux Falls" to "South Duluth Avenue".
  *   3. Paste here. Aliases may be written readably — buildPlaceIndex normalizes them on load.
  *
+ * Typed as `PlaceInput[]` (the Zod INPUT type, `z.input<typeof PlaceSchema>`), not `Place[]` (the
+ * post-parse output type) — these are hand-authored literals, parsed for the first time inside
+ * buildPlaceIndex. `nameAliases` / `addressAliases` / `rooms` all default to `[]` in PlaceSchema, so
+ * an entry with none of those need not write them at all.
+ *
  * Address data from OpenStreetMap is ODbL; attribution ships in the feed footer.
  */
-export const PLACES: Place[] = [
+export const PLACES: PlaceInput[] = [
   {
     id: "bent-paddle-taproom",
     name: "Bent Paddle Brewing Co. — Brewery + Taproom",
@@ -31,19 +36,15 @@ export const PLACES: Place[] = [
   {
     id: "lake-superior-estuarium",
     name: "Lake Superior Estuarium",
-    nameAliases: [],
     addressAliases: ["3 Marina Drive", "3 Marina Dr"],
     address: { street: "3 Marina Drive", city: "Superior", state: "WI", geo: { lat: 46.7221, lon: -92.063 }, inDuluth: false },
-    rooms: [],
     provenance: { source: "osm", ref: "nominatim:Lake Superior Estuarium, Superior, WI" },
   },
   {
     id: "wussows-concert-cafe",
     name: "Wussow's Concert Cafe",
-    nameAliases: [],
     addressAliases: ["324 N Central Ave", "324 North Central Avenue"],
     address: { street: "324 North Central Avenue", city: "Duluth", state: "MN", geo: { lat: 46.7386, lon: -92.1662 }, inDuluth: true },
-    rooms: [],
     provenance: { source: "osm", ref: "nominatim:Wussow's Concert Cafe, Duluth, MN" },
   },
 ];
