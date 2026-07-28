@@ -1,0 +1,5352 @@
+[
+  {
+    "name": "Priest Field",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7057733,
+    "lon": -92.0565792,
+    "ref": "node/353889177"
+  },
+  {
+    "name": "Washington Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7004955,
+    "lon": -92.0463013,
+    "ref": "node/353891286"
+  },
+  {
+    "name": "Reif Recreation Center",
+    "street": null,
+    "city": null,
+    "state": "MN",
+    "zip": null,
+    "lat": 46.817905,
+    "lon": -92.1059949,
+    "ref": "node/367067856"
+  },
+  {
+    "name": "Karpeles Manuscript Library Museum",
+    "street": "902 East 1st Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55805",
+    "lat": 46.7962002,
+    "lon": -92.0875538,
+    "ref": "node/367068092"
+  },
+  {
+    "name": "Proctor Area Historical Museum",
+    "street": null,
+    "city": null,
+    "state": "MN",
+    "zip": null,
+    "lat": 46.7427171,
+    "lon": -92.2248547,
+    "ref": "node/367068128"
+  },
+  {
+    "name": "Holden Fine Arts Center",
+    "street": null,
+    "city": null,
+    "state": "WI",
+    "zip": null,
+    "lat": 46.716607,
+    "lon": -92.0882462,
+    "ref": "node/367808550"
+  },
+  {
+    "name": "Superior Public Library",
+    "street": null,
+    "city": null,
+    "state": "WI",
+    "zip": null,
+    "lat": 46.7197108,
+    "lon": -92.1032291,
+    "ref": "node/367808853"
+  },
+  {
+    "name": "Red Mug Coffeehouse",
+    "street": "916 Hammond Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7267718,
+    "lon": -92.0976329,
+    "ref": "node/367810118"
+  },
+  {
+    "name": "Choo Choo Bar & Grill",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6774113,
+    "lon": -92.0109564,
+    "ref": "node/616085389"
+  },
+  {
+    "name": "Archery Course",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6922427,
+    "lon": -92.1439694,
+    "ref": "node/642273157"
+  },
+  {
+    "name": "Hartley Nature Center",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8385654,
+    "lon": -92.0829825,
+    "ref": "node/762133805"
+  },
+  {
+    "name": "Northern Shores Coffee",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8184862,
+    "lon": -92.0850478,
+    "ref": "node/1098309355"
+  },
+  {
+    "name": "Buffalo Wild Wings",
+    "street": "1307 Miller Trunk Highway",
+    "city": null,
+    "state": "MN",
+    "zip": null,
+    "lat": 46.8062583,
+    "lon": -92.1553697,
+    "ref": "node/1102861968"
+  },
+  {
+    "name": "Applebee's",
+    "street": null,
+    "city": null,
+    "state": "MN",
+    "zip": null,
+    "lat": 46.8045332,
+    "lon": -92.1584245,
+    "ref": "node/1102958171"
+  },
+  {
+    "name": "Fitger's Brewhouse Brewery and Grille",
+    "street": "600 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7924183,
+    "lon": -92.0907559,
+    "ref": "node/1105621953"
+  },
+  {
+    "name": "Bulldog Pizza",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8214517,
+    "lon": -92.0733751,
+    "ref": "node/1110578385"
+  },
+  {
+    "name": "Park Point",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7317112,
+    "lon": -92.0527914,
+    "ref": "node/1271197029"
+  },
+  {
+    "name": "Duluth Public Library",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8215018,
+    "lon": -92.0735956,
+    "ref": "node/1288634116"
+  },
+  {
+    "name": "Northern Waters Smokehaus",
+    "street": "394 Lake Avenue South",
+    "city": null,
+    "state": null,
+    "zip": "55802",
+    "lat": 46.7818773,
+    "lon": -92.094579,
+    "ref": "node/1489708269"
+  },
+  {
+    "name": "Sara's Table",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8104725,
+    "lon": -92.0829981,
+    "ref": "node/2160088363"
+  },
+  {
+    "name": "Pholicious",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7819602,
+    "lon": -92.0944302,
+    "ref": "node/2164617409"
+  },
+  {
+    "name": "Lake Avenue Café",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7821218,
+    "lon": -92.0947198,
+    "ref": "node/2164617412"
+  },
+  {
+    "name": "Duluth-Superior Friends Meeting",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8047423,
+    "lon": -92.076472,
+    "ref": "node/2269966370"
+  },
+  {
+    "name": "Loaves & Fishes Catholic Worker",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8025445,
+    "lon": -92.0749283,
+    "ref": "node/2269973877"
+  },
+  {
+    "name": "Saint Paul's Episcopal Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8032038,
+    "lon": -92.0760885,
+    "ref": "node/2269984189"
+  },
+  {
+    "name": "Thirsty Pagan Brewing",
+    "street": "1615 Winter Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.72825,
+    "lon": -92.1016833,
+    "ref": "node/2358036317"
+  },
+  {
+    "name": "Black Woods Grill and Bar",
+    "street": "195 US-2",
+    "city": "Proctor",
+    "state": "MN",
+    "zip": "55810",
+    "lat": 46.7392705,
+    "lon": -92.2178834,
+    "ref": "node/2566888998"
+  },
+  {
+    "name": "Caribou Coffee",
+    "street": "627 West Central Entrance",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8031342,
+    "lon": -92.1473715,
+    "ref": "node/2579781844"
+  },
+  {
+    "name": "Pizza Lucé",
+    "street": "11 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7871473,
+    "lon": -92.0982094,
+    "ref": "node/2611363182"
+  },
+  {
+    "name": "Gondik Law Speedway",
+    "street": "4700 Tower Avenue",
+    "city": "Superior",
+    "state": null,
+    "zip": "54880",
+    "lat": 46.6817875,
+    "lon": -92.1014405,
+    "ref": "node/2953670481"
+  },
+  {
+    "name": "Green Mill",
+    "street": "340 Lake Avenue South",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7830067,
+    "lon": -92.0953972,
+    "ref": "node/3066132134"
+  },
+  {
+    "name": "Little Angie's Cantina and Grill",
+    "street": "11 Buchanan Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": null,
+    "lat": 46.7820676,
+    "lon": -92.0940236,
+    "ref": "node/3286307152"
+  },
+  {
+    "name": "The Breakwater",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6780767,
+    "lon": -92.0104122,
+    "ref": "node/3413492885"
+  },
+  {
+    "name": "Gronks",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6785662,
+    "lon": -92.0109647,
+    "ref": "node/3413494216"
+  },
+  {
+    "name": "Duluth Curling Club",
+    "street": "327 Harbor Drive",
+    "city": null,
+    "state": null,
+    "zip": "55802",
+    "lat": 46.7818905,
+    "lon": -92.0981243,
+    "ref": "node/3427293223"
+  },
+  {
+    "name": "Clyde Iron Works",
+    "street": "2920 West Michigan Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7585236,
+    "lon": -92.1336135,
+    "ref": "node/3945296240"
+  },
+  {
+    "name": "Minnesota Autism Center",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8371363,
+    "lon": -92.2200919,
+    "ref": "node/4455951337"
+  },
+  {
+    "name": "A World of Accordions Museum",
+    "street": "1401 Belknap Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7208602,
+    "lon": -92.0982573,
+    "ref": "node/4471448729"
+  },
+  {
+    "name": "Hanni Strahl Concert Hall",
+    "street": "1401 Belknap Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7210455,
+    "lon": -92.0982915,
+    "ref": "node/4471448730"
+  },
+  {
+    "name": "State of Wisconsin Fire & Police Hall of Fame",
+    "street": "402 23rd Avenue East",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7040653,
+    "lon": -92.0480495,
+    "ref": "node/4471829623"
+  },
+  {
+    "name": "Superior Branch of Boys & Girls Clubs of the Northland",
+    "street": "710 Catlin Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7298748,
+    "lon": -92.0865553,
+    "ref": "node/4485445687"
+  },
+  {
+    "name": "Manion Center",
+    "street": "1805 Catlin Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7165063,
+    "lon": -92.0882882,
+    "ref": "node/4564447550"
+  },
+  {
+    "name": "Belknap Liquor & Lounge",
+    "street": "130 Belknap Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7196129,
+    "lon": -92.08128,
+    "ref": "node/4583315600"
+  },
+  {
+    "name": "Sammy's Pizza",
+    "street": "1908 Tower Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7156002,
+    "lon": -92.1037124,
+    "ref": "node/4583315602"
+  },
+  {
+    "name": "Steel Toe Pub",
+    "street": "1213 Tower Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7237248,
+    "lon": -92.1042156,
+    "ref": "node/4583331247"
+  },
+  {
+    "name": "Thorpe Langley  Auditorium",
+    "street": "1710 Weeks Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7173289,
+    "lon": -92.0909117,
+    "ref": "node/4638958739"
+  },
+  {
+    "name": "Black Box Theater",
+    "street": "1805 Catlin Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7166315,
+    "lon": -92.0883313,
+    "ref": "node/4639032444"
+  },
+  {
+    "name": "Webb Recital Hall",
+    "street": "1805 Catlin Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7165745,
+    "lon": -92.088438,
+    "ref": "node/4639032445"
+  },
+  {
+    "name": "Kruk Gallery",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7164688,
+    "lon": -92.0886239,
+    "ref": "node/4639032446"
+  },
+  {
+    "name": "Ole Haugsrud Stadium",
+    "street": "1515 Mertz Mortorelli Memorial Drive",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7195465,
+    "lon": -92.0857201,
+    "ref": "node/4639063671"
+  },
+  {
+    "name": "Multicultural Center",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7177975,
+    "lon": -92.0911794,
+    "ref": "node/4643591896"
+  },
+  {
+    "name": "Veterans and Non-Traditional Student Center",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7175589,
+    "lon": -92.0910568,
+    "ref": "node/4643591897"
+  },
+  {
+    "name": "Gender Equity Center",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7187897,
+    "lon": -92.0908551,
+    "ref": "node/4643591898"
+  },
+  {
+    "name": "Caribou Coffee",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7188168,
+    "lon": -92.0892655,
+    "ref": "node/4643591899"
+  },
+  {
+    "name": "Brick Oven Grille",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7187463,
+    "lon": -92.0892972,
+    "ref": "node/4643591900"
+  },
+  {
+    "name": "Mondo Subs",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7188195,
+    "lon": -92.0894276,
+    "ref": "node/4643591901"
+  },
+  {
+    "name": "Papa Don's",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7238455,
+    "lon": -92.1042277,
+    "ref": "node/4666529768"
+  },
+  {
+    "name": "Phantom Galleries",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.723672,
+    "lon": -92.1042158,
+    "ref": "node/4666529769"
+  },
+  {
+    "name": "The Suites Hotel in Canal Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7833935,
+    "lon": -92.0961847,
+    "ref": "node/4688902814"
+  },
+  {
+    "name": "Fitger's Inn",
+    "street": "600 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7923969,
+    "lon": -92.0906228,
+    "ref": "node/4688902815"
+  },
+  {
+    "name": "Glensheen - Historic Congdon Estate",
+    "street": "3300 London Rd",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": null,
+    "lat": 46.8151573,
+    "lon": -92.0517206,
+    "ref": "node/4691963258"
+  },
+  {
+    "name": "Lower Chester Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8045952,
+    "lon": -92.0852261,
+    "ref": "node/4726361290"
+  },
+  {
+    "name": "Big Daddy's Burgers",
+    "street": "2828 Piedmont Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.7831742,
+    "lon": -92.160918,
+    "ref": "node/4823310330"
+  },
+  {
+    "name": "Seventh Day Advent Church",
+    "street": "3210 Decker Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.7862923,
+    "lon": -92.1626848,
+    "ref": "node/4824141376"
+  },
+  {
+    "name": "Duluth Grill",
+    "street": "118 South 27th Avenue West",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7606611,
+    "lon": -92.1299907,
+    "ref": "node/4923205176"
+  },
+  {
+    "name": "Bent Paddle Brewing Co. - Brewery + Taproom",
+    "street": "1912 W Michigan St",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7684227,
+    "lon": -92.1209316,
+    "ref": "node/5169253013"
+  },
+  {
+    "name": "Beacon Sports Bar & Grill",
+    "street": "5044 Hermantown Road",
+    "city": "Hermantown",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.7853394,
+    "lon": -92.2109635,
+    "ref": "node/5353484205"
+  },
+  {
+    "name": "Lake Superior Bakehouse",
+    "street": "102 West Superior Street",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7857998,
+    "lon": -92.0994378,
+    "ref": "node/5649792930"
+  },
+  {
+    "name": "OMC Smokehouse",
+    "street": "1909 West Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7686514,
+    "lon": -92.1223392,
+    "ref": "node/5650330425"
+  },
+  {
+    "name": "Duluth's Best Bread",
+    "street": "1418 Tower Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7213855,
+    "lon": -92.1036871,
+    "ref": "node/5820787367"
+  },
+  {
+    "name": "Norton Park United Methodists Church",
+    "street": "436 N North 79th Avenue West",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7228424,
+    "lon": -92.197461,
+    "ref": "node/5904401993"
+  },
+  {
+    "name": "Westside Vineyard",
+    "street": "410 North 78th Avenue West",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7223847,
+    "lon": -92.1953674,
+    "ref": "node/5904401994"
+  },
+  {
+    "name": "Story Book Circle",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7680005,
+    "lon": -92.1390865,
+    "ref": "node/5911724232"
+  },
+  {
+    "name": "The Ripple Bar",
+    "street": "325 South Lake Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7835935,
+    "lon": -92.0961662,
+    "ref": "node/6037479847"
+  },
+  {
+    "name": "Hoops Brewing Company",
+    "street": "325 South Lake Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7835667,
+    "lon": -92.0963443,
+    "ref": "node/6037514895"
+  },
+  {
+    "name": "Black Water Lounge",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7896961,
+    "lon": -92.0950412,
+    "ref": "node/6174044985"
+  },
+  {
+    "name": "India Palace",
+    "street": "319 West Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7837003,
+    "lon": -92.1027988,
+    "ref": "node/6354895961"
+  },
+  {
+    "name": "West Duluth Branch Library",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7368959,
+    "lon": -92.1717035,
+    "ref": "node/6410703703"
+  },
+  {
+    "name": "Warrior Brewing Company",
+    "street": "2711 West Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7610604,
+    "lon": -92.1333626,
+    "ref": "node/6507047528"
+  },
+  {
+    "name": "Rathskeller",
+    "street": "299 E Michigan st",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7884758,
+    "lon": -92.0953754,
+    "ref": "node/6520745662"
+  },
+  {
+    "name": "NorShor Theatre",
+    "street": "211 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7892956,
+    "lon": -92.0954574,
+    "ref": "node/6522566751"
+  },
+  {
+    "name": "Twelve Holy Apostles Orthodox Church",
+    "street": "632 East 2nd Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55805",
+    "lat": 46.7946716,
+    "lon": -92.0915984,
+    "ref": "node/6747268163"
+  },
+  {
+    "name": "Caribou Coffee",
+    "street": "2 East Central Entrance",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8001042,
+    "lon": -92.131738,
+    "ref": "node/6796169320"
+  },
+  {
+    "name": "Perk Place Coffeehouse",
+    "street": "1336 West Arrowhead Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8212524,
+    "lon": -92.098679,
+    "ref": "node/6925800614"
+  },
+  {
+    "name": "Starbucks",
+    "street": "1902 Miller Trunk Highway",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8086078,
+    "lon": -92.1677436,
+    "ref": "node/6943184238"
+  },
+  {
+    "name": "Starbucks",
+    "street": "1002 Woodland Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55803",
+    "lat": 46.8172835,
+    "lon": -92.0777591,
+    "ref": "node/6959293354"
+  },
+  {
+    "name": "Caribou Coffee",
+    "street": "1515 Kenwood Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8218205,
+    "lon": -92.1015647,
+    "ref": "node/6975301936"
+  },
+  {
+    "name": "Crooked Pint",
+    "street": "1402 West Arrowhead Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8218253,
+    "lon": -92.1010211,
+    "ref": "node/6975301941"
+  },
+  {
+    "name": "Caribou Coffee",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8209176,
+    "lon": -92.07263,
+    "ref": "node/6975320932"
+  },
+  {
+    "name": "Billy's",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8799715,
+    "lon": -92.0484248,
+    "ref": "node/6975323277"
+  },
+  {
+    "name": "YMCA",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8214264,
+    "lon": -92.2395573,
+    "ref": "node/6975349082"
+  },
+  {
+    "name": "7 West Taphouse",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8072337,
+    "lon": -92.1724259,
+    "ref": "node/6977449501"
+  },
+  {
+    "name": "Spirit Mountain Adventure Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7149759,
+    "lon": -92.2181759,
+    "ref": "node/7273401973"
+  },
+  {
+    "name": "Dugout Lounge",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7224495,
+    "lon": -92.1036861,
+    "ref": "node/7373520220"
+  },
+  {
+    "name": "Superior Tavern",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7234259,
+    "lon": -92.1036796,
+    "ref": "node/7373546262"
+  },
+  {
+    "name": "Empire Coffee",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7240716,
+    "lon": -92.1036616,
+    "ref": "node/7373546265"
+  },
+  {
+    "name": "A Dozen Excuses",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7249536,
+    "lon": -92.1036714,
+    "ref": "node/7373546268"
+  },
+  {
+    "name": "Courtyard Café",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6977616,
+    "lon": -92.1024463,
+    "ref": "node/7373973004"
+  },
+  {
+    "name": "Koffee Knook",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6974967,
+    "lon": -92.1028647,
+    "ref": "node/7373973005"
+  },
+  {
+    "name": "The Hammond",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7323625,
+    "lon": -92.0982496,
+    "ref": "node/7387909092"
+  },
+  {
+    "name": "Schultz's Sports Bar",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7327123,
+    "lon": -92.0968432,
+    "ref": "node/7387909093"
+  },
+  {
+    "name": "Superior Cubans",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7241443,
+    "lon": -92.1022033,
+    "ref": "node/7905387411"
+  },
+  {
+    "name": "The Snooty Fox Tea Shop",
+    "street": "12 South 15th Avenue East",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55812",
+    "lat": 46.8011623,
+    "lon": -92.0791242,
+    "ref": "node/8095243028"
+  },
+  {
+    "name": "Duluth Tap Exchange",
+    "street": "1905 West Superior Street",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7687548,
+    "lon": -92.1222135,
+    "ref": "node/8117217573"
+  },
+  {
+    "name": "OMC Whiskey Bar",
+    "street": "1907 West Superior Street",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7687045,
+    "lon": -92.1222818,
+    "ref": "node/8117563534"
+  },
+  {
+    "name": "Dovetail Cafe and Marketplace",
+    "street": "1917 West Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7684566,
+    "lon": -92.1226929,
+    "ref": "node/8334463474"
+  },
+  {
+    "name": "The Caddy Shack Indoor Golf & Pub",
+    "street": "2023 West Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.76737,
+    "lon": -92.1240144,
+    "ref": "node/8576355164"
+  },
+  {
+    "name": "Duluth Coffee Restaurant",
+    "street": "107 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7881644,
+    "lon": -92.0968587,
+    "ref": "node/8576355165"
+  },
+  {
+    "name": "Duluth Coffee Company Cafe & Roastery",
+    "street": "105 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7881038,
+    "lon": -92.0969408,
+    "ref": "node/8576355166"
+  },
+  {
+    "name": "Wasabi Japanese Cuisine Restaurant",
+    "street": "132 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7886418,
+    "lon": -92.095737,
+    "ref": "node/8576355178"
+  },
+  {
+    "name": "310 Pub",
+    "street": "310 South Lake Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7837746,
+    "lon": -92.095962,
+    "ref": "node/8576454035"
+  },
+  {
+    "name": "Cloud 9",
+    "street": "308 South Lake Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7839441,
+    "lon": -92.0960566,
+    "ref": "node/8576454036"
+  },
+  {
+    "name": "Red Lobster",
+    "street": "301 South Lake Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7841191,
+    "lon": -92.096557,
+    "ref": "node/8576454038"
+  },
+  {
+    "name": "The Social House - Canal Park",
+    "street": "355 South Lake Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7825796,
+    "lon": -92.0954968,
+    "ref": "node/8576454039"
+  },
+  {
+    "name": "Mexico Lindo",
+    "street": "600 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7918883,
+    "lon": -92.0907807,
+    "ref": "node/8576819617"
+  },
+  {
+    "name": "Caribou Coffee",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8045538,
+    "lon": -92.0683213,
+    "ref": "node/9103978757"
+  },
+  {
+    "name": "World Of Wheels Skate Center",
+    "street": "1218 Oakes Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7239024,
+    "lon": -92.1065282,
+    "ref": "node/9726088768"
+  },
+  {
+    "name": "The Shack Smokehouse, Bar, & Liquor Store",
+    "street": "3301 Belknap Street",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7212107,
+    "lon": -92.1262394,
+    "ref": "node/9811558894"
+  },
+  {
+    "name": "Clyde Iron Works",
+    "street": "2920 West Michigan Street",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7585128,
+    "lon": -92.1339204,
+    "ref": "node/9813148796"
+  },
+  {
+    "name": "Aces on 29th",
+    "street": "2827 Oaks Ave",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7051549,
+    "lon": -92.1080687,
+    "ref": "node/9815958204"
+  },
+  {
+    "name": "Neptune's Cyber Cafe",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7990198,
+    "lon": -92.0985001,
+    "ref": "node/9829316134"
+  },
+  {
+    "name": "Dunn Brothers Coffee",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8072636,
+    "lon": -92.064695,
+    "ref": "node/9966467898"
+  },
+  {
+    "name": "Hudy's Bar",
+    "street": "2126 E 5th St",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7049689,
+    "lon": -92.0508701,
+    "ref": "node/10052833965"
+  },
+  {
+    "name": "New China",
+    "street": "15 Belknap Street",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.720851,
+    "lon": -92.0782223,
+    "ref": "node/10652230133"
+  },
+  {
+    "name": "Spirit Room",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7268187,
+    "lon": -92.097533,
+    "ref": "node/10743723575"
+  },
+  {
+    "name": "Guadalajara Mexican Restaurant",
+    "street": "69 North 28th Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7079751,
+    "lon": -92.0741675,
+    "ref": "node/10747393611"
+  },
+  {
+    "name": "UofM Medical School, Ste 201",
+    "street": "624 E 1st St",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7939685,
+    "lon": -92.0908337,
+    "ref": "node/11032459630"
+  },
+  {
+    "name": "Toppers Pizza",
+    "street": "1214 Tower Ave",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7236668,
+    "lon": -92.1036792,
+    "ref": "node/11037299251"
+  },
+  {
+    "name": "Pizza Hut",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8006465,
+    "lon": -92.1304969,
+    "ref": "node/11105950058"
+  },
+  {
+    "name": "Oasis Del Norte",
+    "street": "2401",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7640985,
+    "lon": -92.1286072,
+    "ref": "node/11246957408"
+  },
+  {
+    "name": "Salvation Army Community Center",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7596152,
+    "lon": -92.1298127,
+    "ref": "node/11281880370"
+  },
+  {
+    "name": "The Loch Café & Games",
+    "street": "318 North 18th Avenue East",
+    "city": null,
+    "state": null,
+    "zip": "55812",
+    "lat": 46.8065898,
+    "lon": -92.0795765,
+    "ref": "node/11296080469"
+  },
+  {
+    "name": "Vitta Pizza",
+    "street": "307 Canal Park Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7842847,
+    "lon": -92.0950993,
+    "ref": "node/11471982844"
+  },
+  {
+    "name": "St. Louis County Historical Society",
+    "street": "506 West Michigan Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7815045,
+    "lon": -92.1038746,
+    "ref": "node/11580068357"
+  },
+  {
+    "name": "Wissota Chophouse",
+    "street": "1102 Tower Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7252978,
+    "lon": -92.103532,
+    "ref": "node/11764573926"
+  },
+  {
+    "name": "Central Pub",
+    "street": "1001 Belknap Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7210161,
+    "lon": -92.0929027,
+    "ref": "node/11774687075"
+  },
+  {
+    "name": "Chilly Billy’s",
+    "street": "1608 Woodland Avenue",
+    "city": null,
+    "state": null,
+    "zip": "55803",
+    "lat": 46.8215981,
+    "lon": -92.0738697,
+    "ref": "node/11795611669"
+  },
+  {
+    "name": "Ichiro Sushi & Ramen",
+    "street": "1702 Miller Trunk Hwy",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8064611,
+    "lon": -92.1627852,
+    "ref": "node/11847557771"
+  },
+  {
+    "name": "Fond-du-Luth Casino",
+    "street": "129 East Superior Street",
+    "city": null,
+    "state": null,
+    "zip": "55802",
+    "lat": 46.7888757,
+    "lon": -92.0962346,
+    "ref": "node/11919872669"
+  },
+  {
+    "name": "Japanese Peace Bell",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7770748,
+    "lon": -92.124123,
+    "ref": "node/12230661930"
+  },
+  {
+    "name": "Our Lady Queen of Peace Chapel",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8152871,
+    "lon": -92.1062984,
+    "ref": "node/12309454150"
+  },
+  {
+    "name": "Caribou Coffee",
+    "street": "307 Canal Park Drive",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7841945,
+    "lon": -92.0950084,
+    "ref": "node/12437572233"
+  },
+  {
+    "name": "Fitger's Brewhouse",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7924865,
+    "lon": -92.0905538,
+    "ref": "node/12520239137"
+  },
+  {
+    "name": "The Other Place Bar & Grill",
+    "street": "3930 East Calvary Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55803",
+    "lat": 46.8548309,
+    "lon": -92.0931096,
+    "ref": "node/12550237696"
+  },
+  {
+    "name": "Siiviis Gallery",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7826158,
+    "lon": -92.0943465,
+    "ref": "node/12829094686"
+  },
+  {
+    "name": "Barkers Waterfront Grille & Lounge",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.717551,
+    "lon": -92.0553198,
+    "ref": "node/12829312415"
+  },
+  {
+    "name": "Noodles & Company",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7203199,
+    "lon": -92.102106,
+    "ref": "node/12989927762"
+  },
+  {
+    "name": "First United Methodist Church",
+    "street": "230 East Skyline Parkway",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7964752,
+    "lon": -92.1060219,
+    "ref": "node/13051041725"
+  },
+  {
+    "name": "Famous Dave's",
+    "street": "4135 Richard Avenue",
+    "city": "Hermantown",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8090074,
+    "lon": -92.1775476,
+    "ref": "node/13052422009"
+  },
+  {
+    "name": "Starbucks",
+    "street": "325 West Central Entrance",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8008506,
+    "lon": -92.1424611,
+    "ref": "node/13056593804"
+  },
+  {
+    "name": "PhoHolic Taste of Vietnam",
+    "street": "309 East Central Entrance",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8005947,
+    "lon": -92.1257262,
+    "ref": "node/13056713019"
+  },
+  {
+    "name": "Pickwick",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7916794,
+    "lon": -92.0915668,
+    "ref": "node/13094606501"
+  },
+  {
+    "name": "Burger Paradox",
+    "street": "2113 West Superior Street",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7666752,
+    "lon": -92.12508,
+    "ref": "node/13095301601"
+  },
+  {
+    "name": "St. James Catholic Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7439313,
+    "lon": -92.1696936,
+    "ref": "node/13201850995"
+  },
+  {
+    "name": "Our Savior's Lutheran Church",
+    "street": "4825 Grand Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7436302,
+    "lon": -92.1634,
+    "ref": "node/13201895109"
+  },
+  {
+    "name": "Sammy's Pizza & Restaurant - Hermantown",
+    "street": "4310 Menard Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8233398,
+    "lon": -92.1836372,
+    "ref": "node/13530198377"
+  },
+  {
+    "name": "Foster's Sports Bar & Grill",
+    "street": "4767 West Arrowhead Road",
+    "city": "Hermantown",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8226323,
+    "lon": -92.1817539,
+    "ref": "node/13530222866"
+  },
+  {
+    "name": "Proctor Pizza & Sub Shop",
+    "street": "204 3rd Ave",
+    "city": "Proctor",
+    "state": "MN",
+    "zip": "55810",
+    "lat": 46.7441945,
+    "lon": -92.224022,
+    "ref": "node/13568598896"
+  },
+  {
+    "name": "Arrowhead Tap House",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8384128,
+    "lon": -92.1801587,
+    "ref": "node/13652410432"
+  },
+  {
+    "name": "Yellow Bike Coffee",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8335877,
+    "lon": -92.1723201,
+    "ref": "node/13807183744"
+  },
+  {
+    "name": "Elim Lutheran Church",
+    "street": "6101 Cody Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7416112,
+    "lon": -92.1752605,
+    "ref": "node/13833381317"
+  },
+  {
+    "name": "Salem Covenant Church",
+    "street": "339 North 59th Avenue West",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7391215,
+    "lon": -92.1724924,
+    "ref": "node/13833391184"
+  },
+  {
+    "name": "Christ Temple Church",
+    "street": "330 North 59th Avenue West",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7388269,
+    "lon": -92.171694,
+    "ref": "node/13833468257"
+  },
+  {
+    "name": "The Boreal House",
+    "street": "330 North 57th Avenue West",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7387003,
+    "lon": -92.1690382,
+    "ref": "node/13833468258"
+  },
+  {
+    "name": "Kom-On-Inn",
+    "street": "332 North 57th Avenue West",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7388313,
+    "lon": -92.1690408,
+    "ref": "node/13833468259"
+  },
+  {
+    "name": "Shake-It",
+    "street": "5801 North 58th Avenue West",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7380751,
+    "lon": -92.1707805,
+    "ref": "node/13833468262"
+  },
+  {
+    "name": "Superior Ramen House",
+    "street": "110 East 2nd Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7236786,
+    "lon": -92.0714155,
+    "ref": "node/13892981128"
+  },
+  {
+    "name": "Hanabi Sushi & Bar",
+    "street": "110 North 1st Avenue West",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7870288,
+    "lon": -92.1008816,
+    "ref": "node/13903261277"
+  },
+  {
+    "name": "Believer's Church",
+    "street": "30 North 58th Avenue West",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7349689,
+    "lon": -92.1703848,
+    "ref": "node/13905402117"
+  },
+  {
+    "name": "A & Dubs",
+    "street": "3131 West 3rd Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7588809,
+    "lon": -92.1414268,
+    "ref": "node/13911312668"
+  },
+  {
+    "name": "Sabor’s by Pedro’s",
+    "street": "1608 Woodland Ave.",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8215973,
+    "lon": -92.0738371,
+    "ref": "node/13921437654"
+  },
+  {
+    "name": "Frederick Rodney Paine Forest Preserve",
+    "street": "2509 Becks Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55808",
+    "lat": 46.6919621,
+    "lon": -92.2743133,
+    "ref": "node/13938552663"
+  },
+  {
+    "name": "Emmanuel Baptist Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8125081,
+    "lon": -92.1471408,
+    "ref": "node/13952610933"
+  },
+  {
+    "name": "Mount of Olives Baptist Church",
+    "street": "1500 Swan Lake Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8133574,
+    "lon": -92.1410277,
+    "ref": "node/13952610970"
+  },
+  {
+    "name": "Bethany Community Church",
+    "street": "6700 Grand Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7286804,
+    "lon": -92.1826653,
+    "ref": "node/13954353621"
+  },
+  {
+    "name": "New Fire Church",
+    "street": "5919 Bristol Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7378299,
+    "lon": -92.1731832,
+    "ref": "node/13954353622"
+  },
+  {
+    "name": "Asbury United Methodist Church",
+    "street": "6822 Grand Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7276974,
+    "lon": -92.1844546,
+    "ref": "node/13954439426"
+  },
+  {
+    "name": "Tappa Keg Inn",
+    "street": "7036 Grand Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7255118,
+    "lon": -92.1878665,
+    "ref": "node/13954489768"
+  },
+  {
+    "name": "Barnyard",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.725291,
+    "lon": -92.1900724,
+    "ref": "node/13956197851"
+  },
+  {
+    "name": "Red Panda",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7248757,
+    "lon": -92.1913071,
+    "ref": "node/13956197852"
+  },
+  {
+    "name": "Snow Leopard",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7244545,
+    "lon": -92.1916684,
+    "ref": "node/13956197853"
+  },
+  {
+    "name": "Grey Wolf",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7252191,
+    "lon": -92.1928977,
+    "ref": "node/13956197859"
+  },
+  {
+    "name": "Caribou",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7258615,
+    "lon": -92.1924258,
+    "ref": "node/13956197860"
+  },
+  {
+    "name": "River Otter",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7250903,
+    "lon": -92.1924227,
+    "ref": "node/13956197861"
+  },
+  {
+    "name": "Brown Bear",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7252871,
+    "lon": -92.1921095,
+    "ref": "node/13956197862"
+  },
+  {
+    "name": "Amur Tiger",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7254172,
+    "lon": -92.1907552,
+    "ref": "node/13956197863"
+  },
+  {
+    "name": "Capybara",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7272463,
+    "lon": -92.1916873,
+    "ref": "node/13956197864"
+  },
+  {
+    "name": "Bald Eagle",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7269804,
+    "lon": -92.1916021,
+    "ref": "node/13956197865"
+  },
+  {
+    "name": "Safari Cafe",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7255922,
+    "lon": -92.1905006,
+    "ref": "node/13956197875"
+  },
+  {
+    "name": "Coyote",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7246728,
+    "lon": -92.1924785,
+    "ref": "node/13956245290"
+  },
+  {
+    "name": "Cougar",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7244131,
+    "lon": -92.1924931,
+    "ref": "node/13956245291"
+  },
+  {
+    "name": "Black Bear",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7245018,
+    "lon": -92.1928883,
+    "ref": "node/13956245292"
+  },
+  {
+    "name": "Prairie Dog",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7255458,
+    "lon": -92.1898291,
+    "ref": "node/13956317924"
+  },
+  {
+    "name": "Underwood Coffee",
+    "street": "301 West 1st Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55804",
+    "lat": 46.7847499,
+    "lon": -92.1033122,
+    "ref": "node/13962655490"
+  },
+  {
+    "name": "Superior Family Restaurant",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7237841,
+    "lon": -92.1045171,
+    "ref": "node/14024386872"
+  },
+  {
+    "name": "Ward Wells Field House",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8184689,
+    "lon": -92.0806223,
+    "ref": "way/26801168"
+  },
+  {
+    "name": "Residence Dining Center",
+    "street": "1120 Kirby Drive",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8182854,
+    "lon": -92.0861239,
+    "ref": "way/27829439"
+  },
+  {
+    "name": "Hearding Island Wildlife Management Area",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7594344,
+    "lon": -92.0832065,
+    "ref": "way/31656170"
+  },
+  {
+    "name": "Interstate Island Wildlife Management Area",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.748663,
+    "lon": -92.109943,
+    "ref": "way/31656656"
+  },
+  {
+    "name": "Canosia Wildlife Management Area",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.9162665,
+    "lon": -92.2383145,
+    "ref": "way/31657489"
+  },
+  {
+    "name": "Wade Stadium",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7542675,
+    "lon": -92.1438591,
+    "ref": "way/38404087"
+  },
+  {
+    "name": "Jay Cooke State Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6504731,
+    "lon": -92.3511966,
+    "ref": "way/39876348"
+  },
+  {
+    "name": "Jay Cooke State Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6828287,
+    "lon": -92.3143934,
+    "ref": "way/39876420"
+  },
+  {
+    "name": "Griggs Field",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.81908,
+    "lon": -92.0800932,
+    "ref": "way/40051135"
+  },
+  {
+    "name": "SS Meteor",
+    "street": "300 Marina Drive",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7228568,
+    "lon": -92.063406,
+    "ref": "way/48488502"
+  },
+  {
+    "name": "Perkins",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7242751,
+    "lon": -92.0707409,
+    "ref": "way/48488701"
+  },
+  {
+    "name": "Quality Inn Superior - Duluth",
+    "street": "1405 Susquehanna Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7223325,
+    "lon": -92.126938,
+    "ref": "way/48532941"
+  },
+  {
+    "name": "Sleep Inn & Suites",
+    "street": "9330 West Skyline Parkway",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55810",
+    "lat": 46.7252511,
+    "lon": -92.220822,
+    "ref": "way/48538192"
+  },
+  {
+    "name": "Leif Erikson Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7962389,
+    "lon": -92.0831065,
+    "ref": "way/48557946"
+  },
+  {
+    "name": "Enger Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7780658,
+    "lon": -92.126624,
+    "ref": "way/48571458"
+  },
+  {
+    "name": "Washington Square Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8268162,
+    "lon": -92.0376956,
+    "ref": "way/48572653"
+  },
+  {
+    "name": "Portland Square",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7999954,
+    "lon": -92.0900613,
+    "ref": "way/48572684"
+  },
+  {
+    "name": "First Presbyterian Church of Duluth",
+    "street": "300 East 2nd Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55805",
+    "lat": 46.7911239,
+    "lon": -92.0961456,
+    "ref": "way/49234807"
+  },
+  {
+    "name": "Rock Hill Community Church",
+    "street": "2401 West 5th Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7675127,
+    "lon": -92.1339556,
+    "ref": "way/53306655"
+  },
+  {
+    "name": "First United Methodist Church",
+    "street": "230 East Skyline Parkway",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7965132,
+    "lon": -92.1061284,
+    "ref": "way/60942990"
+  },
+  {
+    "name": "City park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8204288,
+    "lon": -92.0386333,
+    "ref": "way/86578548"
+  },
+  {
+    "name": "Library Annex",
+    "street": "1314 Kirby Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55812",
+    "lat": 46.8195619,
+    "lon": -92.0847295,
+    "ref": "way/93289317"
+  },
+  {
+    "name": "Kathryn A. Martin Library",
+    "street": "416 Library Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55812",
+    "lat": 46.8200936,
+    "lon": -92.0842203,
+    "ref": "way/93289318"
+  },
+  {
+    "name": "Sports and Health Center",
+    "street": "1216 Ordean Court",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8187597,
+    "lon": -92.0822629,
+    "ref": "way/94500351"
+  },
+  {
+    "name": "Marshall Performing Arts Center",
+    "street": "1215 Ordean Court",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55812",
+    "lat": 46.8191663,
+    "lon": -92.0834191,
+    "ref": "way/94502284"
+  },
+  {
+    "name": "Tweed Museum of Art",
+    "street": "1201 Ordean Court",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8185503,
+    "lon": -92.0845786,
+    "ref": "way/94502285"
+  },
+  {
+    "name": "Weber Music Hall (WMH)",
+    "street": "1151 University Drive",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8182481,
+    "lon": -92.0831011,
+    "ref": "way/94502287"
+  },
+  {
+    "name": "Marshall W. Alworth Planetarium",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8161223,
+    "lon": -92.0871729,
+    "ref": "way/94559878"
+  },
+  {
+    "name": "Alliance Community Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8224906,
+    "lon": -92.1209361,
+    "ref": "way/94620520"
+  },
+  {
+    "name": "Bagley Nature Area",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8230849,
+    "lon": -92.0861562,
+    "ref": "way/102133412"
+  },
+  {
+    "name": "Leif Erikson Replica Longboat",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7967211,
+    "lon": -92.0821749,
+    "ref": "way/113767152"
+  },
+  {
+    "name": "Grandma's Saloon and Grill",
+    "street": "522 Lake Avenue South",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7801514,
+    "lon": -92.0933081,
+    "ref": "way/113767155"
+  },
+  {
+    "name": "Minnesota Slip",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7825103,
+    "lon": -92.0968612,
+    "ref": "way/113767159"
+  },
+  {
+    "name": "Canal Park",
+    "street": "Canal Park Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": null,
+    "lat": 46.7837768,
+    "lon": -92.0917826,
+    "ref": "way/114199926"
+  },
+  {
+    "name": "Hermantown Community Church",
+    "street": "4880 Maple Grove Road",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8065267,
+    "lon": -92.1933058,
+    "ref": "way/114714531"
+  },
+  {
+    "name": "University of Minnesota Duluth",
+    "street": "1049 University Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55812",
+    "lat": 46.8203824,
+    "lon": -92.0845472,
+    "ref": "way/116426265"
+  },
+  {
+    "name": "Belisio's",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7814363,
+    "lon": -92.0948652,
+    "ref": "way/137334287"
+  },
+  {
+    "name": "Spirit Mountain Upper Chalet",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7180015,
+    "lon": -92.216709,
+    "ref": "way/146915066"
+  },
+  {
+    "name": "Duluth Spirit Mountain Inn - Americas Best Value",
+    "street": "9315 Westgate Boulevard",
+    "city": "Proctor",
+    "state": "MN",
+    "zip": "55810",
+    "lat": 46.7270775,
+    "lon": -92.2199834,
+    "ref": "way/146915103"
+  },
+  {
+    "name": "Canal Park Lodge",
+    "street": "250 Railroad Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7858022,
+    "lon": -92.0943675,
+    "ref": "way/150576388"
+  },
+  {
+    "name": "Hampton Inn",
+    "street": "310 Canal Park Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7843926,
+    "lon": -92.0935152,
+    "ref": "way/150576389"
+  },
+  {
+    "name": "Unitarian Universalist Congregation of Duluth",
+    "street": "835 West College Street",
+    "city": "Duluth",
+    "state": null,
+    "zip": "55711",
+    "lat": 46.815628,
+    "lon": -92.0962315,
+    "ref": "way/161839239"
+  },
+  {
+    "name": "The Inn On Lake Superior",
+    "street": "003 Canal Park Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7832214,
+    "lon": -92.0934848,
+    "ref": "way/166711999"
+  },
+  {
+    "name": "Lake Superior Maritime Visitor Center",
+    "street": "600 South Lake Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": null,
+    "lat": 46.7798277,
+    "lon": -92.092533,
+    "ref": "way/167029142"
+  },
+  {
+    "name": "The St. Louis County Depot",
+    "street": "506 West Michigan Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7813765,
+    "lon": -92.1039969,
+    "ref": "way/167029774"
+  },
+  {
+    "name": "Saint Mary Star of the Sea",
+    "street": "325 East 3rd Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55805",
+    "lat": 46.792812,
+    "lon": -92.0970492,
+    "ref": "way/167030650"
+  },
+  {
+    "name": "SS William A. Irvin",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7827937,
+    "lon": -92.0972273,
+    "ref": "way/170788432"
+  },
+  {
+    "name": "Beacon Pointe Resort",
+    "street": "2100 Water Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55812",
+    "lat": 46.8029504,
+    "lon": -92.0667107,
+    "ref": "way/173871190"
+  },
+  {
+    "name": "Duluth Bible Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8318716,
+    "lon": -92.0739846,
+    "ref": "way/175008970"
+  },
+  {
+    "name": "Best Western Bridgeview",
+    "street": "415 Hammond Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7330144,
+    "lon": -92.0984443,
+    "ref": "way/194805086"
+  },
+  {
+    "name": "Anchor Bar and Grill",
+    "street": "413 Tower Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7333078,
+    "lon": -92.1041911,
+    "ref": "way/194805144"
+  },
+  {
+    "name": "Tower Avenue Tavern",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7335855,
+    "lon": -92.1042028,
+    "ref": "way/194805186"
+  },
+  {
+    "name": "Cedar Lounge",
+    "street": "1715 North 3rd Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7354096,
+    "lon": -92.1031883,
+    "ref": "way/194805204"
+  },
+  {
+    "name": "Earth Rider Brewery",
+    "street": "1617 North 3rd Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7354703,
+    "lon": -92.1016255,
+    "ref": "way/194805234"
+  },
+  {
+    "name": "Superior Inn",
+    "street": "525 Hammond Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7316228,
+    "lon": -92.0986506,
+    "ref": "way/194805235"
+  },
+  {
+    "name": "Our Savior's Lutheran Church",
+    "street": "1924 Wyoming Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7151554,
+    "lon": -92.1240647,
+    "ref": "way/195140259"
+  },
+  {
+    "name": "Acacia-Itasca Masonic Lodge",
+    "street": "3117 North 21st Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7137434,
+    "lon": -92.1240851,
+    "ref": "way/195140289"
+  },
+  {
+    "name": "Hope Congregational Church",
+    "street": "1827 Wyoming Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7162341,
+    "lon": -92.124795,
+    "ref": "way/195152398"
+  },
+  {
+    "name": "Billings Park Café",
+    "street": "1802 Iowa Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7169899,
+    "lon": -92.1281783,
+    "ref": "way/195341099"
+  },
+  {
+    "name": "Charlie Brown's Bar",
+    "street": "1828 Iowa Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7160973,
+    "lon": -92.1281674,
+    "ref": "way/195341108"
+  },
+  {
+    "name": "Calvary Baptist Church",
+    "street": "2812 North 21st Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7132615,
+    "lon": -92.1197236,
+    "ref": "way/195360030"
+  },
+  {
+    "name": "The Old Firehouse & Police Museum",
+    "street": "402 23rd Avenue East",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7040456,
+    "lon": -92.0479826,
+    "ref": "way/195380288"
+  },
+  {
+    "name": "Bayside Baptist Church",
+    "street": "3915 North 16th Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7198097,
+    "lon": -92.1338225,
+    "ref": "way/195493405"
+  },
+  {
+    "name": "St. Alban's Episcopal Church",
+    "street": "1510 New York Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7198336,
+    "lon": -92.1319023,
+    "ref": "way/195493410"
+  },
+  {
+    "name": "Billings Park Civic Center",
+    "street": "3903 North 18th Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7174155,
+    "lon": -92.1335227,
+    "ref": "way/195493507"
+  },
+  {
+    "name": "St. Francis Xavier Catholic Church",
+    "street": "2316 East 4th Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7034709,
+    "lon": -92.0474015,
+    "ref": "way/195592785"
+  },
+  {
+    "name": "Concordia Lutheran Church",
+    "street": "1702 John Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7178138,
+    "lon": -92.1005112,
+    "ref": "way/195644100"
+  },
+  {
+    "name": "PizzaMan Family Restaurant",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7191641,
+    "lon": -92.1036587,
+    "ref": "way/195644959"
+  },
+  {
+    "name": "KD's Family Restaurant",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7178586,
+    "lon": -92.1033715,
+    "ref": "way/195644960"
+  },
+  {
+    "name": "Flame Nightclub",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.718887,
+    "lon": -92.1035854,
+    "ref": "way/195644963"
+  },
+  {
+    "name": "Wessman Arena",
+    "street": "2701 Catlin Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7080807,
+    "lon": -92.0886165,
+    "ref": "way/195774541"
+  },
+  {
+    "name": "The Vineyard Church",
+    "street": "603 Faxon Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.711796,
+    "lon": -92.0856477,
+    "ref": "way/195774582"
+  },
+  {
+    "name": "Keyport Lounge & Liquor",
+    "street": "1900 Belknap Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7203679,
+    "lon": -92.1064089,
+    "ref": "way/197170523"
+  },
+  {
+    "name": "Enger Tower",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7761105,
+    "lon": -92.1249586,
+    "ref": "way/206457171"
+  },
+  {
+    "name": "Lincoln Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7688889,
+    "lon": -92.1381406,
+    "ref": "way/208442373"
+  },
+  {
+    "name": "Irving Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7329068,
+    "lon": -92.1679036,
+    "ref": "way/212400754"
+  },
+  {
+    "name": "Days Inn Duluth Lakewalk",
+    "street": "2211 London Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55812",
+    "lat": 46.8061218,
+    "lon": -92.0670303,
+    "ref": "way/221147660"
+  },
+  {
+    "name": "Perkins",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8073296,
+    "lon": -92.0622313,
+    "ref": "way/228468802"
+  },
+  {
+    "name": "Blackwoods",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8089282,
+    "lon": -92.0619525,
+    "ref": "way/228468804"
+  },
+  {
+    "name": "Fichtner Field",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8087656,
+    "lon": -92.2365048,
+    "ref": "way/245493477"
+  },
+  {
+    "name": "The Vineyard Church",
+    "street": "1533 W Arrowhead Rd",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8244531,
+    "lon": -92.1053786,
+    "ref": "way/246422965"
+  },
+  {
+    "name": "The Landing Church",
+    "street": "9302 West Skyline Parkway",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55810",
+    "lat": 46.725063,
+    "lon": -92.2153119,
+    "ref": "way/264339189"
+  },
+  {
+    "name": "Cathedral of Christ the King Catholic Church",
+    "street": "1410 Baxter Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7212713,
+    "lon": -92.094209,
+    "ref": "way/286357820"
+  },
+  {
+    "name": "Portman Square",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8298809,
+    "lon": -92.0302449,
+    "ref": "way/293293791"
+  },
+  {
+    "name": "Portman Community Center",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8296619,
+    "lon": -92.0306612,
+    "ref": "way/293293792"
+  },
+  {
+    "name": "Canal Park Brewing Company",
+    "street": "300 Canal Park Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7847997,
+    "lon": -92.0939921,
+    "ref": "way/299274997"
+  },
+  {
+    "name": "Superior Douglas County Family YMCA",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7138777,
+    "lon": -92.0780706,
+    "ref": "way/306059646"
+  },
+  {
+    "name": "Radisson Hotel Duluth-Harborview",
+    "street": "505 West Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7820598,
+    "lon": -92.1053653,
+    "ref": "way/310896784"
+  },
+  {
+    "name": "Holiday Inn & Suites",
+    "street": "200 West First St",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": null,
+    "lat": 46.7850771,
+    "lon": -92.1016986,
+    "ref": "way/310896785"
+  },
+  {
+    "name": "Bayfront Festival Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7785829,
+    "lon": -92.1020758,
+    "ref": "way/335612432"
+  },
+  {
+    "name": "Amsoil Arena",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7804826,
+    "lon": -92.0996513,
+    "ref": "way/335615637"
+  },
+  {
+    "name": "Symphony Hall",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7800388,
+    "lon": -92.0988958,
+    "ref": "way/335615645"
+  },
+  {
+    "name": "Hartley Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8348976,
+    "lon": -92.0925636,
+    "ref": "way/340944775"
+  },
+  {
+    "name": "Marcovich Wellness Center",
+    "street": "1810 Catlin Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7162088,
+    "lon": -92.0863387,
+    "ref": "way/374781120"
+  },
+  {
+    "name": "Petroske Complex",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.668143,
+    "lon": -92.089503,
+    "ref": "way/377639100"
+  },
+  {
+    "name": "Billings Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7121888,
+    "lon": -92.1415911,
+    "ref": "way/377745214"
+  },
+  {
+    "name": "The Sports Garden",
+    "street": "417 Lake Avenue South",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.781143,
+    "lon": -92.0946932,
+    "ref": "way/381682463"
+  },
+  {
+    "name": "Civic Center",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7831973,
+    "lon": -92.1061091,
+    "ref": "way/396826295"
+  },
+  {
+    "name": "Benny Peterson Park",
+    "street": "1107 Hughitt Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7250786,
+    "lon": -92.099812,
+    "ref": "way/402570768"
+  },
+  {
+    "name": "Webster Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6701194,
+    "lon": -92.1035181,
+    "ref": "way/438913638"
+  },
+  {
+    "name": "Center City Park",
+    "street": "1501 Tower Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7199635,
+    "lon": -92.10314,
+    "ref": "way/438918806"
+  },
+  {
+    "name": "Superior Public Library-Superior Branch",
+    "street": "1530 Tower Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.719757,
+    "lon": -92.1029256,
+    "ref": "way/438918808"
+  },
+  {
+    "name": "Northwood Technical College-Superior",
+    "street": "600 North 21st Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7143058,
+    "lon": -92.0853998,
+    "ref": "way/438925837"
+  },
+  {
+    "name": "Bryant Playground",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6672343,
+    "lon": -92.1003175,
+    "ref": "way/440702103"
+  },
+  {
+    "name": "Duluth Public Library",
+    "street": "520 W Superior St;West Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7813662,
+    "lon": -92.1049671,
+    "ref": "way/450026905"
+  },
+  {
+    "name": "Sheraton Duluth Hotel",
+    "street": "311 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7902931,
+    "lon": -92.0944423,
+    "ref": "way/450027183"
+  },
+  {
+    "name": "Old Corey Veech Memorial Field",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8106871,
+    "lon": -92.2369499,
+    "ref": "way/450111029"
+  },
+  {
+    "name": "7 West Taphouse",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7223804,
+    "lon": -92.1044212,
+    "ref": "way/450149706"
+  },
+  {
+    "name": "Sammy's Italian & American Foods",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7226928,
+    "lon": -92.1044342,
+    "ref": "way/450149711"
+  },
+  {
+    "name": "Androy Hotel",
+    "street": "1213 Tower Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.723776,
+    "lon": -92.1043791,
+    "ref": "way/450149722"
+  },
+  {
+    "name": "The Main Club",
+    "street": "1217 Tower Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7236046,
+    "lon": -92.1044108,
+    "ref": "way/450149723"
+  },
+  {
+    "name": "Superior Douglas County Senior Center",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7195948,
+    "lon": -92.1043585,
+    "ref": "way/450217129"
+  },
+  {
+    "name": "Harrington Arts Center",
+    "street": "1401 Belknap Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7209555,
+    "lon": -92.0982854,
+    "ref": "way/450222948"
+  },
+  {
+    "name": "Fairlawn Mansion",
+    "street": "906 East 2nd Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7179142,
+    "lon": -92.0629426,
+    "ref": "way/450246843"
+  },
+  {
+    "name": "Douglas County Historical Museum",
+    "street": "1101 John Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7252524,
+    "lon": -92.101336,
+    "ref": "way/450249417"
+  },
+  {
+    "name": "Bridgemans",
+    "street": "2202 Mountain Shadow Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8055281,
+    "lon": -92.1651849,
+    "ref": "way/450506938"
+  },
+  {
+    "name": "AmericInn by Wyndham Duluth",
+    "street": "901 Joshua Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8061089,
+    "lon": -92.1540114,
+    "ref": "way/450507052"
+  },
+  {
+    "name": "Applebee's",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.696156,
+    "lon": -92.1056452,
+    "ref": "way/450920623"
+  },
+  {
+    "name": "18th & Oakes Park",
+    "street": "1725 Oakes Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7173345,
+    "lon": -92.107675,
+    "ref": "way/451662319"
+  },
+  {
+    "name": "Kelly Park",
+    "street": "711 Grand Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.729647,
+    "lon": -92.0941487,
+    "ref": "way/451662913"
+  },
+  {
+    "name": "Jack Ennis Playground",
+    "street": "1801 Hughitt Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7168734,
+    "lon": -92.0991033,
+    "ref": "way/451662920"
+  },
+  {
+    "name": "Gouge Park",
+    "street": "315 13th Avenue East",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7151463,
+    "lon": -92.0609516,
+    "ref": "way/451715426"
+  },
+  {
+    "name": "Red Barn Playground",
+    "street": "901 East 6th Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7159903,
+    "lon": -92.067006,
+    "ref": "way/451716666"
+  },
+  {
+    "name": "Hammond Park",
+    "street": "1920 Hammond Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7156621,
+    "lon": -92.0971636,
+    "ref": "way/451716667"
+  },
+  {
+    "name": "Veterans Memorial Park",
+    "street": "702 Catlin Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7305726,
+    "lon": -92.0852559,
+    "ref": "way/451724121"
+  },
+  {
+    "name": "Virginia L. Deetz Community Center",
+    "street": "710 Catlin Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7298818,
+    "lon": -92.086562,
+    "ref": "way/451724122"
+  },
+  {
+    "name": "Peter Rich Community Center",
+    "street": "1201 North 8th Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7293033,
+    "lon": -92.0952371,
+    "ref": "way/451729789"
+  },
+  {
+    "name": "Softball Field",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7730043,
+    "lon": -92.1830451,
+    "ref": "way/451799954"
+  },
+  {
+    "name": "Superior Curling Club",
+    "street": "4700 Tower Avenue",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6830481,
+    "lon": -92.1006123,
+    "ref": "way/451809582"
+  },
+  {
+    "name": "V.I.P. Vintage Italian Pizza",
+    "street": "1201 Tower Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7240813,
+    "lon": -92.1044115,
+    "ref": "way/458786164"
+  },
+  {
+    "name": "Who's Bar",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7248795,
+    "lon": -92.103528,
+    "ref": "way/458796597"
+  },
+  {
+    "name": "Palace Bar",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7250537,
+    "lon": -92.103611,
+    "ref": "way/458796599"
+  },
+  {
+    "name": "Third Base Bar & Grill",
+    "street": "1218 Tower Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.723601,
+    "lon": -92.1035798,
+    "ref": "way/458797273"
+  },
+  {
+    "name": "Superior Amateur Hockey Association",
+    "street": "1015 Oakes Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7257656,
+    "lon": -92.1079038,
+    "ref": "way/458941559"
+  },
+  {
+    "name": "Wade Bowl Park",
+    "street": "1228 Clough Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": null,
+    "lat": 46.7235683,
+    "lon": -92.0890444,
+    "ref": "way/458951568"
+  },
+  {
+    "name": "Pilgrim Lutheran Church",
+    "street": "820 Belknap Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7202713,
+    "lon": -92.0903096,
+    "ref": "way/458951710"
+  },
+  {
+    "name": "Head of the Lake Fairgrounds",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6826561,
+    "lon": -92.1010873,
+    "ref": "way/459079793"
+  },
+  {
+    "name": "Bear Creek Park",
+    "street": "110 Moccasin Mike Road",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.6729569,
+    "lon": -92.0032287,
+    "ref": "way/459106768"
+  },
+  {
+    "name": "Carl Gullo Park",
+    "street": "510 26th Avenue East",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7009127,
+    "lon": -92.0457331,
+    "ref": "way/459275747"
+  },
+  {
+    "name": "Julie's Family Restaurant",
+    "street": "403 Belknap Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": null,
+    "lat": 46.7208396,
+    "lon": -92.0841454,
+    "ref": "way/459736186"
+  },
+  {
+    "name": "Holiday Inn Express & Suites",
+    "street": "303 2nd Avenue East",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7230784,
+    "lon": -92.0721697,
+    "ref": "way/460121664"
+  },
+  {
+    "name": "Golden Inn Restaraunt",
+    "street": "24 E Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7249322,
+    "lon": -92.0738227,
+    "ref": "way/460121820"
+  },
+  {
+    "name": "Champions Bar & Grill",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7208872,
+    "lon": -92.0883896,
+    "ref": "way/460124692"
+  },
+  {
+    "name": "Zion Lutheran Church",
+    "street": "2022 East 2nd Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7077521,
+    "lon": -92.0493925,
+    "ref": "way/460266670"
+  },
+  {
+    "name": "China Inn",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7209014,
+    "lon": -92.0781975,
+    "ref": "way/460416430"
+  },
+  {
+    "name": "Heritage Park",
+    "street": "2828 Hammond Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.704951,
+    "lon": -92.0953522,
+    "ref": "way/462253990"
+  },
+  {
+    "name": "Richard Bong WWII Heritage Center",
+    "street": "305 Harbor View Parkway",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7228986,
+    "lon": -92.0683293,
+    "ref": "way/462613685"
+  },
+  {
+    "name": "Barkers Island Inn Resort & Conference Center",
+    "street": "300 Marina Drive",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7174295,
+    "lon": -92.0548461,
+    "ref": "way/462622939"
+  },
+  {
+    "name": "Barkers Island Marina",
+    "street": "250 Marina Drive",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7160114,
+    "lon": -92.0551067,
+    "ref": "way/462666600"
+  },
+  {
+    "name": "Holy Assumption Catholic Church",
+    "street": "5601 Tower Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.6719241,
+    "lon": -92.1047798,
+    "ref": "way/462987979"
+  },
+  {
+    "name": "St. Anthony Catholic Church",
+    "street": "4315 East 3rd Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.6841683,
+    "lon": -92.0199836,
+    "ref": "way/462987983"
+  },
+  {
+    "name": "Central Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7173138,
+    "lon": -92.0741626,
+    "ref": "way/470062592"
+  },
+  {
+    "name": "Jim Dan Hill Library",
+    "street": "907 North 19th Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7165165,
+    "lon": -92.0911439,
+    "ref": "way/470115244"
+  },
+  {
+    "name": "Residence Inn Duluth",
+    "street": "517 West Central Entrance",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8016449,
+    "lon": -92.1444918,
+    "ref": "way/475080819"
+  },
+  {
+    "name": "Chester Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8048057,
+    "lon": -92.0873291,
+    "ref": "way/479557442"
+  },
+  {
+    "name": "Old Main Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.812214,
+    "lon": -92.0759264,
+    "ref": "way/488130943"
+  },
+  {
+    "name": "Field 9",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8164497,
+    "lon": -92.0800383,
+    "ref": "way/488132899"
+  },
+  {
+    "name": "Piedmont Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7838485,
+    "lon": -92.1600682,
+    "ref": "way/490241585"
+  },
+  {
+    "name": "Lakewalk",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7910575,
+    "lon": -92.0914218,
+    "ref": "way/492858874"
+  },
+  {
+    "name": "Hermantown Hockey Arena",
+    "street": "4309 Ugstad Road",
+    "city": "Hermantown",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8228606,
+    "lon": -92.2395047,
+    "ref": "way/494255731"
+  },
+  {
+    "name": "Keene Creek Park",
+    "street": "Okerstrom Road",
+    "city": "Hermantown",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.7719917,
+    "lon": -92.1853285,
+    "ref": "way/494259122"
+  },
+  {
+    "name": "Rose Road Fields",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8357318,
+    "lon": -92.2777555,
+    "ref": "way/494262446"
+  },
+  {
+    "name": "Brighton Beach Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8414809,
+    "lon": -91.9963446,
+    "ref": "way/516733271"
+  },
+  {
+    "name": "La Quinta Inn & Suites Duluth",
+    "street": "1805 Maple Grove Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8099012,
+    "lon": -92.164147,
+    "ref": "way/519141919"
+  },
+  {
+    "name": "Dry Dock",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7138254,
+    "lon": -92.2794351,
+    "ref": "way/519145318"
+  },
+  {
+    "name": "Fryberger Arena",
+    "street": "3211 Allandale Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55803",
+    "lat": 46.8425145,
+    "lon": -92.0809187,
+    "ref": "way/543732858"
+  },
+  {
+    "name": "Woodland Community Center",
+    "street": "3211 Allandale Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55803",
+    "lat": 46.8425994,
+    "lon": -92.0800348,
+    "ref": "way/543733427"
+  },
+  {
+    "name": "Lakeview Covenant Church",
+    "street": "1001 Jean Duluth Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55804",
+    "lat": 46.8370526,
+    "lon": -92.0558788,
+    "ref": "way/543738590"
+  },
+  {
+    "name": "Chester Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8118348,
+    "lon": -92.0940585,
+    "ref": "way/552391963"
+  },
+  {
+    "name": "Congdon Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8212,
+    "lon": -92.0653041,
+    "ref": "way/553586609"
+  },
+  {
+    "name": "Granitoid Memorial Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8156084,
+    "lon": -92.0745512,
+    "ref": "way/553587313"
+  },
+  {
+    "name": "Fitgers Courtyard and Rest Area",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7928085,
+    "lon": -92.0899383,
+    "ref": "way/553588407"
+  },
+  {
+    "name": "Ordean Court",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8187595,
+    "lon": -92.0835615,
+    "ref": "way/553609803"
+  },
+  {
+    "name": "Hope Community Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7190454,
+    "lon": -92.1051187,
+    "ref": "way/574934303"
+  },
+  {
+    "name": "Memorial Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7418221,
+    "lon": -92.1656095,
+    "ref": "way/583981295"
+  },
+  {
+    "name": "Riverside Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7114043,
+    "lon": -92.2044328,
+    "ref": "way/583981307"
+  },
+  {
+    "name": "Blackmer Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6930383,
+    "lon": -92.2045742,
+    "ref": "way/583981309"
+  },
+  {
+    "name": "Rev. LF Merritt Memorial Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.744542,
+    "lon": -92.1562747,
+    "ref": "way/583984793"
+  },
+  {
+    "name": "Merritt Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7542337,
+    "lon": -92.1565992,
+    "ref": "way/583984796"
+  },
+  {
+    "name": "Harrison Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7603474,
+    "lon": -92.1382112,
+    "ref": "way/583984800"
+  },
+  {
+    "name": "Observation Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7796711,
+    "lon": -92.1126557,
+    "ref": "way/583984817"
+  },
+  {
+    "name": "Strickand Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7857551,
+    "lon": -92.1079596,
+    "ref": "way/583984819"
+  },
+  {
+    "name": "Cascade Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7899968,
+    "lon": -92.1057681,
+    "ref": "way/583984822"
+  },
+  {
+    "name": "Central Hillside Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7898104,
+    "lon": -92.1014236,
+    "ref": "way/583988111"
+  },
+  {
+    "name": "Lilliput Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7938999,
+    "lon": -92.0995419,
+    "ref": "way/583988117"
+  },
+  {
+    "name": "Lakeview Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8071926,
+    "lon": -92.0947897,
+    "ref": "way/583988137"
+  },
+  {
+    "name": "Munger Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8030898,
+    "lon": -92.0923719,
+    "ref": "way/583988140"
+  },
+  {
+    "name": "Endion Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8037882,
+    "lon": -92.0793992,
+    "ref": "way/583988164"
+  },
+  {
+    "name": "Kelso Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8256845,
+    "lon": -92.0318132,
+    "ref": "way/584003570"
+  },
+  {
+    "name": "Lester Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8523202,
+    "lon": -92.0085676,
+    "ref": "way/584003572"
+  },
+  {
+    "name": "Gichi-Ode' Akiing",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7885565,
+    "lon": -92.0943109,
+    "ref": "way/608675298"
+  },
+  {
+    "name": "Glenshhen Mansion Congdon Estate Grounds",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8153171,
+    "lon": -92.0509824,
+    "ref": "way/609285862"
+  },
+  {
+    "name": "Tavern on the Hill",
+    "street": "1102 Woodland Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55803",
+    "lat": 46.8180893,
+    "lon": -92.077321,
+    "ref": "way/609595052"
+  },
+  {
+    "name": "United Presbyterian Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7067268,
+    "lon": -92.0657106,
+    "ref": "way/617218519"
+  },
+  {
+    "name": "Christ Lutheran Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7053269,
+    "lon": -92.062563,
+    "ref": "way/617218526"
+  },
+  {
+    "name": "Holy Family Catholic Church",
+    "street": "2430 West 3rd Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7651737,
+    "lon": -92.1316674,
+    "ref": "way/625311202"
+  },
+  {
+    "name": "Fairmount Park",
+    "street": "7210 Fremont Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7268443,
+    "lon": -92.1907226,
+    "ref": "way/625316726"
+  },
+  {
+    "name": "Quarry Park",
+    "street": "1325 N 59th Avenue West",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7517765,
+    "lon": -92.1703936,
+    "ref": "way/625360354"
+  },
+  {
+    "name": "Wild State Cider",
+    "street": "2515 West Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7629144,
+    "lon": -92.1302147,
+    "ref": "way/636708464"
+  },
+  {
+    "name": "Days Inn & Suites by Wyndham Duluth by the Mall",
+    "street": "909 Cottonwood Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8065596,
+    "lon": -92.1579289,
+    "ref": "way/636713768"
+  },
+  {
+    "name": "Grosvenor Square Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8329106,
+    "lon": -92.0245896,
+    "ref": "way/638532105"
+  },
+  {
+    "name": "Manchester Square Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.835884,
+    "lon": -92.0303742,
+    "ref": "way/638532106"
+  },
+  {
+    "name": "Waverly Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8292508,
+    "lon": -92.0657782,
+    "ref": "way/638532107"
+  },
+  {
+    "name": "Average Joe's Pub & Grub",
+    "street": "1310 North 5th Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.732357,
+    "lon": -92.096741,
+    "ref": "way/656278827"
+  },
+  {
+    "name": "Birchwood Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6582072,
+    "lon": -92.2307473,
+    "ref": "way/678051850"
+  },
+  {
+    "name": "Gary New Duluth Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6650261,
+    "lon": -92.2284955,
+    "ref": "way/678051851"
+  },
+  {
+    "name": "Leif Erikson Stage",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7959757,
+    "lon": -92.0829386,
+    "ref": "way/694634758"
+  },
+  {
+    "name": "Ursa Minor Brewing",
+    "street": "2415 West Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7638474,
+    "lon": -92.1289673,
+    "ref": "way/712647191"
+  },
+  {
+    "name": "Gloria Dei Lutheran Church",
+    "street": "219 North 6th Avenue East",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55805",
+    "lat": 46.794362,
+    "lon": -92.0938988,
+    "ref": "way/718500483"
+  },
+  {
+    "name": "Sammys Pizza Woodland",
+    "street": null,
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55803",
+    "lat": 46.8505336,
+    "lon": -92.0822924,
+    "ref": "way/739658655"
+  },
+  {
+    "name": "Zen House",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8508273,
+    "lon": -92.081835,
+    "ref": "way/745154519"
+  },
+  {
+    "name": "At Sarah's Table Chester Creek Cafe",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8104128,
+    "lon": -92.082913,
+    "ref": "way/745157640"
+  },
+  {
+    "name": "Sir Benedict's Tavern on the Lake",
+    "street": "805 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7948942,
+    "lon": -92.0883328,
+    "ref": "way/745160361"
+  },
+  {
+    "name": "Amity Coffee",
+    "street": "4429 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55804",
+    "lat": 46.8271344,
+    "lon": -92.0336032,
+    "ref": "way/745296548"
+  },
+  {
+    "name": "Maya Family Mexican Restaurant",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8151782,
+    "lon": -92.1765515,
+    "ref": "way/745395619"
+  },
+  {
+    "name": "Holiday Inn Express & Suites Duluth North - Miller Hill",
+    "street": "4725 Market Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8137576,
+    "lon": -92.1778654,
+    "ref": "way/745396719"
+  },
+  {
+    "name": "Outback Steakhouse",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8179528,
+    "lon": -92.1752911,
+    "ref": "way/745397671"
+  },
+  {
+    "name": "Mitchell Auditorium",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.816441,
+    "lon": -92.1064711,
+    "ref": "way/761862663"
+  },
+  {
+    "name": "Va Bene Caffe",
+    "street": "742 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7939899,
+    "lon": -92.0886895,
+    "ref": "way/762073528"
+  },
+  {
+    "name": "AAD Shriners Event Center",
+    "street": "5152 Miller Trunk Highway",
+    "city": "Hermantown",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8360265,
+    "lon": -92.222012,
+    "ref": "way/787670840"
+  },
+  {
+    "name": "Hampton Inn & Suites",
+    "street": "66 East 2nd Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7242274,
+    "lon": -92.0727045,
+    "ref": "way/788335749"
+  },
+  {
+    "name": "East End Cafe",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.70458,
+    "lon": -92.0496398,
+    "ref": "way/788569783"
+  },
+  {
+    "name": "East End Family Dining",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7045296,
+    "lon": -92.0495152,
+    "ref": "way/788569784"
+  },
+  {
+    "name": "Pudge's",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7041903,
+    "lon": -92.0492394,
+    "ref": "way/788569785"
+  },
+  {
+    "name": "Pak's Green Corner",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7157192,
+    "lon": -92.1045975,
+    "ref": "way/789642550"
+  },
+  {
+    "name": "Presbytery of Northern Waters",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6756976,
+    "lon": -92.007469,
+    "ref": "way/789742523"
+  },
+  {
+    "name": "Twin Ports Baptist Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6755507,
+    "lon": -92.0087999,
+    "ref": "way/789742524"
+  },
+  {
+    "name": "President Bar",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.68929,
+    "lon": -92.0256174,
+    "ref": "way/789972247"
+  },
+  {
+    "name": "Grumpy's Tavern",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6895443,
+    "lon": -92.0251996,
+    "ref": "way/789972249"
+  },
+  {
+    "name": "Franklin Square",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6919882,
+    "lon": -92.0277787,
+    "ref": "way/790018640"
+  },
+  {
+    "name": "Pokegama Carnegie Wetlands State Natural Area",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6518348,
+    "lon": -92.1348034,
+    "ref": "way/790173699"
+  },
+  {
+    "name": "Hayes Court Complex Ball Fields",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7167862,
+    "lon": -92.0795458,
+    "ref": "way/790235500"
+  },
+  {
+    "name": "Northbay Community Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7130119,
+    "lon": -92.0614401,
+    "ref": "way/790239621"
+  },
+  {
+    "name": "Tug Bayfield",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7798452,
+    "lon": -92.0920135,
+    "ref": "way/839317491"
+  },
+  {
+    "name": "Jay Cooke Plaza",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7954084,
+    "lon": -92.086382,
+    "ref": "way/853019031"
+  },
+  {
+    "name": "Corey Veech Memorial Field",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8271856,
+    "lon": -92.2443093,
+    "ref": "way/868883563"
+  },
+  {
+    "name": "Hungry Hippie Tacos",
+    "street": "1810 West Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7692869,
+    "lon": -92.1205846,
+    "ref": "way/871517411"
+  },
+  {
+    "name": "Duluth Children's Museum",
+    "street": "2125 West Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7663658,
+    "lon": -92.1254911,
+    "ref": "way/871740767"
+  },
+  {
+    "name": "Wussow's Concert Cafe",
+    "street": "324 North Central Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7385502,
+    "lon": -92.1662039,
+    "ref": "way/874210410"
+  },
+  {
+    "name": "Vitta Pizza Central Entrance",
+    "street": "21 West Central Entrance",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8006856,
+    "lon": -92.1335397,
+    "ref": "way/911675199"
+  },
+  {
+    "name": "AmericInn by Wyndham Duluth South Black Woods Event Center",
+    "street": "185 US Hwy 2",
+    "city": "Proctor",
+    "state": "MN",
+    "zip": "55810",
+    "lat": 46.7398387,
+    "lon": -92.2179287,
+    "ref": "way/947601453"
+  },
+  {
+    "name": "Country Inn & Suites, Duluth North, MN",
+    "street": "4257 Haines Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8188055,
+    "lon": -92.1755571,
+    "ref": "way/947736227"
+  },
+  {
+    "name": "Pier B Resort Hotel",
+    "street": "800 West Railroad Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7765579,
+    "lon": -92.1033367,
+    "ref": "way/947737006"
+  },
+  {
+    "name": "Comfort Inn West",
+    "street": "3900 West Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7496027,
+    "lon": -92.1468801,
+    "ref": "way/947738218"
+  },
+  {
+    "name": "Cotton Mansion",
+    "street": "2309 East 1st Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55812",
+    "lat": 46.8100177,
+    "lon": -92.0707077,
+    "ref": "way/948007023"
+  },
+  {
+    "name": "Vintage Acres Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6639011,
+    "lon": -92.2373071,
+    "ref": "way/961302356"
+  },
+  {
+    "name": "Gary New Duluth Community Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6701638,
+    "lon": -92.2268481,
+    "ref": "way/961308480"
+  },
+  {
+    "name": "Fairfield Inn and Suites",
+    "street": "1000 Minnesota Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7740074,
+    "lon": -92.0916938,
+    "ref": "way/974847979"
+  },
+  {
+    "name": "Park Point Marina Inn",
+    "street": "1033 Minnesota Avenue",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7733686,
+    "lon": -92.0910258,
+    "ref": "way/974847980"
+  },
+  {
+    "name": "Harbor Cove Marina",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7728423,
+    "lon": -92.0921911,
+    "ref": "way/974848003"
+  },
+  {
+    "name": "Lakehead Boat Basin",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7741882,
+    "lon": -92.0926315,
+    "ref": "way/974848005"
+  },
+  {
+    "name": "Frankline Tot Lot",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7719999,
+    "lon": -92.0889739,
+    "ref": "way/974848833"
+  },
+  {
+    "name": "College of St. Scholastica",
+    "street": "1200 Kenwood Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8152255,
+    "lon": -92.1075648,
+    "ref": "way/977563473"
+  },
+  {
+    "name": "Caribou Coffee",
+    "street": "2215 East 2nd Street",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7062281,
+    "lon": -92.046402,
+    "ref": "way/988086495"
+  },
+  {
+    "name": "Lake Superior College",
+    "street": "2101 Trinity Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.7845142,
+    "lon": -92.1452312,
+    "ref": "way/1019765698"
+  },
+  {
+    "name": "Fairfield Inn & Suites",
+    "street": "1510 Maple Grove Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8073139,
+    "lon": -92.1574712,
+    "ref": "way/1057055578"
+  },
+  {
+    "name": "University Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8370753,
+    "lon": -92.0074205,
+    "ref": "way/1069117288"
+  },
+  {
+    "name": "Texas Roadhouse",
+    "street": "902 Mall Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8012403,
+    "lon": -92.1491022,
+    "ref": "way/1072445874"
+  },
+  {
+    "name": "Olive Garden",
+    "street": "901 Mall Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8018375,
+    "lon": -92.149908,
+    "ref": "way/1072445875"
+  },
+  {
+    "name": "Hampton Inn & Suites",
+    "street": "1002 Mall Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8003007,
+    "lon": -92.1493866,
+    "ref": "way/1072447575"
+  },
+  {
+    "name": "Log Cabin Tavern",
+    "street": "2821 County Road E",
+    "city": "South Range",
+    "state": "WI",
+    "zip": "54874",
+    "lat": 46.6609139,
+    "lon": -92.0026593,
+    "ref": "way/1087762579"
+  },
+  {
+    "name": "The Breakwater",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.678078,
+    "lon": -92.010421,
+    "ref": "way/1087810146"
+  },
+  {
+    "name": "Stebner Soccer Field Complex",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8060682,
+    "lon": -92.1909649,
+    "ref": "way/1090224390"
+  },
+  {
+    "name": "Duluth Gospel Tabernacle",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7724647,
+    "lon": -92.1176346,
+    "ref": "way/1093943483"
+  },
+  {
+    "name": "Bergey's",
+    "street": "2232 W Superior St",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55806",
+    "lat": 46.7650314,
+    "lon": -92.126406,
+    "ref": "way/1093975578"
+  },
+  {
+    "name": "China Café",
+    "street": "1623 London Road",
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8015646,
+    "lon": -92.0756394,
+    "ref": "way/1098398483"
+  },
+  {
+    "name": "Lake Superior Brewing",
+    "street": "5324 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55084",
+    "lat": 46.8359829,
+    "lon": -92.0165201,
+    "ref": "way/1098398489"
+  },
+  {
+    "name": "Lake Park Athletic Complex",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8710625,
+    "lon": -92.0506698,
+    "ref": "way/1099708852"
+  },
+  {
+    "name": "Uninveristy of Minnesota Duluth",
+    "street": "6008 London Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55804",
+    "lat": 46.836166,
+    "lon": -92.0072361,
+    "ref": "way/1104054332"
+  },
+  {
+    "name": "St. George Serbian Orthodox Church",
+    "street": "1216 104th Avenue West",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55808",
+    "lat": 46.6698187,
+    "lon": -92.230677,
+    "ref": "way/1107975919"
+  },
+  {
+    "name": "Hawk Ridge Learning Center",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8471924,
+    "lon": -92.0321799,
+    "ref": "way/1110874564"
+  },
+  {
+    "name": "Lift Bridge Lodge",
+    "street": "408 Canal Park Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.7817022,
+    "lon": -92.0926234,
+    "ref": "way/1111537113"
+  },
+  {
+    "name": "Trinity Luthren Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8028381,
+    "lon": -92.0926166,
+    "ref": "way/1127847423"
+  },
+  {
+    "name": "First Lutheran Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7973039,
+    "lon": -92.0837543,
+    "ref": "way/1128556301"
+  },
+  {
+    "name": "Beijing Restaurant",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8031545,
+    "lon": -92.0708121,
+    "ref": "way/1129000012"
+  },
+  {
+    "name": "Grandma's Saloon & Grill",
+    "street": "2202 Maple Grove Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8073502,
+    "lon": -92.1658211,
+    "ref": "way/1130677985"
+  },
+  {
+    "name": "Grand Avenue Chalet, Riverside Bar & Grill",
+    "street": "8551 Grand Avenue",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55808",
+    "lat": 46.7155389,
+    "lon": -92.2057926,
+    "ref": "way/1150220697"
+  },
+  {
+    "name": "Old Apostolic Lutheran Church",
+    "street": "3730 Martin Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55803",
+    "lat": 46.8629601,
+    "lon": -92.0735634,
+    "ref": "way/1152565691"
+  },
+  {
+    "name": "Duluth Heights Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8064585,
+    "lon": -92.1337386,
+    "ref": "way/1154050228"
+  },
+  {
+    "name": "U.S. Vessel Yard Slip",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7754519,
+    "lon": -92.0931145,
+    "ref": "way/1164824286"
+  },
+  {
+    "name": "Canosia Township Recreation Area",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8644153,
+    "lon": -92.2766796,
+    "ref": "way/1179634602"
+  },
+  {
+    "name": "James S. Malosky Stadium",
+    "street": "1336 University Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55812",
+    "lat": 46.8191743,
+    "lon": -92.0796453,
+    "ref": "way/1198638859"
+  },
+  {
+    "name": "DECC Arena",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.780693,
+    "lon": -92.0979781,
+    "ref": "way/1214587711"
+  },
+  {
+    "name": "Rip Williams Memorial Rink",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8044405,
+    "lon": -92.0860708,
+    "ref": "way/1217664687"
+  },
+  {
+    "name": "Tru By Hilton Duluth Mall Area",
+    "street": "503 Clearwood Drive",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.7993557,
+    "lon": -92.1200097,
+    "ref": "way/1226067621"
+  },
+  {
+    "name": "Legends Bar",
+    "street": "3 6th Street",
+    "city": "Proctor",
+    "state": "MN",
+    "zip": "55810",
+    "lat": 46.7482924,
+    "lon": -92.2174389,
+    "ref": "way/1235362023"
+  },
+  {
+    "name": "Powerhouse Bar",
+    "street": "423 3rd Ave",
+    "city": "Proctor",
+    "state": "MN",
+    "zip": "55810",
+    "lat": 46.7468253,
+    "lon": -92.2245633,
+    "ref": "way/1235362047"
+  },
+  {
+    "name": "Keyboard Lounge",
+    "street": "304 3rd Ave",
+    "city": "Proctor",
+    "state": "MN",
+    "zip": "55810",
+    "lat": 46.7452349,
+    "lon": -92.2236908,
+    "ref": "way/1235653616"
+  },
+  {
+    "name": "Web Woods",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8044395,
+    "lon": -92.1187088,
+    "ref": "way/1238902808"
+  },
+  {
+    "name": "Pennell Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.800837,
+    "lon": -92.131522,
+    "ref": "way/1238903427"
+  },
+  {
+    "name": "Como Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8345927,
+    "lon": -92.0752968,
+    "ref": "way/1238904199"
+  },
+  {
+    "name": "Hawk Ridge",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8493743,
+    "lon": -92.0323128,
+    "ref": "way/1238908159"
+  },
+  {
+    "name": "Snowflake Nordic Ski Center",
+    "street": "4348 Rice Lake Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.8304107,
+    "lon": -92.140517,
+    "ref": "way/1240498761"
+  },
+  {
+    "name": "Lake Superior Railroad Museum",
+    "street": "506 West Michigan Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.781035,
+    "lon": -92.1040294,
+    "ref": "way/1245663009"
+  },
+  {
+    "name": "St. Louis County Heritage & Arts Center",
+    "street": "506 West Michigan Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55802",
+    "lat": 46.780912,
+    "lon": -92.1045627,
+    "ref": "way/1245663010"
+  },
+  {
+    "name": "Saint Scholastica Theatre",
+    "street": null,
+    "city": null,
+    "state": "MN",
+    "zip": null,
+    "lat": 46.8153301,
+    "lon": -92.1070643,
+    "ref": "way/1255449820"
+  },
+  {
+    "name": "Cobblestone Hotel & Suites – Superior/Duluth",
+    "street": "1102 Tower Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7254577,
+    "lon": -92.1034959,
+    "ref": "way/1266604897"
+  },
+  {
+    "name": "Sol Hong Kong Café",
+    "street": "4721 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55804",
+    "lat": 46.8300087,
+    "lon": -92.0280211,
+    "ref": "way/1284459207"
+  },
+  {
+    "name": "8th Street Video On 47th Ave",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8299326,
+    "lon": -92.0289916,
+    "ref": "way/1284459214"
+  },
+  {
+    "name": "Sammy's Pizza",
+    "street": "4631 East Superior Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55804",
+    "lat": 46.8292077,
+    "lon": -92.029507,
+    "ref": "way/1284472684"
+  },
+  {
+    "name": "Piedmont Community Center",
+    "street": "2302 West 23rd Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.7802511,
+    "lon": -92.1516893,
+    "ref": "way/1306967700"
+  },
+  {
+    "name": "Piedmont Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7807317,
+    "lon": -92.1511943,
+    "ref": "way/1306967704"
+  },
+  {
+    "name": "Rice Lake City Park",
+    "street": "4135 Stockholm Road",
+    "city": "Rice Lake",
+    "state": "MN",
+    "zip": "55803",
+    "lat": 46.8719769,
+    "lon": -92.1168045,
+    "ref": "way/1311515996"
+  },
+  {
+    "name": "Cathedral of Our Lady of the Rosary",
+    "street": "2801 East 4th Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55812",
+    "lat": 46.8165766,
+    "lon": -92.0681785,
+    "ref": "way/1318570656"
+  },
+  {
+    "name": "The Breeze Inn",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8852608,
+    "lon": -92.0476775,
+    "ref": "way/1321492597"
+  },
+  {
+    "name": "Wheeler Athletic Complex",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7567412,
+    "lon": -92.1470893,
+    "ref": "way/1327051968"
+  },
+  {
+    "name": "College of Saint Scholastica Library",
+    "street": null,
+    "city": null,
+    "state": "MN",
+    "zip": null,
+    "lat": 46.8153026,
+    "lon": -92.1064753,
+    "ref": "way/1330404553"
+  },
+  {
+    "name": "Lower Chester Park",
+    "street": "501 N 15th Ave E",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55805",
+    "lat": 46.8045339,
+    "lon": -92.0859137,
+    "ref": "way/1377244642"
+  },
+  {
+    "name": "Peace United Church of Christ",
+    "street": "1111 N 11th Ave E",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55805",
+    "lat": 46.8045385,
+    "lon": -92.0976073,
+    "ref": "way/1388556603"
+  },
+  {
+    "name": "Boomtown Woodfire Grill",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8658946,
+    "lon": -92.1516661,
+    "ref": "way/1396623168"
+  },
+  {
+    "name": "Back Alley Surf & Coffee",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7641964,
+    "lon": -92.1287415,
+    "ref": "way/1420435851"
+  },
+  {
+    "name": "Salem Lutheran Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7899342,
+    "lon": -92.1765272,
+    "ref": "way/1420442326"
+  },
+  {
+    "name": "Apostolic Gospel Church",
+    "street": "3882 Haines Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.7917334,
+    "lon": -92.1736708,
+    "ref": "way/1420443863"
+  },
+  {
+    "name": "Superior Choice Credit Union Stadium",
+    "street": "15550 Mertz Mortorelli Memorial Drive",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7180336,
+    "lon": -92.0857783,
+    "ref": "way/1427242129"
+  },
+  {
+    "name": "St. Lawerence Church",
+    "street": "2410 Morris Thomas Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55811",
+    "lat": 46.7779224,
+    "lon": -92.156897,
+    "ref": "way/1453248065"
+  },
+  {
+    "name": "Little Free Art Gallery",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7464237,
+    "lon": -92.1677726,
+    "ref": "way/1463507226"
+  },
+  {
+    "name": "Keene Creek Park",
+    "street": "6272 Bristol Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55807",
+    "lat": 46.7361184,
+    "lon": -92.1755333,
+    "ref": "way/1512818261"
+  },
+  {
+    "name": "Mike Colalillo Medal of Honor Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7399289,
+    "lon": -92.1595306,
+    "ref": "way/1513110235"
+  },
+  {
+    "name": "Large Lakes Observatory",
+    "street": "2205 East 5th Street",
+    "city": null,
+    "state": null,
+    "zip": "55812",
+    "lat": 46.812047,
+    "lon": -92.0769008,
+    "ref": "way/1523527937"
+  },
+  {
+    "name": "Grassy Point",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7251541,
+    "lon": -92.1539399,
+    "ref": "way/1524817333"
+  },
+  {
+    "name": "Sister Cities Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7868048,
+    "lon": -92.0956368,
+    "ref": "way/1525833965"
+  },
+  {
+    "name": "Fond-du-Lac Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6612355,
+    "lon": -92.2743757,
+    "ref": "way/1529482980"
+  },
+  {
+    "name": "Historical Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6594808,
+    "lon": -92.2781745,
+    "ref": "way/1529495755"
+  },
+  {
+    "name": "Midway Christian Fellowship",
+    "street": "3251 Midway Road",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55810",
+    "lat": 46.7460559,
+    "lon": -92.2808802,
+    "ref": "way/1535506515"
+  },
+  {
+    "name": "University of Wisconsin-Superior",
+    "street": "1605 Catlin Avenue",
+    "city": "Superior",
+    "state": "WI",
+    "zip": "54880",
+    "lat": 46.7133716,
+    "lon": -92.0885832,
+    "ref": "relation/4229162"
+  },
+  {
+    "name": "Douglas County Forest",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.4187752,
+    "lon": -91.9222068,
+    "ref": "relation/5620681"
+  },
+  {
+    "name": "St. Louis/Red River Stream Bank Protection Area",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6530196,
+    "lon": -92.2355529,
+    "ref": "relation/6778999"
+  },
+  {
+    "name": "Superior Municipal Forest",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6868963,
+    "lon": -92.1480367,
+    "ref": "relation/8534452"
+  },
+  {
+    "name": "Wisconsin Point",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6934576,
+    "lon": -91.9883277,
+    "ref": "relation/12118654"
+  },
+  {
+    "name": "Arrowhead Fishing Pier Recreational Complex",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7191294,
+    "lon": -92.1420914,
+    "ref": "relation/12545903"
+  },
+  {
+    "name": "Tri-County Recreation Corridor",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.5984899,
+    "lon": -91.4726927,
+    "ref": "relation/12618310"
+  },
+  {
+    "name": "Congdon Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8192693,
+    "lon": -92.059772,
+    "ref": "relation/14197923"
+  },
+  {
+    "name": "Nemadji State Forest",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.4321445,
+    "lon": -92.4107258,
+    "ref": "relation/19198306"
+  },
+  {
+    "name": "Minnesota Point Pine Forest Scientific and Natural Area",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7176639,
+    "lon": -92.0359519,
+    "ref": "relation/19209883"
+  },
+  {
+    "name": "Russel Square",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8326076,
+    "lon": -92.0377921,
+    "ref": "relation/20712080"
+  },
+  {
+    "name": "One Life Community Church",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.8408793,
+    "lon": -92.0224533,
+    "ref": "relation/20712145"
+  },
+  {
+    "name": "Morgan Park",
+    "street": "1302 88th Avenue West",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55808",
+    "lat": 46.6874372,
+    "lon": -92.2093239,
+    "ref": "relation/20976839"
+  },
+  {
+    "name": "Short Line Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.6775887,
+    "lon": -92.2553975,
+    "ref": "relation/20979430"
+  },
+  {
+    "name": "Chambers Grove Park",
+    "street": "13419 West 3rd Street",
+    "city": "Duluth",
+    "state": "MN",
+    "zip": "55808",
+    "lat": 46.661157,
+    "lon": -92.2825187,
+    "ref": "relation/20980491"
+  },
+  {
+    "name": "Norton Park",
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null,
+    "lat": 46.7212037,
+    "lon": -92.1990547,
+    "ref": "relation/21011630"
+  }
+]

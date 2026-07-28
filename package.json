@@ -14,7 +14,9 @@
     "build:feeds": "tsx src/build.ts",
     "start": "tsx src/server.ts",
     "dev": "tsx watch src/server.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "places:osm": "node scripts/fetch-osm.mjs",
+    "places:propose": "tsx scripts/places-propose.mjs"
   },
   "dependencies": {
     "fastify": "^5.10.0",
