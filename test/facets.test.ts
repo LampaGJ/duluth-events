@@ -15,7 +15,7 @@ import {
   extractTicketUrl,
   parseAgeBand,
 } from "../src/facets.js";
-import { decodeEntities, cleanText } from "../src/normalize.js";
+import { decodeEntities, cleanText, unescapeIcsText } from "../src/normalize.js";
 
 /**
  * Every assertion below quotes a phrase that actually occurs in the deployed corpus
@@ -36,6 +36,35 @@ describe("decodeEntities", () => {
   });
   it("cleanText collapses whitespace too", () => {
     expect(cleanText("  Food &amp;   Drink \n")).toBe("Food & Drink");
+  });
+});
+
+describe("unescapeIcsText", () => {
+  it("undoes each of the three RFC5545 escapes individually", () => {
+    expect(unescapeIcsText("A\\,B")).toBe("A,B");
+    expect(unescapeIcsText("A\\;B")).toBe("A;B");
+    expect(unescapeIcsText("A\\\\B")).toBe("A\\B");
+  });
+  it("leaves unescaped text untouched", () => {
+    expect(unescapeIcsText("no backslashes here")).toBe("no backslashes here");
+  });
+  it("composes with decodeEntities to resolve double-encoded text (PDD's Wussow's case)", () => {
+    // Perfect Duluth Day emits `&amp;#8217\;s`: the escaped `;` masks the entity terminator, so
+    // decodeEntities alone can't see it. unescapeIcsText must run FIRST.
+    expect(decodeEntities(unescapeIcsText("Wussow&amp;#8217\\;s"))).toBe("Wussow’s");
+  });
+  it("is idempotent — a second pass over already-unescaped text is a no-op", () => {
+    const once = unescapeIcsText("A\\;B\\,C\\\\D");
+    expect(unescapeIcsText(once)).toBe(once);
+  });
+  it("ORDER MATTERS: decoding entities before unescaping leaves the entity intact, but unescaping first resolves it", () => {
+    const raw = "Wussow&amp;#8217\\;s";
+    // Wrong order: decodeEntities runs first, so the `\;` still masks the terminator and the
+    // (double-encoded) entity survives undecoded.
+    expect(decodeEntities(raw)).toBe("Wussow&#8217\\;s");
+    // Right order: unescapeIcsText runs first, exposing the real `;` terminator so decodeEntities
+    // resolves the entity.
+    expect(decodeEntities(unescapeIcsText(raw))).toBe("Wussow’s");
   });
 });
 

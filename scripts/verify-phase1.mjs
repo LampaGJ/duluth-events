@@ -25,7 +25,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolvePlace } from "../src/place-registry.js";
-import { decodeEntities } from "../src/normalize.js";
+import { decodeEntities, unescapeIcsText } from "../src/normalize.js";
 
 /** Parse an .ics file's VEVENT blocks into flat property-name -> first-value maps. */
 export function parseIcs(f) {
@@ -51,14 +51,9 @@ export function parseIcs(f) {
   return evs;
 }
 
-/** Undo RFC5545 TEXT escaping (`\,` `\;` `\\`) — the inverse of what ical-generator applies on emit. */
-function unescapeIcsText(s) {
-  return (s ?? "").replace(/\\,/g, ",").replace(/\\;/g, ";").replace(/\\\\/g, "\\");
-}
-
 /** First comma-segment of an unescaped LOCATION value — the venue string, same convention formatLocation uses. */
 function venueOf(e) {
-  return unescapeIcsText(e.LOCATION).split(",")[0].trim();
+  return unescapeIcsText(e.LOCATION ?? "").split(",")[0].trim();
 }
 
 /**
@@ -110,7 +105,7 @@ function categorizeLocationChange(beforeRaw, afterRaw, afterEvent) {
   if (registered && placeName && afterVenue === placeName && beforeVenue !== placeName) {
     return "registry-canonicalization";
   }
-  if (decodeEntities(unescapeIcsText(beforeRaw)) === unescapeIcsText(afterRaw)) {
+  if (decodeEntities(unescapeIcsText(beforeRaw ?? "")) === unescapeIcsText(afterRaw ?? "")) {
     return "entity-quote-decode";
   }
   return "unexplained";

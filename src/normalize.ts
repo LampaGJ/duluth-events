@@ -92,6 +92,15 @@ export function parseClockTime(s: string): { hour: number; minute: number; secon
 }
 
 /**
+ * Undo RFC 5545 backslash escaping (`\,` `\;` `\\`). Must run BEFORE decodeEntities: some sources
+ * emit double-encoded text like `Wussow&amp;#8217\;s`, where the escaped `;` masks the entity
+ * terminator and the entity would otherwise survive undecoded.
+ */
+export function unescapeIcsText(s: string): string {
+  return s.replace(/\\([;,\\])/g, "$1");
+}
+
+/**
  * Decode the HTML entities that arrive from JSON/REST sources (WordPress and Squarespace both
  * double-escape). The corpus carries `Food &amp; Drink`, `Whole Foods Co-op &#8211; Hillside` and
  * `Wussow&#8217;s` — left encoded, every category-equality and venue rubric silently misses.

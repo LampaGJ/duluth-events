@@ -1,4 +1,4 @@
-import { cleanText } from "./normalize.js";
+import { cleanText, unescapeIcsText } from "./normalize.js";
 import { extractLeadingCity } from "./facets.js";
 
 /**
@@ -30,7 +30,7 @@ import { extractLeadingCity } from "./facets.js";
  *   5. lowercase, strip punctuation, collapse whitespace
  */
 export function normalizeVenueKey(raw: string): string {
-  const unescaped = raw.replace(/\\([;,\\])/g, "$1");
+  const unescaped = unescapeIcsText(raw);
   return cleanText(unescaped)
     .replace(/\(.*?\)/g, " ")
     .replace(/['’]/g, "")
