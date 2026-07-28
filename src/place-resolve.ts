@@ -65,14 +65,26 @@ const LEADING_ARTICLES = new Set(["the", "a", "an"]);
  *   5. strip parenthetical suffixes — "(G)", "(MWAP)" are room/building codes, not venue identity
  *   6. strip apostrophes (elide, don't space-break — "Wussow's" -> "wussows" not "wussow s")
  *   7. lowercase, strip punctuation, collapse whitespace
- *   8. strip a leading article token (the/a/an) — AFTER tokenizing, so "The Rex" and "Rex" converge
+ *   8. strip leading article tokens (the/a/an) — AFTER tokenizing, so "The Rex" and "Rex" converge.
+ *      Exhaustive (a `while`, matching step 9), not a single strip: "The The Rex" has two leading
+ *      articles, and a single `if` would leave the second one for a SECOND call to remove, breaking
+ *      idempotency (`normalizeVenueKey("The The Rex")` -> "the rex" -> feeding that BACK in would
+ *      strip again -> "rex"). No real corpus string is known to double an article; this is fixed
+ *      pre-emptively because the function's own contract (below) is "idempotent for ALL inputs," not
+ *      "idempotent for inputs observed so far."
  *   9. strip trailing legal/company-suffix tokens — same tokenized pass, restricted to exactly the
  *      LAST token, so a mid-string or non-trailing "co"/"op" survives untouched ("Co-op" -> "co op",
- *      last token is "op", not a suffix, so nothing strips; "Co-op Deli" -> "co op deli" likewise)
+ *      last token is "op", not a suffix, so nothing strips; "Co-op Deli" -> "co op deli" likewise).
+ *      Already exhaustive (a `while`), so "X Company Inc" collapses in one call, not two.
  *
- * Idempotent by construction: every step above either is a no-op on its own output (transliterating
- * already-ASCII text, replacing an "&" that no longer exists) or removes a token that a second pass
- * would no longer find at the position it looks (a leading/trailing token already stripped).
+ * Idempotent by construction FOR ALL INPUTS: steps 4 and 8-9 are the only steps that remove/rewrite
+ * content rather than just re-express it, and all three are now exhaustive loops that run to a fixed
+ * point within a single call — step 4 replaces every "&" (there are none left to find on a second
+ * pass), step 8 shifts every leading article (not just one), step 9 pops every trailing suffix (not
+ * just one). Every other step is a no-op on its own output (transliterating already-ASCII text,
+ * lowercasing already-lowercase text). A single non-exhaustive `if` on either tokenized step would
+ * have broken this: it would still terminate, just not on the FIRST call, which is what "idempotent"
+ * actually promises.
  */
 export function normalizeVenueKey(raw: string): string {
   const unescaped = unescapeIcsText(raw);
@@ -85,7 +97,7 @@ export function normalizeVenueKey(raw: string): string {
     .trim();
 
   const tokens = base.split(" ").filter(Boolean);
-  if (tokens.length > 1 && LEADING_ARTICLES.has(tokens[0]!)) tokens.shift();
+  while (tokens.length > 1 && LEADING_ARTICLES.has(tokens[0]!)) tokens.shift();
   while (tokens.length > 1 && LEGAL_SUFFIXES.has(tokens[tokens.length - 1]!)) tokens.pop();
 
   return tokens.join(" ");

@@ -48,10 +48,29 @@ describe("normalizeVenueKey", () => {
     expect(normalizeVenueKey("The Rex")).toBe("rex");
   });
 
+  it("strips ALL leading articles, not just one — doubled articles, and idempotency across them", () => {
+    // Fix round 1, M1: a single `if` left a SECOND leading article for a re-fed call to strip,
+    // breaking idempotency (normalizeVenueKey("The The Rex") -> "the rex", which is not fixed-point).
+    // The article strip is now a `while`, matching the (already-exhaustive) legal-suffix strip.
+    expect(normalizeVenueKey("The The Rex")).toBe("rex");
+    expect(normalizeVenueKey("A An Event Hall")).toBe("event hall");
+    for (const raw of ["The The Rex", "A An Event Hall"]) {
+      const once = normalizeVenueKey(raw);
+      expect(normalizeVenueKey(once)).toBe(once);
+    }
+  });
+
   it("strips a trailing legal/company suffix, so Company/Co./bare-name converge", () => {
     expect(normalizeVenueKey("Bent Paddle Brewing Company")).toBe(normalizeVenueKey("Bent Paddle Brewing Co."));
     expect(normalizeVenueKey("Bent Paddle Brewing Company")).toBe(normalizeVenueKey("Bent Paddle Brewing"));
     expect(normalizeVenueKey("Bent Paddle Brewing Company")).toBe("bent paddle brewing");
+  });
+
+  it("strips ALL trailing legal-suffix tokens in one pass, so doubled suffixes are already covered", () => {
+    // Pinning existing (already-correct) behavior: the suffix strip was already a `while` before this
+    // fix round, so "Foo Co Inc" -> "foo" in a single call. Kept here alongside the article fix so
+    // the two exhaustive-strip guarantees are pinned side by side, not just the one that was broken.
+    expect(normalizeVenueKey("Foo Co Inc")).toBe("foo");
   });
 
   it("does not orphan 'op' out of Co-op — trailing-suffix strip only ever touches the LAST token", () => {
@@ -60,7 +79,15 @@ describe("normalizeVenueKey", () => {
   });
 
   it("remains idempotent under every new step (accents, &, article, legal suffix)", () => {
-    for (const raw of ["The Bent Paddle Brewing Co.", "Lake Avenue Café", "Sports & Health Center", "Whole Foods Co-op"]) {
+    for (const raw of [
+      "The Bent Paddle Brewing Co.",
+      "Lake Avenue Café",
+      "Sports & Health Center",
+      "Whole Foods Co-op",
+      "The The Rex",
+      "A An Event Hall",
+      "Foo Co Inc",
+    ]) {
       const once = normalizeVenueKey(raw);
       expect(normalizeVenueKey(once)).toBe(once);
     }
