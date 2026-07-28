@@ -19,9 +19,29 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { progress } from "/Users/graham/.claude/lib/progress.mjs";
 import { normalizeVenueKey, isSentinelVenue, parseVenueString } from "../src/place-resolve.js";
 import { unescapeIcsText } from "../src/normalize.js";
+import { deriveSetting } from "../src/facets.js";
 
 const ICS = process.argv[2] ?? "duluth-events.ics";
 const UA = "duluth-events/0.1 (github.com/LampaGJ/duluth-events)";
+
+/**
+ * Pre-classification: some raw strings can never be a Place no matter what a geocoder returns for
+ * them, per project spec ("virtual pseudo-venues, cities used as venues, and rooms" are rejected
+ * outright, left provisional forever). These get sorted into their own NOT-A-VENUE bucket instead of
+ * being scored — a perfect similarity score on a bare city name is maximally deceptive precisely
+ * because a perfect score is the signal the LIKELY tier exists to reward.
+ *
+ *   virtual   — reuses src/facets.ts's OWN `deriveSetting` (its VIRTUAL_RE), so "Zoom"/"webinar"/
+ *               "z.umn.edu" detection can never drift out of sync with the production classifier.
+ *   room      — a small, evidence-drawn regex in the same minimal no-fuzzy-logic style as
+ *               place-resolve.ts's SENTINELS list: every literal here is a raw string actually
+ *               observed in the corpus ("Council Chambers[-,] ... City Hall", "Lakeside Conference
+ *               Room", "Rm 430"), not a speculative pattern.
+ *   city-as-venue — checked separately below (both pre- and post-geocode), since it needs the
+ *               parsed `city` field this same collection loop is still computing.
+ */
+const ROOM_RE = /\bcouncil\s+chambers?\b|\bconference\s+room\b|\bmeeting\s+room\b|\bboard\s*room\b|\broom\s+\d+\b|\brm\.?\s*\d+\b/i;
+const isVirtualPseudoVenue = (raw) => deriveSetting(raw, raw) === "virtual";
 
 // --- collect unresolved venue strings with counts and their stated city ---
 const lines = readFileSync(ICS, "utf8").replace(/\r?\n[ \t]/g, "").split(/\r?\n/);
@@ -38,26 +58,49 @@ for (const l of lines) {
 }
 
 const wanted = new Map(); // normalized key -> { raw, city, state, n }
+const notAVenue = new Map(); // normalized key -> { raw, n, reason } — never geocoded, never scored
+const addNotAVenue = (map, key, raw, n, reason) => {
+  const prev = map.get(key);
+  map.set(key, { raw, reason, n: (prev?.n ?? 0) + n });
+};
+
 for (const e of evs) {
   const loc = unescapeIcsText(e.LOCATION ?? "");
   const rawField = e["X-PLACE-NAME"] ?? loc.split(",")[0];
   if (!rawField || isSentinelVenue(rawField)) continue;
   if (e["X-PLACE-PROVISIONAL"] === "false") continue; // already registered
   const raw = unescapeIcsText(rawField); // guard: X-PLACE-NAME may itself carry RFC5545 escaping
+
+  if (isVirtualPseudoVenue(raw)) {
+    addNotAVenue(notAVenue, normalizeVenueKey(raw) || raw, raw, 1, "virtual pseudo-venue");
+    continue;
+  }
+  if (ROOM_RE.test(raw)) {
+    addNotAVenue(notAVenue, normalizeVenueKey(raw) || raw, raw, 1, "room, not a venue");
+    continue;
+  }
+
   const parsed = parseVenueString(raw);
   const key = normalizeVenueKey(parsed.name);
   if (!key) continue;
   const m = loc.match(/,\s*([A-Za-z .'-]+),\s*([A-Z]{2})\b/); // ALL states, not just MN|WI
   const prev = wanted.get(key);
-  wanted.set(key, {
-    raw: parsed.name,
-    city: parsed.city ?? prev?.city ?? m?.[1]?.trim() ?? "Duluth",
-    state: parsed.state ?? prev?.state ?? m?.[2] ?? "MN",
-    n: (prev?.n ?? 0) + 1,
-  });
+  const city = parsed.city ?? prev?.city ?? m?.[1]?.trim() ?? "Duluth";
+  const state = parsed.state ?? prev?.state ?? m?.[2] ?? "MN";
+
+  // City-as-venue, pre-geocode: the source gave no venue name at all, just repeated its own city
+  // (UMD away-game feeds do this — "Sioux Falls, SD" with an empty `rest`). Catching it here means
+  // these never cost a Nominatim call at all, not just that they're relabeled after one.
+  if (normalizeVenueKey(parsed.name) === normalizeVenueKey(city)) {
+    addNotAVenue(notAVenue, key, parsed.name, 1, "raw venue string is just its own city (no venue name in source)");
+    wanted.delete(key); // in case an earlier alias of the same key had already gone into `wanted`
+    continue;
+  }
+
+  wanted.set(key, { raw: parsed.name, city, state, n: (prev?.n ?? 0) + 1 });
 }
 const targets = [...wanted.values()].sort((a, b) => b.n - a.n);
-console.log(`${targets.length} unresolved venue strings`);
+console.log(`${targets.length} unresolved venue strings (+ ${notAVenue.size} pre-classified NOT-A-VENUE, skipped)`);
 
 // --- tier 1: the committed OSM cache ---
 const osm = existsSync("data/osm-duluth.json") ? JSON.parse(readFileSync("data/osm-duluth.json", "utf8")) : [];
@@ -115,17 +158,55 @@ for (const t of targets) {
   rows.push({ ...t, best, score: +score.toFixed(2), src });
   p.tick(++done);
 }
-p.done({ total: rows.length });
+
+// City-as-venue, post-geocode: catches the case pre-geocode filtering above can't — raw text that
+// doesn't textually equal its city, but which the geocoder still resolved TO the bare city (no
+// distinguishing venue in the result either). A perfect similarity score here is the most dangerous
+// case, not the safest: "Sioux Falls" -> Sioux Falls, SD at sim=1 is a mathematically correct geocode
+// of a string that was never a venue to begin with.
+const keptRows = [];
+for (const r of rows) {
+  if (r.best && normalizeVenueKey(r.best.name) === normalizeVenueKey(r.city)) {
+    addNotAVenue(notAVenue, `${r.raw}|resolved`, r.raw, r.n, "resolved name equals its own city");
+    continue;
+  }
+  keptRows.push(r);
+}
+const finalRows = keptRows;
+p.done({ total: finalRows.length, notAVenue: notAVenue.size });
 
 // --- emit paste-ready literals, ranked, with the verdict a human must check ---
 const slug = (s) => normalizeVenueKey(s).replace(/\s+/g, "-").slice(0, 48).replace(/-+$/, "");
 const verdict = (r) => (!r.best ? "NO MATCH — research by hand" : r.score >= 0.5 ? "LIKELY" : "WEAK — verify or reject");
+const notAVenueRows = [...notAVenue.values()].sort((a, b) => b.n - a.n);
+const anyAcronymHit = finalRows.some((r) => r.best && r.score === 0.9);
 
-let out = `# Place proposals\n\n`;
-out += `${rows.length} unresolved strings. **Verify every entry before pasting.** A geocoder's\n`;
+let out = "";
+if (notAVenueRows.length) {
+  out += `# NOT-A-VENUE — reject, leave provisional forever\n\n`;
+  out += `${notAVenueRows.length} raw strings are structurally not venues (a city used as a venue\n`;
+  out += `name, a virtual/online pseudo-venue, or a building room/subdivision). Per spec these are\n`;
+  out += `never registered — **confirm the rejection**, do not paste a Place literal for any of\n`;
+  out += `these. Listed here, ranked, and pulled OUT of the LIKELY/WEAK/NO MATCH tiers below so\n`;
+  out += `skimming LIKELY can't miss them (a perfect similarity score on a bare city name is the\n`;
+  out += `most deceptive case, not the safest one).\n\n`;
+  for (const r of notAVenueRows) {
+    out += `- **${r.raw}** (${r.n} event${r.n === 1 ? "" : "s"}) — ${r.reason}\n`;
+  }
+  out += `\n---\n\n`;
+}
+
+out += `# Place proposals\n\n`;
+out += `${finalRows.length} unresolved strings. **Verify every entry before pasting.** A geocoder's\n`;
 out += `confident wrong answer looks exactly like data: "Restaurant 301" resolved to "Perkins",\n`;
 out += `"Sioux Falls" to "South Duluth Avenue". Nothing here is auto-accepted.\n\n`;
-for (const r of rows) {
+out += `Caveat: the acronym-boost path (DECC -> Duluth Entertainment Convention Center, scoring 0.9\n`;
+out += `on zero token overlap) **${anyAcronymHit ? "did" : "did not"} fire** on this run — ${
+  anyAcronymHit ? "at least one row below shows sim=0.9 via that path." : "no row below shows sim=0.9."
+} It is proven\n`;
+out += `correct in isolation (\`isAcronym("DECC", "Duluth Entertainment Convention Center") === true\`)\n`;
+out += `but undemonstrated on live data in this run; see the Task 8 report for detail.\n\n`;
+for (const r of finalRows) {
   out += `## ${r.raw}  (${r.n} event${r.n === 1 ? "" : "s"}) — ${verdict(r)}${r.best ? `, sim=${r.score}` : ""}\n\n`;
   out += "```ts\n{\n";
   out += `  id: ${JSON.stringify(slug(r.best?.name ?? r.raw))},\n`;
@@ -142,7 +223,8 @@ for (const r of rows) {
 mkdirSync("reports", { recursive: true });
 writeFileSync("reports/places-proposal.md", out);
 console.log(`\nwrote reports/places-proposal.md`);
-console.log(`  LIKELY:   ${rows.filter((r) => r.best && r.score >= 0.5).length}`);
-console.log(`  WEAK:     ${rows.filter((r) => r.best && r.score < 0.5).length}`);
-console.log(`  NO MATCH: ${rows.filter((r) => !r.best).length}`);
+console.log(`  NOT-A-VENUE: ${notAVenueRows.length}`);
+console.log(`  LIKELY:      ${finalRows.filter((r) => r.best && r.score >= 0.5).length}`);
+console.log(`  WEAK:        ${finalRows.filter((r) => r.best && r.score < 0.5).length}`);
+console.log(`  NO MATCH:    ${finalRows.filter((r) => !r.best).length}`);
 console.log(`\nreports/places-proposal.md is NOT the registry. Review, then paste into src/places.ts.`);
