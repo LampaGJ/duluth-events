@@ -1,5 +1,7 @@
 import { cleanText } from "./normalize.js";
 import { extractLeadingCity } from "./facets.js";
+import type { PlaceRef } from "./schema.js";
+import { PLACE_INDEX, type PlaceIndex } from "./place-registry.js";
 
 /**
  * Venue-string normalization and resolution.
@@ -12,23 +14,6 @@ import { extractLeadingCity } from "./facets.js";
  * @tacticalObjective Normalize a raw venue string to a stable lookup key, reject sentinels, and
  *   split packed "City, ST, Venue" forms — deterministically, with no fuzzy matching and no I/O.
  */
-
-/**
- * Placeholder strings sources emit when they have no venue. These must NEVER resolve to a place:
- * two events at the same instant both reading "See listing" are demonstrably different events, and
- * merging them would DELETE one. 129 of 461 live events (28%) carry one.
- */
-const SENTINELS = [
-  "see listing",
-  "see catalog",
-  "see agenda",
-  "not specified",
-  "sign in to download the location",
-  "tbd",
-  "to be determined",
-  "various",
-  "varies",
-];
 
 /**
  * Normalize to a lookup key. Order matters and each step fixes a measured probe defect:
@@ -48,10 +33,32 @@ export function normalizeVenueKey(raw: string): string {
     .trim();
 }
 
-/** Words that plausibly continue a sentinel phrase rather than start a real venue name. */
-const SENTINEL_CONTINUATIONS = ["for", "see", "check", "tbd"];
-
+/**
+ * Placeholder strings sources emit when they have no venue, and words that plausibly continue a
+ * sentinel phrase rather than start a real venue name.
+ *
+ * Declared INSIDE the function, not at module scope: `place-resolve.ts` and `place-registry.ts`
+ * import each other (the registry imports these normalizers; `resolvePlace` below imports
+ * `PLACE_INDEX`), and `place-registry.ts` eagerly builds `PLACE_INDEX` at module load. When this
+ * module is the entry point, that eager build calls back into `isSentinelVenue` before this
+ * module's OWN top-level statements have run — a module-scope `const` here would still be in its
+ * temporal dead zone at that point and throw. A function-local const has no such ordering
+ * dependency: it is freshly created on every call, cycle or not.
+ */
 export function isSentinelVenue(raw: string): boolean {
+  const SENTINELS = [
+    "see listing",
+    "see catalog",
+    "see agenda",
+    "not specified",
+    "sign in to download the location",
+    "tbd",
+    "to be determined",
+    "various",
+    "varies",
+  ];
+  const SENTINEL_CONTINUATIONS = ["for", "see", "check", "tbd"];
+
   const key = normalizeVenueKey(raw ?? "");
   if (!key) return true;
   return SENTINELS.some((s) => {
@@ -79,4 +86,36 @@ export function parseVenueString(raw: string): { name: string; city?: string; st
   const found = extractLeadingCity(raw);
   if (!found) return { name: cleanText(raw) };
   return { name: found.rest || found.city, city: found.city, state: found.state };
+}
+
+/** kebab slug for a provisional id. Prefixed "~" so provisional ids can never collide with curated ones. */
+function provisionalId(key: string): string {
+  return `~${key.replace(/\s+/g, "-")}`;
+}
+
+/**
+ * Resolve a raw venue string to a canonical place.
+ *
+ * Three outcomes, deliberately distinct:
+ *   sentinel      -> undefined     never merges, never gets a feed
+ *   registered    -> stable id     public feed URL, id guaranteed not to move
+ *   anything else -> provisional   usable for dedupe, no feed, no stability promise
+ */
+export function resolvePlace(venueRaw: string | undefined, index: PlaceIndex = PLACE_INDEX): PlaceRef | undefined {
+  if (!venueRaw || isSentinelVenue(venueRaw)) return undefined;
+
+  const parsed = parseVenueString(venueRaw);
+  const key = normalizeVenueKey(parsed.name);
+  if (!key) return undefined;
+
+  const hit = index.byNameAlias.get(key) ?? index.byAddressAlias.get(key);
+  if (hit) return { id: hit.id, name: hit.name, provisional: false };
+
+  // Also try the FULL raw string: sources like Do Duluth put the whole address in the venue field,
+  // and that form is registered as an address alias.
+  const fullKey = normalizeVenueKey(venueRaw);
+  const fullHit = index.byNameAlias.get(fullKey) ?? index.byAddressAlias.get(fullKey);
+  if (fullHit) return { id: fullHit.id, name: fullHit.name, provisional: false };
+
+  return { id: provisionalId(key), name: parsed.name, provisional: true };
 }

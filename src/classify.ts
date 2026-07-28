@@ -1,6 +1,7 @@
 import type { DuluthEvent, EventType } from "./schema.js";
 import { deriveFacets, extractLeadingCity, extractTicketUrl, haystack, normalizedCategories, parseAgeBand } from "./facets.js";
 import { cleanText } from "./normalize.js";
+import { resolvePlace } from "./place-resolve.js";
 
 /**
  * Deterministic typification: source categories first, then title/description vocabulary.
@@ -186,6 +187,7 @@ export function resolveLocation(loc: DuluthEvent["location"]): DuluthEvent["loca
  */
 export function finalizeEvent(e: DuluthEvent): DuluthEvent {
   const location = resolveLocation(e.location);
+  const place = resolvePlace(e.venueRaw ?? e.location.venueName);
   const eventType = e.eventType !== "other" ? e.eventType : classifyEventType(e.title, e.categories, "community", [location.venueName, location.room].filter(Boolean).join(" "));
   const withLoc: DuluthEvent = { ...e, location, eventType, multiDay: isMultiDay(e.start, e.end) };
 
@@ -203,6 +205,7 @@ export function finalizeEvent(e: DuluthEvent): DuluthEvent {
 
   return {
     ...withLoc,
+    place,
     facets,
     age,
     ticketUrl: e.ticketUrl ?? extractTicketUrl(e.description ?? ""),

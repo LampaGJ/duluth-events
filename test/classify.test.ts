@@ -116,3 +116,16 @@ describe("finalizeEvent", () => {
     expect(e.status).toBe("tentative");
   });
 });
+
+describe("finalizeEvent place resolution", () => {
+  it("resolves a registered venue and preserves the raw claim", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "Wussow's Concert Cafe" }));
+    expect(e.place?.id).toBe("wussows-concert-cafe");
+    expect(e.place?.provisional).toBe(false);
+    expect(e.venueRaw).toBe("Wussow's Concert Cafe");
+  });
+
+  it("leaves place undefined for a sentinel venue", () => {
+    expect(finalizeEvent(makeEvent({ venueRaw: "See listing" })).place).toBeUndefined();
+  });
+});
