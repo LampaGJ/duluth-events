@@ -66,6 +66,14 @@ describe("unescapeIcsText", () => {
     // resolves the entity.
     expect(decodeEntities(unescapeIcsText(raw))).toBe("Wussow’s");
   });
+  it("leaves a backslash before a non-escaped character alone (the helper must stay narrow)", () => {
+    // This narrowness is exactly what makes it safe to keep OUT of cleanText/decodeEntities: a
+    // permissive `\(.)` implementation would strip the backslash from ANY escaped char, silently
+    // corrupting prose that legitimately contains `\a`, `\n`, or a trailing `\`.
+    expect(unescapeIcsText("\\a")).toBe("\\a");
+    expect(unescapeIcsText("\\n")).toBe("\\n");
+    expect(unescapeIcsText("abc\\")).toBe("abc\\");
+  });
 });
 
 describe("R1 — age band", () => {
