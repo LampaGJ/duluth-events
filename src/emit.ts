@@ -102,6 +102,12 @@ function buildXProps(e: DuluthEvent): { key: string; value: string }[] {
   if (f.homeAway) x.push({ key: "X-HOME-AWAY", value: f.homeAway });
   if (f.institutionalNotice) x.push({ key: "X-INSTITUTIONAL-NOTICE", value: "true" });
   if (f.rescheduled) x.push({ key: "X-RESCHEDULED", value: "true" });
+
+  if (e.place) {
+    x.push({ key: "X-PLACE-ID", value: e.place.id });
+    x.push({ key: "X-PLACE-NAME", value: e.place.name });
+    x.push({ key: "X-PLACE-PROVISIONAL", value: String(e.place.provisional) });
+  }
   return x;
 }
 
