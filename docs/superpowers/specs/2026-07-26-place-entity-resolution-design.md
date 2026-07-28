@@ -60,9 +60,19 @@ for
 is depressed entirely by the undecoded HTML entity and the `HighKey`/`High Key` split, both of which
 normalization fixes.
 
-**Consequence: a title-similarity guard is not required, and at any useful threshold it would reject
-real duplicates.** Place plus instant is the key. This inverted the design's starting assumption and
-is the single most important finding in this spec.
+**Consequence: a title-similarity guard must not be used to *select* merges** — at any threshold high
+enough to be meaningful it rejects real duplicates. Place plus instant is the key.
+
+**Amended 2026-07-28 (pre-implementation).** The 8 confirmed pairs all occur at small single-room
+venues — Bent Paddle, Wussow's, the Glensheen pier. None tested a convention center. At DECC, AMSOIL
+Arena or a UMD building, four genuinely different events from four sources can share a venue and a
+start time, and `room` — the intended discriminator — is populated on **0 of 461 events**, so nothing
+guards it.
+
+So a title check enters as a **veto, not a selector**: merge on place + instant *unless* the titles
+are near-disjoint (token Jaccard < 0.15). Every confirmed duplicate scores ≥ 0.25 after
+normalization, so the veto passes all 8 while blocking unrelated events, which score ~0. The
+distinction matters — a selector at 0.5 would have rejected 4 of the 8.
 
 ## Doctrine
 
@@ -286,7 +296,8 @@ covers it. Launch-stage detail, noted and not a blocker.
 Two passes, so nothing currently working regresses:
 
 1. **Place pass** — key `startInstant | placeId`. Cross-source only. Skipped entirely when place is
-   absent. Refuses to merge when both sides state a *different* `room`.
+   absent. Refuses to merge when both sides state a *different* `room`, **or when the titles are
+   near-disjoint (token Jaccard < 0.15)** — the high-capacity-venue veto.
 2. **Title fallback** — the existing fuzzy key, now entity-decoded, applied only to events the place
    pass did not merge.
 

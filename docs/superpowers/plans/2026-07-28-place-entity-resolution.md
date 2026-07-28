@@ -1589,6 +1589,24 @@ describe("place-first dedupe", () => {
     expect(dedupe([a, b])).toHaveLength(1);
   });
 
+  it("VETOES a merge when titles are near-disjoint — the high-capacity-venue guard", () => {
+    // Four unrelated events from four sources at one venue and instant. Real at DECC / AMSOIL /
+    // a UMD building. `room` would discriminate but is populated on 0/461 events, so the title
+    // veto is the only guard. A false merge here would DELETE three events.
+    const evs = ["Symphony Rehearsal", "Craft Vendor Expo", "Job Fair Northland", "Roller Derby Bout"].map((t, i) =>
+      at({ uid: `u${i}`, title: t, venueRaw: "Wussow's Concert Cafe", source: src(`Source ${i}`) }),
+    );
+    expect(dedupe(evs)).toHaveLength(4);
+  });
+
+  it("still merges every confirmed duplicate pair — the veto must not become a selector", () => {
+    // Lowest-scoring confirmed pair in the corpus (0.25 after normalization). A 0.5 selector
+    // would reject this; the 0.15 veto passes it.
+    const a = at({ uid: "a", title: "High Key Mondays &#038; Industry Nights", venueRaw: "Bent Paddle Brewing", source: src("Visit Duluth") });
+    const b = at({ uid: "b", title: "HighKey Mondays + Industry Night!", venueRaw: "Bent Paddle Brewing", source: src("Do Duluth") });
+    expect(dedupe([a, b])).toHaveLength(1);
+  });
+
   it("does not merge the same place at DIFFERENT instants", () => {
     const a = at({ uid: "a", title: "A", venueRaw: "Wussow's Concert Cafe", source: src("X") });
     const b = at({ uid: "b", title: "A", start: "2026-08-11T18:00:00-05:00", venueRaw: "Wussow's Concert Cafe", source: src("Y") });
@@ -1614,6 +1632,24 @@ Expected: FAIL — the place-pair test returns 2, not 1.
 Replace the body of `dedupe` in `src/dedupe.ts`:
 
 ```ts
+/**
+ * Token-set Jaccard over normalized titles. Used ONLY as a veto (see TITLE_VETO) — never to select
+ * merges, because a selector at any meaningful threshold rejects real duplicates: 4 of the 8
+ * confirmed corpus pairs score below 0.5.
+ */
+const TITLE_STOP = new Set(["the", "and", "for", "with", "live", "music", "night", "nights", "duluth"]);
+export function titleSimilarity(a: string, b: string): number {
+  const tk = (s: string) => new Set(normalizeVenueKey(s).split(" ").filter((w) => w.length > 2 && !TITLE_STOP.has(w)));
+  const [x, y] = [tk(a), tk(b)];
+  if (!x.size || !y.size) return 1; // no signal either way — do not veto on emptiness
+  let hits = 0;
+  for (const t of x) if (y.has(t)) hits++;
+  return hits / (x.size + y.size - hits);
+}
+
+/** Below this, two events at one place and instant are treated as genuinely different. */
+const TITLE_VETO = 0.15;
+
 /** Merge one group into a primary + corroborators. Highest confidence wins; ties keep first-seen order. */
 function mergeGroup(group: DuluthEvent[]): DuluthEvent {
   const sorted = [...group].sort((a, b) => CONFIDENCE_RANK[b.source.confidence] - CONFIDENCE_RANK[a.source.confidence]);
@@ -1664,7 +1700,15 @@ export function dedupe(events: DuluthEvent[]): DuluthEvent[] {
     const rooms = new Set(group.map((e) => e.place?.room ?? ""));
     const roomsConflict = rooms.size > 1 && !rooms.has("");
     if (roomsConflict) { afterPlace.push(...group); continue; }
+
     const reps = [...bySource.values()].map((g) => (g.length === 1 ? g[0]! : mergeGroup(g)));
+    // High-capacity-venue veto: a big venue can host genuinely different events at one instant, and
+    // `room` (the intended discriminator) is populated on 0/461 events. Refuse when any pair of
+    // titles is near-disjoint. This is a VETO, not a selector — every confirmed duplicate scores
+    // >= 0.25, unrelated events score ~0, so the bar sits at 0.15.
+    const disjoint = reps.some((x, i) => reps.slice(i + 1).some((y) => titleSimilarity(x.title, y.title) < TITLE_VETO));
+    if (disjoint) { afterPlace.push(...reps); continue; }
+
     afterPlace.push(reps.length === 1 ? reps[0]! : mergeGroup(reps));
   }
 
@@ -1723,14 +1767,13 @@ regression case is UMD 'Fall Volunteer and Engagement Fair' vs NSSR
 Append to `test/place-dedupe.test.ts`:
 
 ```ts
-it("does not collapse unrelated events sharing an instant at a large venue", () => {
-  // A multi-event venue must not become a merge magnet.
-  const evs = ["A", "B", "C", "D"].map((t, i) =>
-    at({ uid: `u${i}`, title: `Event ${t}`, venueRaw: "Wussow's Concert Cafe", source: src(`Source ${t}`) }),
+it("pins the corroborator count when near-identical listings collapse", () => {
+  // Four sources listing the SAME event. Titles overlap, so the veto does not fire and all four
+  // collapse to one with three corroborators. Pins the count so a future widening is visible.
+  const evs = ["Visit Duluth", "Do Duluth", "Perfect Duluth Day", "Duluth Reader"].map((s, i) =>
+    at({ uid: `u${i}`, title: "Buffalo Galaxy Live at the Taproom", venueRaw: "Wussow's Concert Cafe", source: src(s) }),
   );
   const merged = dedupe(evs);
-  // All four are cross-source at one place and instant — they DO collapse, which is the designed
-  // behaviour. This test pins the count so a future change that widens matching is visible.
   expect(merged).toHaveLength(1);
   expect(merged[0]!.alsoListedIn).toHaveLength(3);
 });
