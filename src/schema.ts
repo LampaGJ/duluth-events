@@ -235,6 +235,76 @@ export const FacetsSchema = z.object({
 export type Facets = z.infer<typeof FacetsSchema>;
 
 // ---------------------------------------------------------------------------
+// Place entities
+// ---------------------------------------------------------------------------
+
+/**
+ * @displayName Address
+ * @strategicPurpose WHERE on earth an event happens, kept strictly separate from WHAT the venue is
+ *   called. Conflating the two is why `venueName` ended up carrying strings like
+ *   "Bismarck, ND, MDU Resources Community Bowl" and 59 out-of-state games shipped inside
+ *   `duluth-proper.ics`.
+ * @tacticalObjective Carry the geographic facts a feed consumer needs, and nothing else.
+ */
+export const AddressSchema = z.object({
+  street: z.string().optional(),
+  city: z.string().default("Duluth"),
+  state: z.string().default("MN"),
+  zip: z.string().optional(),
+  geo: GeoSchema.optional(),
+  /** false => Superior WI / Iron Range / an away game. Derived from `city`, never hand-set. */
+  inDuluth: z.boolean().default(true),
+});
+export type Address = z.infer<typeof AddressSchema>;
+
+/** Where a registry fact came from. Required: a fetched address and a typed one are not the same. */
+export const PlaceProvenanceSchema = z.object({
+  source: z.enum(["osm", "web", "manual"]),
+  ref: z.string().optional(), // OSM element id ("way/123456"), or the URL a fact came from
+  retrievedAt: z.iso.datetime({ offset: true }).optional(),
+});
+
+/**
+ * @displayName Place
+ * @strategicPurpose The canonical venue entity. Cross-source dedupe keys on place identity because
+ *   string similarity provably cannot separate true from false merges — venue-token similarity
+ *   between CONFIRMED duplicate pairs ranges from 0.13 to 0.83.
+ * @tacticalObjective Hold a hand-set stable id (it appears in feed URLs), every normalized alias
+ *   that resolves to it, and a canonical address used to enrich events whose source gave none.
+ */
+export const PlaceSchema = z.object({
+  /** Hand-set, stable, lowercase-kebab. Appears in feed URLs, so it must never move. */
+  id: z
+    .string()
+    .min(1)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, { error: "place id must be lowercase-kebab (it appears in feed URLs)" }),
+  name: z.string().min(1),
+  /** Pre-normalized name forms — see normalizeVenueKey(). Resolution is an O(1) lookup, not fuzzy. */
+  nameAliases: z.array(z.string()).default([]),
+  /** Pre-normalized address forms. This is how an address-only listing merges with a name-only one. */
+  addressAliases: z.array(z.string()).default([]),
+  address: AddressSchema,
+  /** Subdivisions: "The Yard", "AMSOIL Arena", "Council Chambers". Declarative; inert until an adapter populates room. */
+  rooms: z.array(z.string()).default([]),
+  /** Forward hook for Institution (issue #3): a name, deliberately not yet a reference. */
+  operator: z.string().optional(),
+  provenance: PlaceProvenanceSchema,
+});
+export type Place = z.infer<typeof PlaceSchema>;
+
+/**
+ * What an event carries. `provisional` = auto-derived from an unregistered string: usable for
+ * dedupe, but never given a public feed URL, because no stability promise can be made about it.
+ */
+export const PlaceRefSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  room: z.string().optional(),
+  provisional: z.boolean().default(false),
+});
+export type PlaceRef = z.infer<typeof PlaceRefSchema>;
+
+// ---------------------------------------------------------------------------
 // The event
 // ---------------------------------------------------------------------------
 
@@ -255,6 +325,10 @@ export const DuluthEventSchema = z
     timezone: z.string().default("America/Chicago"),
 
     location: LocationSchema,
+    /** The source's LITERAL venue string, preserved as provenance and used as the resolution input. */
+    venueRaw: z.string().optional(),
+    /** Resolved canonical venue. Absent = unresolved (a sentinel, or a string we declined to guess at). */
+    place: PlaceRefSchema.optional(),
     organizer: OrganizerSchema.optional(),
     cost: CostSchema.default({ kind: "unknown" }),
     categories: z.array(z.string()).default([]), // free-form source CATEGORIES e.g. ["music","all-ages"]
