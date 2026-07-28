@@ -48,10 +48,23 @@ export function normalizeVenueKey(raw: string): string {
     .trim();
 }
 
+/** Words that plausibly continue a sentinel phrase rather than start a real venue name. */
+const SENTINEL_CONTINUATIONS = ["for", "see", "check", "tbd"];
+
 export function isSentinelVenue(raw: string): boolean {
   const key = normalizeVenueKey(raw ?? "");
   if (!key) return true;
-  return SENTINELS.some((s) => key === s || key.startsWith(`${s} `));
+  return SENTINELS.some((s) => {
+    if (key === s) return true;
+    if (!key.startsWith(`${s} `)) return false;
+    // A prefix match only counts as a sentinel when the sentinel itself is a multi-word phrase
+    // (too specific to accidentally open a real venue name), or when a single-word sentinel is
+    // followed by another sentinel-flavored word — otherwise a lone sentinel word starting a real
+    // venue name (e.g. "Various Stages at Bayfront", "TBD Skatepark") would be misclassified.
+    if (s.includes(" ")) return true;
+    const rest = key.slice(s.length + 1);
+    return SENTINEL_CONTINUATIONS.some((w) => rest === w || rest.startsWith(`${w} `));
+  });
 }
 
 /**

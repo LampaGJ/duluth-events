@@ -42,6 +42,16 @@ describe("isSentinelVenue", () => {
     expect(isSentinelVenue("")).toBe(true);
     expect(isSentinelVenue("   ")).toBe(true);
   });
+
+  it("still recognises sentinel-prefixed corpus variants", () => {
+    expect(isSentinelVenue("See listing for details")).toBe(true);
+    expect(isSentinelVenue("Not specified — check website")).toBe(true);
+  });
+
+  it("does not misclassify a real venue that merely starts with a sentinel word", () => {
+    expect(isSentinelVenue("Various Stages at Bayfront")).toBe(false);
+    expect(isSentinelVenue("TBD Skatepark")).toBe(false);
+  });
 });
 
 describe("parseVenueString", () => {
