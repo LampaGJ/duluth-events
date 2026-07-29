@@ -66,6 +66,34 @@ describe("place-first dedupe", () => {
     }
   });
 
+  it("NEVER merges two events at a city-only provisional place, even with IDENTICAL titles — Task 11b", () => {
+    // Before Task 11b, "Winona" and "Winona, MN" both resolved to the SAME provisional place
+    // (~winona), so two cross-source events sharing that place + instant would enter pass 1's
+    // place-based merge, and identical titles score similarity=1 — comfortably above TITLE_VETO
+    // (0.15) — so the veto would NOT have refused them. The city-only rule must refuse regardless of
+    // title similarity, by removing the shared place identity outright (place resolves to
+    // undefined), not by relying on the veto.
+    //
+    // The two venueRaw spellings deliberately differ ("Winona" bare vs "Winona, MN" packed) so pass
+    // 2's fuzzyKey venue token ALSO differs ("winona" vs "winonamn") — this test is not passing
+    // because pass 2 happens to coincide; it is testing that dedupe has NO path left to merge these
+    // two events at all once the shared place identity is gone.
+    const a = at({
+      uid: "a", title: "Cross Country Invitational", venueRaw: "Winona",
+      location: { city: "Winona", state: "MN" }, source: src("UMD Events"),
+    });
+    const b = at({
+      uid: "b", title: "Cross Country Invitational", venueRaw: "Winona, MN",
+      location: { city: "Duluth", state: "MN" }, source: src("Perfect Duluth Day"),
+    });
+    // Preconditions: both resolve to NO place (the behavior under test), and the veto would have
+    // passed an identical-title pair had a shared place still existed.
+    expect(a.place).toBeUndefined();
+    expect(b.place).toBeUndefined();
+    expect(titleSimilarity(a.title, b.title)).toBe(1);
+    expect(dedupe([a, b])).toHaveLength(2);
+  });
+
   it("never merges two events from the SAME source at one place and instant", () => {
     // Live corpus shape: Perfect Duluth Day lists two different shows at one venue at 18:00. The
     // titles clear the veto (0.25) and differ in pass 2's key, so ONLY the same-source refusal can

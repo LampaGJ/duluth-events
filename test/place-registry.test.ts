@@ -181,4 +181,56 @@ describe("resolvePlace", () => {
     ]);
     expect(resolvePlace("Pueblo, CO, Massari Arena", awayIdx)).toEqual({ id: "massari-arena", name: "Massari Arena at CSU Pueblo", provisional: false });
   });
+
+  // --- Task 11b: city-shaped provisional places must never act as merge keys ------------------
+  //
+  // UMD away meets resolve to bare-city venue strings. All-day events all key on midnight, so
+  // `instant | place.id` degenerates to "anything all-day in that city" once a place resolves at
+  // all — the human ruling was to remove the risk class outright (treat a bare city like a
+  // sentinel: resolve to no place) rather than lean on the title-similarity veto as the only guard.
+  // Two shapes, two signals — see `isCityOnlyVenue`'s doc comment in place-registry.ts for why both
+  // are needed: the ICS adapter's packed "City, ST" form (parseVenueString alone catches it, no
+  // `locationCity` argument needed) and the JSON-LD adapter's bare-name form (only catchable by
+  // comparing against the event's OWN, separately-sourced `location.city`).
+  describe("city-only venues resolve to no place (Task 11b)", () => {
+    it("the 6 real corpus city ids all resolve to undefined", () => {
+      // Corpus spelling preserved verbatim, including "Lawerence" (misspelled in the source feed).
+      // The packed "City, ST" forms need no locationCity — parseVenueString alone identifies them.
+      expect(resolvePlace("River Falls, WI")).toBeUndefined();
+      expect(resolvePlace("Sioux Falls, SD")).toBeUndefined();
+      // The bare forms (no state, so extractLeadingCity never fires) need the location-city signal —
+      // exactly what classify.ts's finalizeEvent threads through in production.
+      expect(resolvePlace("Winona", PLACE_INDEX, "Winona")).toBeUndefined();
+      expect(resolvePlace("Northfield", PLACE_INDEX, "Northfield")).toBeUndefined();
+      expect(resolvePlace("Romeoville", PLACE_INDEX, "Romeoville")).toBeUndefined();
+      expect(resolvePlace("Lawerence", PLACE_INDEX, "Lawerence")).toBeUndefined();
+    });
+
+    it("a bare city with NO locationCity argument still falls through to provisional — signal 2 is additive, not a regression on old callers", () => {
+      // Without a location to compare against, "Winona" carries no evidence it's city-only, so the
+      // OLD (pre-Task-11b) behavior is preserved for any 1- or 2-arg caller. This is the case Task
+      // 11b's brief calls out: signal 1 alone cannot catch this shape.
+      expect(resolvePlace("Winona")?.provisional).toBe(true);
+    });
+
+    it("a venue that merely CONTAINS a city name is unaffected — the restraint case", () => {
+      // Over-matching here would silently unregister real venues. Neither is a real registry entry
+      // in the fixture-scoped IDX, so both must still mint an ordinary provisional place — the exact
+      // opposite of the city-only outcome (undefined).
+      expect(resolvePlace("Duluth Grill", IDX, "Duluth")?.provisional).toBe(true);
+      expect(resolvePlace("Superior Public Library", IDX, "Superior")?.provisional).toBe(true);
+      // And against the REAL shipped registry, "Superior Public Library" is in fact registered —
+      // proving the city-only check runs AFTER the registry lookup, never before it.
+      expect(resolvePlace("Superior Public Library", PLACE_INDEX, "Superior")).toEqual({
+        id: "superior-public-library", name: "Superior Public Library", provisional: false,
+      });
+    });
+
+    it("a registered place legitimately named after a city still resolves — registry wins before any city-only check", () => {
+      const cityNamedIdx = buildPlaceIndex([
+        { ...base, id: "winona", name: "Winona", address: { city: "Winona", state: "MN" } },
+      ]);
+      expect(resolvePlace("Winona", cityNamedIdx, "Winona")).toEqual({ id: "winona", name: "Winona", provisional: false });
+    });
+  });
 });

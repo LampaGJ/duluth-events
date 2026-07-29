@@ -177,7 +177,9 @@ export function finalizeEvent(e: DuluthEvent): DuluthEvent {
     ...e.location,
     ...(parsed.city ? { city: parsed.city, state: parsed.state ?? e.location.state, inDuluth: /^duluth$/i.test(parsed.city) } : {}),
   };
-  const place = resolvePlace(e.venueRaw);
+  // `location.city` (just recomputed above) is threaded through as the second signal a bare
+  // city-shaped venue string needs — see `isCityOnlyVenue` in place-registry.ts.
+  const place = resolvePlace(e.venueRaw, undefined, location.city);
   const eventType = e.eventType !== "other" ? e.eventType : classifyEventType(e.title, e.categories, "community", place?.name ?? e.venueRaw ?? "");
   // `place` is folded in HERE, not at the return, because deriveFacets reads `e.place?.name` —
   // leaving it for the return would make that read permanently undefined.

@@ -71,14 +71,53 @@ function provisionalId(key: string): string {
 }
 
 /**
+ * True when a venue string carries no identity beyond restating a city — the UMD away-meet class
+ * ("Winona", "River Falls, WI") that made `instant | place.id` degenerate to "anything all-day in
+ * that city" (six such groups measured by `scripts/merge-diff.mjs`, all same-source and refused
+ * today, but with `room` populated on 0/584 events, the title-similarity veto was the ONLY remaining
+ * guard against a false cross-source merge). Human ruling at the Phase-3 sign-off gate: remove the
+ * risk class rather than lean on the veto — treat a bare-city venue exactly like a sentinel.
+ *
+ * Two independent, deterministic signals, because the two adapter families produce two different
+ * shapes and neither alone covers both:
+ *
+ *   1. `parseVenueString` already encodes it for the PACKED "City, ST[, rest]" form the ICS adapter
+ *      emits (`src/adapters/ical-import.ts`): when nothing follows the city, `parsed.name ===
+ *      parsed.city` by construction (`name: found.rest || found.city`). Catches "River Falls, WI".
+ *   2. Comparing the venue string's own normalized key against the event's OWN `location.city`
+ *      catches the shape the JSON-LD adapter can produce (`src/adapters/jsonld.ts`'s `mapLocation`
+ *      sets `venueRaw` from `location.name` and `location.city` from the STRUCTURALLY SEPARATE
+ *      `address.addressLocality` — a source can say "name": "Winona" and "addressLocality": "Winona"
+ *      independently, with no comma-joined "City, ST" text for `parseVenueString` to split). Catches
+ *      the bare "Winona" form, which has no state and so never matches `extractLeadingCity`.
+ *
+ * Deliberately an EXACT normalized-key match, not a substring/contains check: "Superior Public
+ * Library" and "Duluth Grill" both contain a city name but are not equal to it, so both keep
+ * resolving normally — this is the restraint case, and over-matching here would silently strip a
+ * `place` from real, already-registered-or-registerable venues. No hand-maintained city list either
+ * way: both signals fall out of data the pipeline already computes, not a curated set of names.
+ */
+function isCityOnlyVenue(venueRaw: string, parsed: { name: string; city?: string }, locationCity: string | undefined): boolean {
+  if (parsed.city !== undefined && parsed.name === parsed.city) return true;
+  if (locationCity === undefined) return false;
+  return normalizeVenueKey(venueRaw) === normalizeVenueKey(locationCity);
+}
+
+/**
  * Resolve a raw venue string to a canonical place.
  *
- * Three outcomes, deliberately distinct:
+ * Four outcomes, deliberately distinct:
  *   sentinel      -> undefined     never merges, never gets a feed
+ *   city-only     -> undefined     same treatment as a sentinel — see `isCityOnlyVenue`
  *   registered    -> stable id     public feed URL, id guaranteed not to move
  *   anything else -> provisional   usable for dedupe, no feed, no stability promise
+ *
+ * `locationCity` is optional and additive — every existing 1- and 2-arg call site keeps working
+ * unchanged, just without signal 2 above (signal 1 alone still catches the packed "City, ST" form).
+ * `classify.ts`'s `finalizeEvent` is the one call site that has a location to thread; it passes the
+ * event's own (possibly just-recomputed) `location.city`.
  */
-export function resolvePlace(venueRaw: string | undefined, index: PlaceIndex = PLACE_INDEX): PlaceRef | undefined {
+export function resolvePlace(venueRaw: string | undefined, index: PlaceIndex = PLACE_INDEX, locationCity?: string): PlaceRef | undefined {
   if (!venueRaw || isSentinelVenue(venueRaw)) return undefined;
 
   const parsed = parseVenueString(venueRaw);
@@ -98,6 +137,11 @@ export function resolvePlace(venueRaw: string | undefined, index: PlaceIndex = P
   const fullKey = normalizeVenueKey(venueRaw);
   const fullHit = index.byNameAlias.get(fullKey) ?? index.byAddressAlias.get(fullKey);
   if (fullHit) return { id: fullHit.id, name: fullHit.name, provisional: false };
+
+  // Registered lookups (both above) always run FIRST — a registry entry legitimately named after a
+  // city (none exist today, but the ordering guarantees it) resolves via the alias index and never
+  // reaches this check.
+  if (isCityOnlyVenue(venueRaw, parsed, locationCity)) return undefined;
 
   return { id: provisionalId(key), name: parsed.name, provisional: true };
 }
