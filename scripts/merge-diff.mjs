@@ -57,8 +57,10 @@ import { SOURCES } from "../src/sources.js";
  */
 const locationSegments = (e) =>
   unescapeIcsText(e.LOCATION ?? "").split(",").map((s) => s.trim()).filter(Boolean);
-const venueOf = (e) => locationSegments(e)[0] ?? "";
-const cityOf = (e) => {
+// Exported so a test can pin the segment math directly (Task-11b M2), rather than only inferring it
+// through resolvePlace()'s downstream behaviour.
+export const venueOf = (e) => locationSegments(e)[0] ?? "";
+export const cityOf = (e) => {
   const segs = locationSegments(e);
   return segs.length >= 2 ? segs[segs.length - 2] : undefined;
 };

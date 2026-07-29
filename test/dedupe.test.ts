@@ -77,8 +77,15 @@ describe("dedupe keys on resolved place identity", () => {
     expect(byName.place?.id).toBe("bent-paddle-taproom");
     expect(byAddress.place?.id).toBe("bent-paddle-taproom");
 
-    // THE diagnostic assertion. Drop `e.place?.name ??` from fuzzyKey and the keys become
-    // "bentpaddlebr" vs "1832wmichiga" — two groups, and this line fails.
+    // NOT a diagnostic for fuzzyKey's `e.place?.name` branch: both events resolve to the same place
+    // id at the same instant, cross-source, so pass 1 (place identity) merges this pair regardless of
+    // what fuzzyKey does — dropping `e.place?.name ??` from fuzzyKey entirely still leaves this line
+    // passing. This test instead pins pass 1's place-identity merge on its own (an address-only
+    // listing and a name-only listing of one show, resolved to one place, correctly collapse). The
+    // assertion that genuinely fails if `e.place?.name ??` is dropped from fuzzyKey is
+    // test/place-dedupe.test.ts's "keeps fuzzyKey's place-identity branch load-bearing at a DIFFERENT
+    // time on the same day" — same two venue strings, but at different clock times so only pass 2
+    // (the title fallback, which is what fuzzyKey feeds) can merge them.
     const out = dedupe([byName, byAddress]);
     expect(out).toHaveLength(1);
     expect(out[0]!.source.name).toBe("Perfect Duluth Day"); // high beats medium

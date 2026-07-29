@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { diff, instantOf, exceedsBound, isFailing } from "../scripts/merge-diff.mjs";
+import { diff, instantOf, exceedsBound, isFailing, venueOf, cityOf } from "../scripts/merge-diff.mjs";
 
 /**
  * `diff()` consumes the SAME flat property-map shape `parseIcs()` produces (see
@@ -30,6 +30,56 @@ describe("merge-diff: instantOf", () => {
   it("returns null for a missing or malformed DTSTART", () => {
     expect(instantOf(ev({ DTSTART: undefined }))).toBeNull();
     expect(instantOf(ev({ DTSTART: "not-a-date" }))).toBeNull();
+  });
+});
+
+/**
+ * Item D (final review): `venueOf`/`cityOf`'s segment math was previously exercised only by
+ * single-bare-segment fixtures ("Wussow's Concert Cafe") — the split is never invoked, so the review
+ * mutation-proved that `venueOf` ignoring the split entirely, `cityOf` reading the LAST segment
+ * instead of second-to-last, and `cityOf` returning `undefined` unconditionally ALL passed 208/208.
+ *
+ * `LOCATION` is `src/emit.ts`'s `formatLocation`: `[venue, room?, street?, cityLine].filter(Boolean)`
+ * joined by ", ", where `cityLine` is itself `"${city}, ${state}${zip ? ' ' + zip : ''}"`. Because
+ * `cityLine` is ONE array element that itself contains a comma, the FINAL joined string always has
+ * state(+zip) as its last comma-segment and city as its second-to-last, regardless of how many
+ * optional segments (room, street) preceded them — and regardless of whether the venue name itself
+ * happens to contain a comma. These fixtures build real multi-segment LOCATION strings the way
+ * `formatLocation` actually produces them, so the split is genuinely exercised.
+ */
+describe("merge-diff: venueOf / cityOf segment math (Task-11b M2)", () => {
+  it("extracts venue and city from a full location: venue, room, street, city, state+zip", () => {
+    const e = ev({ LOCATION: "AMSOIL Arena, Section 108, 350 Harbor Dr, Duluth, MN 55802" });
+    expect(venueOf(e)).toBe("AMSOIL Arena");
+    expect(cityOf(e)).toBe("Duluth");
+  });
+
+  it("still finds the city when zip is ABSENT (state alone is the last segment)", () => {
+    const e = ev({ LOCATION: "AMSOIL Arena, Section 108, 350 Harbor Dr, Duluth, MN" });
+    expect(venueOf(e)).toBe("AMSOIL Arena");
+    expect(cityOf(e)).toBe("Duluth");
+  });
+
+  it("still finds venue and city when the STREET segment is missing (venue, city, state+zip)", () => {
+    const e = ev({ LOCATION: "Bent Paddle Taproom, Duluth, MN 55807" });
+    expect(venueOf(e)).toBe("Bent Paddle Taproom");
+    expect(cityOf(e)).toBe("Duluth");
+  });
+
+  it("cityOf stays correct — indexing from the END — even when the VENUE NAME itself contains a comma", () => {
+    // "Zenith Bookstore, Ltd." packs an extra comma into the venue segment. venueOf (indexes from the
+    // START, documented as "just the first segment") is truncated by this — a known limitation, not
+    // this test's subject. cityOf (indexes from the END) is unaffected by the extra leading segment,
+    // which is exactly the property this fixture pins.
+    const e = ev({ LOCATION: "Zenith Bookstore, Ltd., 505 W Superior St, Duluth, MN 55802" });
+    expect(venueOf(e)).toBe("Zenith Bookstore"); // truncated at the comma — first segment only, by design
+    expect(cityOf(e)).toBe("Duluth"); // unaffected by the extra segment; still second-to-last
+  });
+
+  it("cityOf returns undefined for a single bare segment (no comma at all) — not a false city", () => {
+    const e = ev({ LOCATION: "Wussow's Concert Cafe" });
+    expect(venueOf(e)).toBe("Wussow's Concert Cafe");
+    expect(cityOf(e)).toBeUndefined();
   });
 });
 

@@ -1,5 +1,6 @@
 import type { DuluthEvent, Source } from "./schema.js";
 import { normalizeVenueKey } from "./place-resolve.js";
+import { logger } from "./logger.js";
 
 /**
  * Cross-source duplicate merging.
@@ -87,16 +88,30 @@ export const TITLE_VETO = 0.15;
 function mergeGroup(group: DuluthEvent[]): DuluthEvent {
   const sorted = [...group].sort((a, b) => CONFIDENCE_RANK[b.source.confidence] - CONFIDENCE_RANK[a.source.confidence]);
   const primary = sorted[0]!;
+  const others = sorted.slice(1);
   // Corroborators = every other copy's source AND its own corroborators (pass 2 consumes pass 1's
   // output, so an input here may already carry them), deduped by name, excluding the primary's own.
   const seen = new Set([primary.source.name]);
   const corroborators: Source[] = [];
-  for (const s of [...primary.alsoListedIn, ...sorted.slice(1).flatMap((e) => [e.source, ...e.alsoListedIn])]) {
+  for (const s of [...primary.alsoListedIn, ...others.flatMap((e) => [e.source, ...e.alsoListedIn])]) {
     if (!seen.has(s.name)) {
       seen.add(s.name);
       corroborators.push(s);
     }
   }
+  // Spec §335: every merge logs both sides at info level, so a false merge is greppable after the
+  // fact rather than invisible — grep for `"msg":"merged duplicate event"`. Structured, not
+  // string-concatenated. `others` are the actual listings absorbed by THIS call (not the flattened
+  // `corroborators`, which loses per-listing titles once a prior merge collapsed them to sources).
+  logger.info(
+    {
+      placeId: primary.place?.id ?? null,
+      instant: primary.start,
+      primary: { title: primary.title, source: primary.source.name },
+      corroborators: others.map((e) => ({ title: e.title, source: e.source.name })),
+    },
+    "merged duplicate event",
+  );
   return { ...primary, alsoListedIn: corroborators };
 }
 
@@ -116,7 +131,7 @@ function mergeGroup(group: DuluthEvent[]): DuluthEvent {
  *      listing two different events (live corpus: UMD publishes the men's and the women's
  *      cross-country race at one meet; Perfect Duluth Day publishes two different shows at Wussow's
  *      at 18:00). The fold that runs first is what makes this precise rather than blunt — see the
- *      comment on `byLegacyKey` in the body.
+ *      comment on `bySourceTitle` in the body.
  *   c. CONFLICTING ROOM — more than one distinct stated `room` in the group. (An unstated room is
  *      not a conflict, only less specific.) Inert today: `room` is populated on 0 of 584 events, so
  *      this guards a future adapter, and its absence is exactly why refusal (d) has to exist.

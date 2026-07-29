@@ -87,6 +87,48 @@ describe("the shipped registry", () => {
     expect(ids).toEqual([...new Set(ids)]);
   });
 
+  // Spec §340: "id stability across rebuilds" is a REQUIRED unit test — nothing else in this suite
+  // pins the actual id STRINGS. Renaming `amsoil-arena` -> `amsoil-arena-renamed`, or inserting a new
+  // place ahead of it in src/places.ts, both pass every other test in this file (unique-ids and
+  // count-matches-PLACES don't care what the strings ARE, only that they're distinct and the right
+  // quantity). Place ids are baked into shipped `/feeds/place/<id>.ics` URLs, so a moved id is a
+  // silently broken subscriber link, not a compile error. This is a deliberate frozen snapshot, not a
+  // derived check: the array below must be edited by hand whenever a place is legitimately
+  // added/renamed/removed, so the diff shows exactly what moved.
+  it("pins the exact set of registered place ids — they appear in feed URLs and must never move", () => {
+    const FROZEN_IDS = [
+      "alex-nemzek-soccer-field", "alex-nemzek-stadium", "amsoil-arena", "barnett-center",
+      "bayfront-festival-park", "bennett-park", "bent-paddle-taproom", "big-top-chautauqua",
+      "blacklist-brewing-company", "brighton-beach-park", "carl-gullo-park", "carmody-irish-pub",
+      "chambers-grove-park", "chester-bowl-park", "chet-anderson-stadium", "dai-lincoln-park-building",
+      "dubh-linn-irish-pub", "duluth-flame-nightclub", "duluth-folk-school", "duluth-heights-park",
+      "ed-robson-arena", "elmen-center", "enger-tower", "fond-du-lac-tribal-and-community-college",
+      "gangelhoff-center", "glensheen-mansion", "great-lakes-aquarium", "gutterson-fieldhouse",
+      "harrison-park", "heikkila-hcams", "herb-brooks-national-hockey-center", "husky-stadium",
+      "james-s-malosky-stadium", "labahn-arena", "lake-superior-estuarium", "lake-superior-zoo",
+      "leif-erikson-park", "marshall-w-alworth-planetarium", "massari-arena", "mcfarland-park",
+      "mdu-resources-community-bowl", "merritt-park", "midco-arena", "morgan-park", "mullett-arena",
+      "northern-waters-smokehaus", "observation-park", "olcott-park", "piedmont-community-center",
+      "pier-b-resort-hotel", "pizza-luce", "portland-square", "ralph-engelstad-arena",
+      "rathskeller", "rice-auditorium", "ritual-marketplace", "sacred-heart-music-center",
+      "sanford-center", "sea-foam-stadium", "second-harvest-northland", "sheraton-duluth-hotel",
+      "sir-benedicts-tavern-on-the-lake", "spirit-of-the-lake-community-arts", "split-rock-lighthouse",
+      "ss-william-a-irvin", "superior-public-library", "the-caddy-shack-indoor-golf-pub",
+      "wade-stadium", "weber-music-hall", "webster-park", "whole-foods-co-op-denfeld",
+      "whole-foods-co-op-hillside", "wild-state-cider", "wisconsin-point", "wussows-concert-cafe",
+      "zeitgeist-teatro-zuccone", "zenith-bookstore",
+    ];
+    const shipped = new Set(PLACE_INDEX.all.map((p) => p.id));
+    const frozen = new Set(FROZEN_IDS);
+    const added = [...shipped].filter((id) => !frozen.has(id)).sort();
+    const removed = [...frozen].filter((id) => !shipped.has(id)).sort();
+    expect(
+      { added, removed },
+      "place ids appear in feed URLs and must never move; if this change is intentional, update " +
+        "the frozen list in this test to match",
+    ).toEqual({ added: [], removed: [] });
+  });
+
   it("resolves every observed Bent Paddle corpus variant to the same id", () => {
     // Confirms the flagship claim in place-resolve.ts's module doc: these three raw forms plus the
     // canonical address all converge on one identity — against the REAL shipped PLACE_INDEX, not a
