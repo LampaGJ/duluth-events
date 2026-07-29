@@ -1,7 +1,7 @@
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { runPipeline } from "./pipeline.js";
 import { buildFeed, filterEvents } from "./feed.js";
-import { GROUPS, SPECS, type Group } from "./feeds-config.js";
+import { GROUPS, SPECS, placeSpecs, type Group } from "./feeds-config.js";
 import { logger } from "./logger.js";
 
 /**
@@ -30,9 +30,21 @@ function renderIndex(rows: Row[], sourceCount: number, builtAt: string): string 
   // An empty sub-feed is a dead link, not a feature. Suppress it from the page; the file still
   // ships, so a subscriber whose bookmark predates the emptiness keeps working.
   const shown = rows.filter((r) => r.count > 0);
-  const sections = GROUPS.filter((g) => shown.some((r) => r.group === g))
+  // 77 place feeds cannot all be listed and stay scannable — cap "By venue" to the busiest, with the
+  // rest still on disk (see venueNote below) so an existing bookmark keeps resolving.
+  const BY_VENUE_LIMIT = 15;
+  const capped = GROUPS.flatMap((g) => {
+    const rowsInGroup = shown.filter((r) => r.group === g).sort((a, b) => b.count - a.count);
+    return g === "By venue" ? rowsInGroup.slice(0, BY_VENUE_LIMIT) : rowsInGroup;
+  });
+  const venueTotal = shown.filter((r) => r.group === "By venue").length;
+  const venueNote =
+    venueTotal > BY_VENUE_LIMIT
+      ? `Showing the ${BY_VENUE_LIMIT} busiest of ${venueTotal} venue feeds; all are on disk at <code>/feeds/place/&lt;id&gt;.ics</code>.`
+      : "";
+  const sections = GROUPS.filter((g) => capped.some((r) => r.group === g))
     .map((g) => {
-      const items = shown
+      const items = capped
         .filter((r) => r.group === g)
         .map(
           (r) => `      <tr>
@@ -75,6 +87,8 @@ ${sections}
   <footer>
     <p>Every event keeps its origin, confidence, type and facets (<code>X-SOURCE-*</code>, <code>X-EVENT-TYPE</code>, <code>X-AUDIENCE</code>, <code>X-COST-TIER</code>, <code>X-ACCESS</code>, …).</p>
     <p><strong>Tags are derived from what the source actually said.</strong> A missing tag means the publisher was silent, not that the answer is no — an event absent from <em>Free</em> may still be free, and one absent from <em>Wheelchair access stated</em> may still be accessible. Rubrics: <code>docs/tagging-rubrics.md</code>.</p>
+    ${venueNote ? `<p>${venueNote}</p>` : ""}
+    <p>Venue addresses derived from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, © OpenStreetMap contributors, ODbL.</p>
     <p>${sourceCount} sources · ${shown.length} feeds${hidden > 0 ? ` (${hidden} currently empty, hidden)` : ""} · rebuilt every ~6 hours · last build ${esc(builtAt)}.</p>
   </footer>
 </body>
@@ -85,14 +99,15 @@ ${sections}
 const { events, stats } = await runPipeline();
 
 await rm(OUT, { recursive: true, force: true });
-await mkdir(`${OUT}/feeds`, { recursive: true });
+await mkdir(`${OUT}/feeds/place`, { recursive: true });
 await writeFile(`${OUT}/.nojekyll`, "");
 
+const allSpecs = [...SPECS, ...placeSpecs()];
 const rows: Row[] = [];
-for (const spec of SPECS) {
+for (const spec of allSpecs) {
   await writeFile(`${OUT}/feeds/${spec.file}`, buildFeed(events, spec.filter), "utf8");
   rows.push({ title: spec.title, desc: spec.desc, count: filterEvents(events, spec.filter).length, file: spec.file, group: spec.group });
 }
 await writeFile(`${OUT}/index.html`, renderIndex(rows, Object.keys(stats.perSource).length, new Date().toISOString()), "utf8");
 
-logger.info({ feeds: SPECS.length, events: events.length, sources: Object.keys(stats.perSource).length, out: OUT }, "static site built");
+logger.info({ feeds: allSpecs.length, events: events.length, sources: Object.keys(stats.perSource).length, out: OUT }, "static site built");

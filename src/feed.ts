@@ -55,6 +55,9 @@ export interface FeedFilter {
   homeAway?: "home" | "away";
   /** false excludes institutional non-events ("Final exams", "Faculty appointments begin"). */
   institutionalNotice?: boolean;
+  /** Registered place id — see `place-registry.ts`. Never matches a provisional (`~`-prefixed) id
+   *  via this filter alone; place feeds are only ever built from `PLACE_INDEX.all`. */
+  placeId?: string;
 }
 
 const oneOf =
@@ -104,6 +107,8 @@ export function parseFilter(q: Record<string, unknown>): FeedFilter {
   if (admission.length) f.publicAdmission = admission;
   const ha = String(q.homeAway ?? q.homeaway ?? "").toLowerCase();
   if (ha === "home" || ha === "away") f.homeAway = ha;
+  const place = String(q.place ?? q.placeId ?? q.placeid ?? "").trim();
+  if (place) f.placeId = place;
   f.weekend = bool(q.weekend);
   f.recurring = bool(q.recurring);
   f.alcohol = bool(q.alcohol);
@@ -138,6 +143,7 @@ export function filterEvents(events: DuluthEvent[], f: FeedFilter): DuluthEvent[
     if (f.alcohol !== undefined && x.alcohol !== f.alcohol) return false;
     if (f.homeAway !== undefined && x.homeAway !== f.homeAway) return false;
     if (f.institutionalNotice !== undefined && x.institutionalNotice !== f.institutionalNotice) return false;
+    if (f.placeId !== undefined && e.place?.id !== f.placeId) return false;
     return true;
   });
 }
