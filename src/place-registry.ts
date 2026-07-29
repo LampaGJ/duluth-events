@@ -1,4 +1,4 @@
-import { PlaceSchema, type Place, type PlaceRef } from "./schema.js";
+import { PlaceSchema, type DuluthEvent, type Place, type PlaceRef } from "./schema.js";
 import { normalizeVenueKey, isSentinelVenue, parseVenueString } from "./place-resolve.js";
 import { PLACES } from "./places.js";
 
@@ -114,8 +114,13 @@ function isCityOnlyVenue(venueRaw: string, parsed: { name: string; city?: string
  *
  * `locationCity` is optional and additive — every existing 1- and 2-arg call site keeps working
  * unchanged, just without signal 2 above (signal 1 alone still catches the packed "City, ST" form).
- * `classify.ts`'s `finalizeEvent` is the one call site that has a location to thread; it passes the
- * event's own (possibly just-recomputed) `location.city`.
+ *
+ * This is the RAW, multi-arg form: nothing type-checks that a production caller remembers to pass
+ * `locationCity`, which is exactly how this function shipped for one release with signal 2 silently
+ * absent. Reserved for tests and offline tools (`scripts/*.mjs`) that legitimately work from just a
+ * venue string with no full event to hand. Any call site that HAS a `DuluthEvent` must use
+ * `resolvePlaceForEvent` below instead, which cannot forget the third argument because it has no
+ * third argument to forget.
  */
 export function resolvePlace(venueRaw: string | undefined, index: PlaceIndex = PLACE_INDEX, locationCity?: string): PlaceRef | undefined {
   if (!venueRaw || isSentinelVenue(venueRaw)) return undefined;
@@ -144,4 +149,20 @@ export function resolvePlace(venueRaw: string | undefined, index: PlaceIndex = P
   if (isCityOnlyVenue(venueRaw, parsed, locationCity)) return undefined;
 
   return { id: provisionalId(key), name: parsed.name, provisional: true };
+}
+
+/**
+ * THE SANCTIONED PRODUCTION ENTRY POINT. Always threads `e.location.city` as the city-only signal
+ * (§2 above), so a future finalize-style call site cannot silently reopen the risk class Task 11b
+ * closed by simply forgetting `resolvePlace`'s optional third argument — there is no third argument
+ * here to forget. `location.city` genuinely cannot be recovered from `venueRaw` alone in general
+ * (the JSON-LD adapter's `address.addressLocality` is a structurally separate field from
+ * `location.name`), so this dependency is real and irreducible, not a convenience default — the
+ * wrapper exists to make threading it mandatory rather than merely remembered.
+ *
+ * Takes a `Pick`, not the full `DuluthEvent`, so a caller building a partial/updated event object
+ * (as `classify.ts`'s `finalizeEvent` does, mid-construction) need not have every field settled yet.
+ */
+export function resolvePlaceForEvent(e: Pick<DuluthEvent, "venueRaw" | "location">, index: PlaceIndex = PLACE_INDEX): PlaceRef | undefined {
+  return resolvePlace(e.venueRaw, index, e.location.city);
 }

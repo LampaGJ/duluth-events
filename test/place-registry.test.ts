@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildPlaceIndex, PLACE_INDEX, resolvePlace } from "../src/place-registry.js";
+import { buildPlaceIndex, PLACE_INDEX, resolvePlace, resolvePlaceForEvent } from "../src/place-registry.js";
 import { PLACES } from "../src/places.js";
 
 const base = {
@@ -231,6 +231,35 @@ describe("resolvePlace", () => {
         { ...base, id: "winona", name: "Winona", address: { city: "Winona", state: "MN" } },
       ]);
       expect(resolvePlace("Winona", cityNamedIdx, "Winona")).toEqual({ id: "winona", name: "Winona", provisional: false });
+    });
+  });
+});
+
+// --- Task 11b fix round 1: resolvePlaceForEvent is the sanctioned production entry point --------
+//
+// resolvePlace's locationCity is an OPTIONAL third argument — nothing in the type system stops a
+// future finalize-style call site from writing `resolvePlace(e.venueRaw)` and silently reopening the
+// exact risk class Task 11b closed. resolvePlaceForEvent has no third argument to forget: it always
+// threads `e.location.city`. These tests pin that it actually does the threading (not just that it
+// compiles), by exercising the SAME bare-city case the raw multi-arg form needs a third argument for.
+describe("resolvePlaceForEvent", () => {
+  it("threads e.location.city as the city-only signal, catching the bare-city form the 2-arg resolvePlace cannot", () => {
+    const bareWinona = { venueRaw: "Winona", location: { city: "Winona", state: "MN", inDuluth: false } };
+    expect(resolvePlaceForEvent(bareWinona)).toBeUndefined();
+    // Precondition/contrast: the SAME venueRaw through the raw form with no third argument does NOT
+    // catch it — proving the wrapper is doing real work (supplying the city), not just re-deriving
+    // something the bare 1-arg call already gave you.
+    expect(resolvePlace(bareWinona.venueRaw)?.provisional).toBe(true);
+  });
+
+  it("does not city-only a real venue that merely shares a location — the restraint case survives the wrapper", () => {
+    const grill = { venueRaw: "Duluth Grill", location: { city: "Duluth", state: "MN", inDuluth: true } };
+    expect(resolvePlaceForEvent(grill, IDX)?.provisional).toBe(true);
+  });
+
+  it("a registered place still resolves through the wrapper — registry wins before any city-only check", () => {
+    expect(resolvePlaceForEvent({ venueRaw: "Bent Paddle Brewing", location: { city: "Duluth", state: "MN", inDuluth: true } }, IDX)).toEqual({
+      id: "bent-paddle-taproom", name: "Bent Paddle Taproom", provisional: false,
     });
   });
 });

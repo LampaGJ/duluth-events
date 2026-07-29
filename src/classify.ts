@@ -2,7 +2,7 @@ import type { DuluthEvent, EventType } from "./schema.js";
 import { deriveFacets, extractTicketUrl, haystack, normalizedCategories, parseAgeBand } from "./facets.js";
 import { cleanText } from "./normalize.js";
 import { parseVenueString } from "./place-resolve.js";
-import { resolvePlace } from "./place-registry.js";
+import { resolvePlaceForEvent } from "./place-registry.js";
 
 /**
  * Deterministic typification: source categories first, then title/description vocabulary.
@@ -177,9 +177,12 @@ export function finalizeEvent(e: DuluthEvent): DuluthEvent {
     ...e.location,
     ...(parsed.city ? { city: parsed.city, state: parsed.state ?? e.location.state, inDuluth: /^duluth$/i.test(parsed.city) } : {}),
   };
-  // `location.city` (just recomputed above) is threaded through as the second signal a bare
-  // city-shaped venue string needs — see `isCityOnlyVenue` in place-registry.ts.
-  const place = resolvePlace(e.venueRaw, undefined, location.city);
+  // `resolvePlaceForEvent` (not the raw `resolvePlace`) so the location-city signal a bare
+  // city-shaped venue string needs — see `isCityOnlyVenue` in place-registry.ts — cannot be silently
+  // dropped by a future edit here. Passed `{ venueRaw, location }` rather than `e` because `location`
+  // is the just-recomputed value above, which can differ from `e.location` when the venue string
+  // itself carried a leading city (the away-game case).
+  const place = resolvePlaceForEvent({ venueRaw: e.venueRaw, location });
   const eventType = e.eventType !== "other" ? e.eventType : classifyEventType(e.title, e.categories, "community", place?.name ?? e.venueRaw ?? "");
   // `place` is folded in HERE, not at the return, because deriveFacets reads `e.place?.name` —
   // leaving it for the return would make that read permanently undefined.

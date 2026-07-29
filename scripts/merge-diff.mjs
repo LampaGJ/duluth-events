@@ -42,7 +42,26 @@ import { titleSimilarity, TITLE_VETO, fuzzyKey } from "../src/dedupe.js";
 import { decodeEntities, unescapeIcsText } from "../src/normalize.js";
 import { SOURCES } from "../src/sources.js";
 
-const venueOf = (e) => unescapeIcsText(e.LOCATION ?? "").split(",")[0].trim();
+/**
+ * `LOCATION` is `src/emit.ts`'s `formatLocation`: `[name, room?, street?, cityLine].filter(Boolean)`
+ * joined by ", ", where `cityLine` is itself `"${city}, ${state}${zip}"` — so the state(+zip) is
+ * ALWAYS the last comma segment and the city is ALWAYS the second-to-last, regardless of how many
+ * optional segments (room, street) precede them. `venueOf` keeps taking just the first segment (the
+ * venue name / provisional place name); `cityOf` is new — Task 11b fix round 1 (M2): without it,
+ * `resolvePlace` below had no way to supply the location-city signal `isCityOnlyVenue` needs for the
+ * bare-city form, so this tool was structurally blind to the whole city-only-place class Task 11b
+ * closed — a same-corpus name for the risk it was already built to surface (see the
+ * PROVISIONAL-PLACE STRUCTURAL RISK section below). Fails safe either way (an unrecognised city-only
+ * lost event falls through to "unexplained", never to a false "explained"), but a signing-off human
+ * should not be looking at a gate that can't see the class it's meant to catch.
+ */
+const locationSegments = (e) =>
+  unescapeIcsText(e.LOCATION ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+const venueOf = (e) => locationSegments(e)[0] ?? "";
+const cityOf = (e) => {
+  const segs = locationSegments(e);
+  return segs.length >= 2 ? segs[segs.length - 2] : undefined;
+};
 const titleOf = (e) => decodeEntities(unescapeIcsText(e.SUMMARY ?? ""));
 
 /**
@@ -121,7 +140,7 @@ function pseudoEventFor(e, wouldBePlace) {
  */
 function explainLoss(lost, survivors) {
   const venue = venueOf(lost);
-  const wouldBePlace = resolvePlace(venue || undefined);
+  const wouldBePlace = resolvePlace(venue || undefined, undefined, cityOf(lost));
   const lostSources = sourceSetOf(lost);
 
   if (wouldBePlace) {
