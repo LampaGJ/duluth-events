@@ -81,9 +81,12 @@ describe("place feeds", () => {
   });
 
   it("never emits a feed for a provisional place", () => {
+    // Decorative: PlaceSchema.id is regex-validated to forbid "~", so a provisional-shaped id in
+    // the registry would throw at module load, before this assertion could ever run either way.
+    // Kept for readability, not load-bearing — see the direct proof below.
     expect(placeSpecs().every((s) => !s.file.includes("~"))).toBe(true);
-    // Direct proof, not just an id-shape inference: resolve a venue string that is guaranteed NOT
-    // to be in the registry, confirm it comes back provisional, and confirm no place spec selects it.
+    // The load-bearing clause: resolve a venue string that is guaranteed NOT to be in the registry,
+    // confirm it comes back provisional, and confirm no place spec selects it.
     const provisional = finalizeEvent(makeEvent({ venueRaw: "Totally Unregistered Popup Space #4471" }));
     expect(provisional.place?.provisional).toBe(true);
     expect(provisional.place?.id.startsWith("~")).toBe(true);
