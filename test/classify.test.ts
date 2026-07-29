@@ -143,3 +143,29 @@ describe("finalizeEvent place resolution", () => {
     expect(finalizeEvent(makeEvent({ venueRaw: "See listing" })).place).toBeUndefined();
   });
 });
+
+describe("address enrichment from a resolved place", () => {
+  it("fills missing street and geo from the registry", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "Wussow's Concert Cafe", location: { city: "Duluth", state: "MN" } }));
+    expect(e.location.street).toBe("324 North Central Avenue");
+    expect(e.location.geo).toEqual({ lat: 46.7386, lon: -92.1662 });
+  });
+
+  it("NEVER overwrites what the source stated", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "Wussow's Concert Cafe", location: { street: "999 Source Says This St", city: "Duluth", state: "MN" } }));
+    expect(e.location.street).toBe("999 Source Says This St");
+  });
+
+  it("does not enrich from a provisional place", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "Some Unregistered Venue", location: { city: "Duluth", state: "MN" } }));
+    expect(e.location.street).toBeUndefined();
+  });
+
+  it("does not enrich when there is no place at all (sentinel venue)", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "See listing", location: { city: "Duluth", state: "MN" } }));
+    expect(e.place).toBeUndefined();
+    expect(e.location.street).toBeUndefined();
+    expect(e.location.zip).toBeUndefined();
+    expect(e.location.geo).toBeUndefined();
+  });
+});

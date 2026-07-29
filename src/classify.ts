@@ -2,7 +2,7 @@ import type { DuluthEvent, EventType } from "./schema.js";
 import { deriveFacets, extractTicketUrl, haystack, normalizedCategories, parseAgeBand } from "./facets.js";
 import { cleanText } from "./normalize.js";
 import { parseVenueString } from "./place-resolve.js";
-import { resolvePlaceForEvent } from "./place-registry.js";
+import { resolvePlaceForEvent, PLACE_INDEX } from "./place-registry.js";
 
 /**
  * Deterministic typification: source categories first, then title/description vocabulary.
@@ -183,10 +183,23 @@ export function finalizeEvent(e: DuluthEvent): DuluthEvent {
   // is the just-recomputed value above, which can differ from `e.location` when the venue string
   // itself carried a leading city (the away-game case).
   const place = resolvePlaceForEvent({ venueRaw: e.venueRaw, location });
+  // Enrichment: fill address gaps from the registry, NEVER overwrite what the source stated. Only a
+  // REGISTERED place (place.provisional === false) has a verified address — a provisional place's id
+  // is auto-derived and, by construction, absent from PLACE_INDEX.byId, so `canonical` guards both
+  // conditions even though the `!place.provisional` check alone would already exclude provisionals.
+  const canonical = place && !place.provisional ? PLACE_INDEX.byId.get(place.id) : undefined;
+  const enriched: DuluthEvent["location"] = canonical
+    ? {
+        ...location,
+        street: location.street ?? canonical.address.street,
+        zip: location.zip ?? canonical.address.zip,
+        geo: location.geo ?? canonical.address.geo,
+      }
+    : location;
   const eventType = e.eventType !== "other" ? e.eventType : classifyEventType(e.title, e.categories, "community", place?.name ?? e.venueRaw ?? "");
   // `place` is folded in HERE, not at the return, because deriveFacets reads `e.place?.name` —
   // leaving it for the return would make that read permanently undefined.
-  const withLoc: DuluthEvent = { ...e, location, place, eventType, multiDay: isMultiDay(e.start, e.end) };
+  const withLoc: DuluthEvent = { ...e, location: enriched, place, eventType, multiDay: isMultiDay(e.start, e.end) };
 
   const facets = deriveFacets(withLoc, { isAthletics: eventType === "sports" });
 
