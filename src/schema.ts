@@ -371,3 +371,159 @@ export const FeedMetaSchema = z.object({
 });
 
 export type FeedMeta = z.infer<typeof FeedMetaSchema>;
+
+// ---------------------------------------------------------------------------
+// Reference geodata — vendored City of Duluth ArcGIS layers (committed, offline)
+// ---------------------------------------------------------------------------
+//
+// Field order in every object below is DELIBERATE and matched byte-for-byte by
+// `scripts/fetch-arcgis.mjs`'s object-construction order: z.object().parse() rebuilds its output
+// key-by-key in SCHEMA declaration order (verified empirically — Zod does not preserve input key
+// order), so a mismatch here would silently break the idempotency round-trip test
+// (`test/reference-data.test.ts`) even though every individual field still parses correctly. If you
+// add/reorder a field, update the fetcher's builder function to match.
+
+/**
+ * @displayName Trail Use
+ * @strategicPurpose The source's eight loose Y/N/"Yes"/"No" columns (Hiking, MountainBiking,
+ *   XCountrySkiing, Snowmobile, Accessible, Horseback, ATV, Adaptive) are one axis — WHAT a trail
+ *   permits — logically independent of `Season` (WHEN it's usable). Modeling them as a uniform
+ *   array instead of eight boolean fields makes "does this trail permit X" one lookup instead of
+ *   eight differently-named properties, and means a ninth activity column added upstream extends
+ *   the `activity` union without reshaping every consumer.
+ * @tacticalObjective One permitted/not-permitted fact per activity, boolean-normalized from the
+ *   source's inconsistent string encodings ("Y"/"N" for six columns, "Yes"/"No" for `Adaptive`) —
+ *   see `Trail.raw` for the untouched source string this was derived from.
+ */
+export const TrailUseSchema = z.object({
+  activity: z.enum(["hiking", "mountainBiking", "xcSkiing", "snowmobile", "accessible", "horseback", "atv", "adaptive"]),
+  permitted: z.boolean(),
+});
+export type TrailUse = z.infer<typeof TrailUseSchema>;
+
+/**
+ * @displayName Trail
+ * @strategicPurpose Vendors the City of Duluth's "Trails - All City" ArcGIS master layer (layer 14
+ *   of `Parks/TrailsDuluthService`; layers 0-13 are filtered views over this same schema) as
+ *   committed reference data, so trail identity/attributes are available offline and
+ *   version-controlled rather than re-fetched live on every build.
+ * @tacticalObjective Hold one normalized record per trail segment: the permitted-use axis (`uses`)
+ *   separated from the season axis (`season`), human-legible field names in place of the source's
+ *   misspelled/inconsistent columns (`Suface` -> `surface`), and the COMPLETE untouched source
+ *   attributes under `raw` so no source value — including the ones this schema normalizes away
+ *   from (e.g. `raw.Jurisdiction` may be "City" or "City of Duluth" for the same municipal
+ *   authority; `raw.Adaptive` is "No" not "N") — is ever silently discarded.
+ */
+export const TrailSchema = z.object({
+  /** Stable entity id: `GlobalID` lowercased with the `{}` braces stripped. Not the source's own
+   *  casing/braces (see `globalId`) — normalized once here so every consumer sorts/keys the same way. */
+  id: z.string().min(1),
+  /** `GlobalID` exactly as ArcGIS returned it (e.g. "{D6440883-...}") — the source's stable UUID. */
+  globalId: z.string().min(1),
+  objectId: z.number().int(),
+  /** 44/800 records have a null `Name` (unnamed trail segments — the layer models trail SEGMENTS,
+   *  not named trails; a named trail is usually several segments sharing a `Name`). */
+  name: z.string().min(1).nullable(),
+  park: z.string().min(1).nullable(),
+  /** Raw source string, NOT collapsed: "City" and "City of Duluth" both appear for what is very
+   *  likely the same municipal authority, but nothing in the source data proves they're
+   *  interchangeable, so this schema declines to invent that equivalence. */
+  jurisdiction: z.string().min(1).nullable(),
+  /** Raw two-letter source code (HK, BH, MP, XC, BK, MS, SM, CL, RD, HB, XL, DG, ...) — left as a
+   *  plain string rather than an enum because the source's own layer description lists the codes as
+   *  informal/evolving ("XB - XC and Moutain Biking (none yet)"), so a closed union would be a
+   *  fabricated completeness guarantee this dataset doesn't back up. */
+  type: z.string().min(1).nullable(),
+  status: z.string().min(1).nullable(),
+  /** Normalized from raw `Season` ("Summer"/"Winter"/"Both"/null): null (8/800 records) maps to
+   *  "both" — the conservative choice, since defaulting to a single season would wrongly exclude a
+   *  trail of unstated seasonality from a seasonal search. Raw value preserved at `raw.Season`. */
+  season: z.enum(["summer", "winter", "both"]),
+  /** `Suface` in the source (sic) — renamed on read; the misspelled raw key survives at `raw.Suface`. */
+  surface: z.string().min(1).nullable(),
+  rating: z.number().int().nullable(),
+  /** The activity axis — see TrailUseSchema. Always all 8 activities, in a fixed order. */
+  uses: z.array(TrailUseSchema),
+  /** Forward hook for the Institution entity (issue #3) — deliberately a plain string, not a
+   *  reference, until that entity exists. The literal source value `"None"` is normalized to
+   *  `null` (raw preserved at `raw.PartnerOrganization`); every other value passes through verbatim. */
+  partnerOrganization: z.string().min(1).nullable(),
+  /** Trail length in miles (source `Mileage`). */
+  mileage: z.number().nullable(),
+  /** Trail length in the source's projected units (source `SHAPE.STLength()`); geometry itself is
+   *  NOT vendored (`returnGeometry=false` — polylines would dominate this artifact) but is available
+   *  live from the source service if a future consumer needs it. */
+  shapeLength: z.number().nullable(),
+  dateOpen: z.iso.datetime({ offset: true }).nullable(),
+  constructionYear: z.number().int().nullable(),
+  /** Source's own edit watermark for THIS record (epoch ms -> ISO). The artifact-level
+   *  `sourceWatermark` in `TrailsArtifactSchema` is the max of this across every record — see there
+   *  for why this replaces a wall-clock fetch timestamp. */
+  lastEditedDate: z.iso.datetime({ offset: true }),
+  /** The complete, untouched ArcGIS `attributes` object for this record (keys sorted alphabetically
+   *  by the fetcher for determinism) — the full-fidelity escape hatch for every field this schema
+   *  doesn't promote to a named property (`Traverse`, `Position`, `SHT`, `EMVAccess`, `CCT`,
+   *  `VisibleRecMap`, `created_user`, `created_data`, `last_edited_user`, and the normalized-away
+   *  originals of every field above). */
+  raw: z.record(z.string(), z.unknown()),
+});
+export type Trail = z.infer<typeof TrailSchema>;
+
+/** The committed `data/duluth-trails.json` envelope — one fetch, one layer, many trails. */
+export const TrailsArtifactSchema = z
+  .object({
+    source: z.url(), // the layer's query endpoint
+    layerId: z.number().int(),
+    /** Max `last_edited_date` across all records, as ISO — the source's own change watermark. NEVER
+     *  `Date.now()`: a wall-clock fetch timestamp would dirty this committed file on every re-run
+     *  even when upstream data is unchanged, which is exactly the idempotency trap this field exists
+     *  to avoid. This value only changes when the City actually edits a trail record. */
+    sourceWatermark: z.iso.datetime({ offset: true }),
+    recordCount: z.number().int().nonnegative(),
+    trails: z.array(TrailSchema),
+  })
+  .refine((a) => a.recordCount === a.trails.length, { error: "recordCount must equal trails.length", path: ["recordCount"] });
+export type TrailsArtifact = z.infer<typeof TrailsArtifactSchema>;
+
+/**
+ * @displayName Neighborhood
+ * @strategicPurpose Vendors the City of Duluth's 31-neighborhood ArcGIS boundary layer as committed
+ *   reference data. Joins to the `neighborhood` free-text field already present in
+ *   `data/homegrown-venues.json` (that field is not always an exact match — e.g. "Downtown Duluth /
+ *   Central Hillside" spans what this layer models as two separate neighborhoods — so the join is
+ *   left to the consumer, not baked in here).
+ * @tacticalObjective Hold one record per neighborhood polygon's non-geometric attributes.
+ */
+export const NeighborhoodSchema = z.object({
+  /** Stable entity id: `GlobalID` lowercased (the source already omits `{}` braces for this layer,
+   *  unlike Trail's `GlobalID` — normalized the same way regardless, so both entities key alike). */
+  id: z.string().min(1),
+  /** `GlobalID` exactly as ArcGIS returned it. */
+  globalId: z.string().min(1),
+  objectId: z.number().int(),
+  /** The source's own integer neighborhood id (field `ID`) — distinct from `objectId`, which is an
+   *  ArcGIS row identifier with no standalone meaning outside this service. */
+  adminId: z.number().int(),
+  name: z.string().min(1),
+  /** Polygon area in the source's projected units (source `Shape__Area`); geometry itself is NOT
+   *  vendored (`returnGeometry=false`) but is available live from the source service if needed. */
+  shapeArea: z.number().nullable(),
+  shapeLength: z.number().nullable(),
+  lastEditedDate: z.iso.datetime({ offset: true }),
+  /** The complete, untouched ArcGIS `attributes` object (keys sorted alphabetically), preserving
+   *  `created_user`/`created_data`/`last_edited_user` and the un-normalized originals. */
+  raw: z.record(z.string(), z.unknown()),
+});
+export type Neighborhood = z.infer<typeof NeighborhoodSchema>;
+
+/** The committed `data/duluth-neighborhoods.json` envelope. */
+export const NeighborhoodsArtifactSchema = z
+  .object({
+    source: z.url(),
+    layerId: z.number().int(),
+    sourceWatermark: z.iso.datetime({ offset: true }),
+    recordCount: z.number().int().nonnegative(),
+    neighborhoods: z.array(NeighborhoodSchema),
+  })
+  .refine((a) => a.recordCount === a.neighborhoods.length, { error: "recordCount must equal neighborhoods.length", path: ["recordCount"] });
+export type NeighborhoodsArtifact = z.infer<typeof NeighborhoodsArtifactSchema>;

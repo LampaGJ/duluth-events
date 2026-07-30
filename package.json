@@ -16,6 +16,7 @@
     "dev": "tsx watch src/server.ts",
     "test": "vitest run",
     "places:osm": "node scripts/fetch-osm.mjs",
+    "places:arcgis": "node scripts/fetch-arcgis.mjs",
     "places:propose": "tsx scripts/places-propose.mjs",
     "aliases:harvest": "tsx scripts/harvest-aliases.mjs",
     "merge:diff": "tsx scripts/merge-diff.mjs"
