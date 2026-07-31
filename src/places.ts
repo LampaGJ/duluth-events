@@ -118,6 +118,27 @@ export const PLACES: PlaceInput[] = [
     address: { city: "Superior", state: "WI", geo: { lat: 46.7197108, lon: -92.1032291 }, inDuluth: false },
     provenance: { source: "osm", ref: "node/367808853" },
   },
+  // Human sign-off (Phase 3, place-entity-resolution): both corpus strings name the same building —
+  // 9 events "Duluth Public Library – Main Library" (DAI) + 2 events "Duluth Public Library" (PDD),
+  // previously two different provisional ids. Overture has no clean "Main Library" record for the
+  // library itself — only "Duluth Library Foundation" (gersId 29ab8856-72f9-42bb-a070-f598ffd157db),
+  // a co-located but DIFFERENT organization at the same address, whose GERS id is deliberately NOT
+  // borrowed here. gersId omitted: no defensible match for the library entity. Also in Overture, NOT
+  // registered here (different addresses, different buildings): "Duluth Public Library Mt Royal" (105
+  // Mount Royal Shopping Cir, gers 3d91f4bc-c0c8-44e4-a06f-8d058c9b6517) and "West Duluth Public
+  // Library" (5830 Grand Ave, gers eaabb31a-76a6-46ca-b805-7b82c4fe5751).
+  {
+    id: "duluth-public-library-main",
+    name: "Duluth Public Library — Main Library",
+    nameAliases: ["Duluth Public Library – Main Library", "Duluth Public Library"],
+    address: { street: "520 W Superior St", city: "Duluth", state: "MN", inDuluth: true },
+    provenance: {
+      source: "manual",
+      ref: "address corroborated by osm:way/450026905 (Duluth Public Library, 520 W Superior St) and " +
+        "overture:Duluth Library Foundation (29ab8856-72f9-42bb-a070-f598ffd157db, same address; " +
+        "Foundation is a distinct org housed in the Main Library building, not registered as this place)",
+    },
+  },
   {
     id: "chambers-grove-park",
     name: "Chambers Grove Park",

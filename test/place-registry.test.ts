@@ -102,6 +102,7 @@ describe("the shipped registry", () => {
       "blacklist-brewing-company", "brighton-beach-park", "carl-gullo-park", "carmody-irish-pub",
       "chambers-grove-park", "chester-bowl-park", "chet-anderson-stadium", "dai-lincoln-park-building",
       "dubh-linn-irish-pub", "duluth-flame-nightclub", "duluth-folk-school", "duluth-heights-park",
+      "duluth-public-library-main",
       "ed-robson-arena", "elmen-center", "enger-tower", "fond-du-lac-tribal-and-community-college",
       "gangelhoff-center", "glensheen-mansion", "great-lakes-aquarium", "gutterson-fieldhouse",
       "harrison-park", "heikkila-hcams", "herb-brooks-national-hockey-center", "husky-stadium",
