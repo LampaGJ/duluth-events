@@ -149,6 +149,16 @@ export const SOURCES: SourceDef[] = [
     notes: "CONFIRMED. Squarespace ?format=json (runs the Lake Superior Estuarium, Barker's Island, Superior WI). ~33 upcoming (Estuarium open hours, Everyone Can Bird). Superior-WI venue -> inDuluth:false.",
   },
   {
+    name: "Fond du Lac Tribal and Community College",
+    adapter: "structured-api",
+    mapper: "tribe-rest",
+    url: "https://fdltcc.edu/wp-json/tribe/events/v1/events",
+    type: "json-api",
+    confidence: "high",
+    enabled: true,
+    notes: "CONFIRMED 2026-07-31 (3 upcoming). The Events Calendar REST, plain fetch. Listed 'ready to wire' by the 2026-07-24 sweep and never wired; its place feed was empty as a result. Net-new tribal institution (Cloquet, MN — Fond du Lac reservation, so inDuluth:false). Thin but real and public: concert series, Foundation golf scramble, Pumpkin Run.",
+  },
+  {
     name: "Wild State Cider",
     adapter: "structured-api",
     mapper: "tribe-rest",
