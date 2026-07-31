@@ -20,6 +20,7 @@ import { progress } from "/Users/graham/.claude/lib/progress.mjs";
 import { normalizeVenueKey, isSentinelVenue, parseVenueString } from "../src/place-resolve.js";
 import { unescapeIcsText } from "../src/normalize.js";
 import { deriveSetting, deriveGeoScope } from "../src/facets.js";
+import { loadOverturePlaces } from "../src/overture.js";
 
 const ICS = process.argv[2] ?? "duluth-events.ics";
 const UA = "duluth-events/0.1 (github.com/LampaGJ/duluth-events)";
@@ -162,6 +163,49 @@ const hgIdx = homegrown.map((v) => ({
 }));
 
 /**
+ * Tier "overture": Overture Maps' vendored Duluth-bbox `places` extract (`data/overture-places.json`
+ * — see `data/overture-places.SOURCE.md`). Placed AFTER tier 0 (Homegrown — hand-curated, so it still
+ * wins outright on a tie or a stronger score, same as it already beats tier 1/2) and BEFORE tier 1
+ * (the OSM cache): probed live against this exact corpus (see the task report), Overture's address
+ * data beat both OSM and Nominatim on a measured case (Bent Paddle's street address — Overture had
+ * "1832 W Michigan St", matching this project's own corpus and Homegrown; OSM/Nominatim had "1912"),
+ * and it also disambiguates a case OSM/Nominatim conflate (the Duluth Public Library branches — see
+ * the task report's library-branch proposal). Its committed extract is broader than OSM's (7,428
+ * addressed places) while costing zero network calls, same as OSM — so it is tried FIRST among the
+ * two committed caches.
+ *
+ * It is still machine-aggregated, non-hand-curated data, though — NOT promoted above tier 0, and NOT
+ * exempted from any existing guard: same `score < 0.5` gate chaining (a stronger earlier tier is
+ * never overridden), same tie-surfacing (a tokenizer tie is forced to WEAK regardless of numeric
+ * score, same as every other tier), same locality gate (`isLocalToOsmCache`) and bbox belt-and-braces
+ * (own `withinOvertureBbox`, since Overture was fetched with a slightly wider bbox than
+ * `DULUTH_BBOX` below — see `data/overture-places.SOURCE.md`), and — the one rule that matters most —
+ * **no similarity score here ever auto-accepts a candidate**; `isLikely` downstream applies uniformly
+ * across every tier.
+ *
+ * `permanently_closed` candidates are excluded outright at index-build time (never enter `ovIdx`
+ * below) — proposing a dead business as a live venue match would be strictly worse than proposing
+ * nothing, since a human reviewer skimming a confident-looking match has no other signal telling them
+ * the place no longer exists.
+ */
+const overture = existsSync("data/overture-places.json") ? loadOverturePlaces("data/overture-places.json") : [];
+const ovIdx = overture
+  .filter((o) => o.operatingStatus !== "permanently_closed")
+  .map((o) => ({
+    o: {
+      name: o.name,
+      street: o.address.freeform || null,
+      city: o.address.locality || null,
+      state: o.address.region || null,
+      lat: o.lat,
+      lon: o.lon,
+      ref: `overture:${o.gersId}`,
+      gersId: o.gersId,
+    },
+    t: tk(o.name),
+  }));
+
+/**
  * `data/osm-duluth.json` is a Duluth-BOUNDING-BOX extract (see scripts/fetch-osm.mjs's QUERY), not a
  * general venue database. An away-game venue (city="Sioux Falls, SD") can never legitimately match
  * it — every entry in the cache is, by construction, near Duluth. Matching non-local targets against
@@ -193,6 +237,15 @@ const DULUTH_BBOX = { latMin: 46.6, latMax: 46.9, lonMin: -92.35, lonMax: -91.95
 const withinDuluthBbox = (lat, lon) =>
   lat != null && lon != null && lat >= DULUTH_BBOX.latMin && lat <= DULUTH_BBOX.latMax && lon >= DULUTH_BBOX.lonMin && lon <= DULUTH_BBOX.lonMax;
 
+/** Same belt-and-braces idea as `withinDuluthBbox`, sized to Overture's OWN fetch bbox (see
+ *  `scripts/fetch-overture.mjs`'s `BBOX` / `data/overture-places.SOURCE.md`) rather than reused from
+ *  `DULUTH_BBOX` above — the two boxes are close but not identical (Overture's extends to lat 46.95
+ *  and lon -91.90, `DULUTH_BBOX` stops at 46.9 / -91.95), and reusing the narrower constant would
+ *  reject genuine in-cache Overture hits that fall in the sliver between the two. */
+const OVERTURE_BBOX = { latMin: 46.6, latMax: 46.95, lonMin: -92.35, lonMax: -91.9 };
+const withinOvertureBbox = (lat, lon) =>
+  lat != null && lon != null && lat >= OVERTURE_BBOX.latMin && lat <= OVERTURE_BBOX.latMax && lon >= OVERTURE_BBOX.lonMin && lon <= OVERTURE_BBOX.lonMax;
+
 const p = progress("places-propose", { total: targets.length, everyN: 5 });
 const rows = [];
 let done = 0;
@@ -214,6 +267,16 @@ for (const t of targets) {
       else if (s === score && s > 0) { tiedWith.push(x.o); }
     }
     if (best && src === "homegrown" && !withinDuluthBbox(best.lat, best.lon)) { best = null; score = 0; src = null; tiedWith = []; }
+  }
+  // tier "overture": see the doc comment above `ovIdx`'s definition for the full placement rationale.
+  // Same `score < 0.5` gate as tier 1/2 below — a strong tier-0 Homegrown hit is never reconsidered.
+  if (score < 0.5 && isLocalToOsmCache(t.city, t.state)) {
+    for (const x of ovIdx) {
+      const s = Math.max(jac(tk(t.raw), x.t), isAcronym(t.raw, x.o.name) ? 0.9 : 0);
+      if (s > score) { score = s; best = x.o; src = "overture"; tiedWith = []; }
+      else if (s === score && s > 0) { tiedWith.push(x.o); }
+    }
+    if (best && src === "overture" && !withinOvertureBbox(best.lat, best.lon)) { best = null; score = 0; src = null; tiedWith = []; }
   }
   // tier 1 only for targets the parsed city says are actually near Duluth — see isLocalToOsmCache's
   // doc comment. A non-local target skips straight to tier 2 (score stays 0, so the `< 0.5` gate
@@ -296,12 +359,18 @@ const englishList = (items) =>
 // A tied score is FORCED to WEAK regardless of its numeric value — a tie at sim=1.0 is less
 // trustworthy than a clean, untied 0.6, because it means the tokenizer had no basis to prefer the
 // winner over its tied alternative(s); see the tiedWith doc comment in the matching loop above.
-// `r.src` carries "homegrown" for display/stats (distinct from "osm"/"web"), but PlaceProvenanceSchema's
-// `source` enum only accepts "osm" | "web" | "manual" — a Homegrown hit is curated, human-checked data,
-// not a machine geocode, so it maps to "manual" (with the `homegrown:<name>` ref carrying the real
-// provenance) at the point the literal is actually written, not upstream where "homegrown" is still
-// useful for telling tiers apart.
-const provenanceSource = (r) => (r.src === "homegrown" ? "manual" : (r.src ?? "manual"));
+// `r.src` carries "homegrown"/"overture" for display/stats (distinct from "osm"/"web"), but
+// PlaceProvenanceSchema's `source` enum only accepts "osm" | "web" | "manual" — this task's scope
+// deliberately does NOT extend that enum (see the task report), so both map onto an existing value at
+// the point the literal is actually written, not upstream where the finer-grained tier name is still
+// useful for telling tiers apart:
+//   - "homegrown" -> "manual" (curated, human-checked data, not a machine geocode; `homegrown:<name>`
+//     ref carries the real provenance)
+//   - "overture" -> "web" (machine-aggregated from a hosted dataset, the same character as a
+//     Nominatim geocode even though the mechanism differs; `overture:<gersId>` ref carries the real
+//     provenance, and the GERS id ALSO lands on the literal's own `gersId:` field below — see the
+//     literal-emission loop)
+const provenanceSource = (r) => (r.src === "homegrown" ? "manual" : r.src === "overture" ? "web" : (r.src ?? "manual"));
 const isLikely = (r) => !r.tied && r.best && r.score >= 0.5;
 const verdict = (r) => (!r.best ? "NO MATCH — research by hand" : isLikely(r) ? "LIKELY" : "WEAK — verify or reject");
 const notAVenueRows = [...notAVenue.values()].sort((a, b) => b.n - a.n);
@@ -402,6 +471,9 @@ for (const r of finalRows) {
   out += `  address: { ${r.best?.street ? `street: ${JSON.stringify(r.best.street)}, ` : ""}city: ${JSON.stringify(city)}, state: ${JSON.stringify(state)}`;
   if (r.best?.lat) out += `, geo: { lat: ${r.best.lat}, lon: ${r.best.lon} }`;
   out += `, inDuluth: ${/^duluth$/i.test(city)} },\n`;
+  // GERS join key (see Place.gersId in src/schema.ts) — only present when the winning candidate came
+  // from the Overture tier; every other tier has no GERS id to offer, and the field is optional.
+  if (r.best?.gersId) out += `  gersId: ${JSON.stringify(r.best.gersId)},\n`;
   out += `  provenance: { source: ${JSON.stringify(provenanceSource(r))}${r.best?.ref ? `, ref: ${JSON.stringify(r.best.ref)}` : ""} },\n`;
   out += "},\n```\n\n";
 }
@@ -414,5 +486,6 @@ console.log(`  WEAK:        ${finalRows.filter((r) => r.best && !isLikely(r)).le
 console.log(`  NO MATCH:    ${finalRows.filter((r) => !r.best).length}`);
 console.log(`  tied (forced WEAK): ${finalRows.filter((r) => r.tied).length}`);
 console.log(`  tier-0 Homegrown hits: ${finalRows.filter((r) => r.src === "homegrown").length}`);
+console.log(`  tier Overture hits: ${finalRows.filter((r) => r.src === "overture").length}`);
 console.log(`  duplicate proposed ids: ${duplicateIds.length}${duplicateIds.length ? ` (${duplicateIds.map(([id]) => id).join(", ")})` : ""}`);
 console.log(`\nreports/places-proposal.md is NOT the registry. Review, then paste into src/places.ts.`);

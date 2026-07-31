@@ -277,6 +277,11 @@ export const PlaceSchema = z.object({
   rooms: z.array(z.string()).default([]),
   /** Forward hook for Institution (issue #3): a name, deliberately not yet a reference. */
   operator: z.string().optional(),
+  /** Overture Maps GERS id (a stable UUID — see `src/overture.ts`), when this place has been matched
+   *  to an Overture record. Purely a JOIN KEY into the global Overture graph, additive and optional
+   *  — `id` (above) remains the sole public/URL-stable identifier and this field never affects it.
+   *  Absent = not yet matched, not "does not exist in Overture". */
+  gersId: z.string().min(1).optional(),
   provenance: PlaceProvenanceSchema,
 });
 export type Place = z.infer<typeof PlaceSchema>;
