@@ -3,12 +3,14 @@ import { readFileSync, writeFileSync, unlinkSync } from "node:fs";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { TrailsArtifactSchema, NeighborhoodsArtifactSchema } from "../src/schema.js";
+import { TrailsArtifactSchema, NeighborhoodsArtifactSchema, TrailConditionsArtifactSchema } from "../src/schema.js";
 import { loadTrails } from "../src/trails.js";
 import { loadNeighborhoods } from "../src/neighborhoods.js";
+import { loadTrailConditions } from "../src/trail-conditions.js";
 
 const TRAILS_PATH = "data/duluth-trails.json";
 const NEIGHBORHOODS_PATH = "data/duluth-neighborhoods.json";
+const TRAIL_CONDITIONS_PATH = "data/trail-conditions.json";
 
 const tmpFiles: string[] = [];
 afterEach(() => {
@@ -81,6 +83,44 @@ describe("NeighborhoodsArtifactSchema — parses the real committed artifact", (
   });
 });
 
+describe("TrailConditionsArtifactSchema — parses the real committed artifact", () => {
+  const text = readFileSync(TRAIL_CONDITIONS_PATH, "utf8");
+  const raw = JSON.parse(text);
+
+  it("parses without throwing", () => {
+    expect(() => TrailConditionsArtifactSchema.parse(raw)).not.toThrow();
+  });
+
+  it("recordCount matches trailConditions.length, and every discovered key produced a record", () => {
+    const parsed = TrailConditionsArtifactSchema.parse(raw);
+    expect(parsed.recordCount).toBe(parsed.trailConditions.length);
+    expect(parsed.trailConditions.length).toBeGreaterThan(0);
+    expect(parsed.keys.length).toBeGreaterThan(0);
+    // Every trailCondition's own embedKey must be one of the discovered keys — the envelope's
+    // `keys` list and the records it produced must not silently diverge.
+    const keySet = new Set(parsed.keys);
+    for (const c of parsed.trailConditions) {
+      expect(keySet.has(c.embedKey)).toBe(true);
+    }
+  });
+
+  it("`keys` is sorted (deterministic write order)", () => {
+    const parsed = TrailConditionsArtifactSchema.parse(raw);
+    expect(parsed.keys).toEqual([...parsed.keys].sort());
+  });
+
+  it("records are sorted by embedKey (deterministic write order)", () => {
+    const parsed = TrailConditionsArtifactSchema.parse(raw);
+    const keys = parsed.trailConditions.map((c) => c.embedKey);
+    expect(keys).toEqual([...keys].sort());
+  });
+
+  it("loadTrailConditions() returns the same records the raw parse does", () => {
+    const conditions = loadTrailConditions(TRAIL_CONDITIONS_PATH);
+    expect(conditions.length).toBe(TrailConditionsArtifactSchema.parse(raw).recordCount);
+  });
+});
+
 describe("loaders fail fast on a malformed record", () => {
   it("loadTrails throws when a record has an invalid season", () => {
     const good = TrailsArtifactSchema.parse(JSON.parse(readFileSync(TRAILS_PATH, "utf8")));
@@ -115,6 +155,41 @@ describe("loaders fail fast on a malformed record", () => {
     const path = writeTmpJson("bad-neighborhoods.json", broken);
     expect(() => loadNeighborhoods(path)).toThrow();
   });
+
+  it("loadTrailConditions throws when a record is missing trailStatus", () => {
+    const good = TrailConditionsArtifactSchema.parse(JSON.parse(readFileSync(TRAIL_CONDITIONS_PATH, "utf8")));
+    const { trailStatus: _drop, ...rest } = good.trailConditions[0]!;
+    const broken = { ...good, trailConditions: [rest], recordCount: 1, keys: [good.trailConditions[0]!.embedKey] };
+    const path = writeTmpJson("bad-trail-conditions-no-status.json", broken);
+    expect(() => loadTrailConditions(path)).toThrow();
+  });
+
+  it("loadTrailConditions throws when embedKey is missing entirely", () => {
+    const good = TrailConditionsArtifactSchema.parse(JSON.parse(readFileSync(TRAIL_CONDITIONS_PATH, "utf8")));
+    const { embedKey: _drop, ...rest } = good.trailConditions[0]!;
+    const broken = { ...good, trailConditions: [rest], recordCount: 1, keys: [] };
+    const path = writeTmpJson("bad-trail-conditions-no-embedkey.json", broken);
+    expect(() => loadTrailConditions(path)).toThrow();
+  });
+
+  it("loadTrailConditions throws when recordCount disagrees with trailConditions.length (envelope invariant)", () => {
+    const good = TrailConditionsArtifactSchema.parse(JSON.parse(readFileSync(TRAIL_CONDITIONS_PATH, "utf8")));
+    const broken = { ...good, trailConditions: [good.trailConditions[0]!], recordCount: 2 };
+    const path = writeTmpJson("bad-trail-conditions-count.json", broken);
+    expect(() => loadTrailConditions(path)).toThrow();
+  });
+
+  it("loadTrailConditions throws when last24Precip is the wrong type (schema-drift tripwire)", () => {
+    const good = TrailConditionsArtifactSchema.parse(JSON.parse(readFileSync(TRAIL_CONDITIONS_PATH, "utf8")));
+    const broken = {
+      ...good,
+      trailConditions: [{ ...good.trailConditions[0]!, last24Precip: "0.1" }], // string, not number
+      recordCount: 1,
+      keys: [good.trailConditions[0]!.embedKey],
+    };
+    const path = writeTmpJson("bad-trail-conditions-precip-type.json", broken);
+    expect(() => loadTrailConditions(path)).toThrow();
+  });
 });
 
 /**
@@ -142,6 +217,13 @@ describe("idempotency: parse -> re-serialize reproduces the committed file byte-
     expect(reserialized).toBe(text);
   });
 
+  it("data/trail-conditions.json", () => {
+    const text = readFileSync(TRAIL_CONDITIONS_PATH, "utf8");
+    const parsed = TrailConditionsArtifactSchema.parse(JSON.parse(text));
+    const reserialized = JSON.stringify(parsed, null, 2) + "\n";
+    expect(reserialized).toBe(text);
+  });
+
   /**
    * Mutation-diagnostic proof, per project rule ("seventeen defects in this project's plan code
    * have been tests that looked like coverage and pinned nothing"): flip one boolean deep inside a
@@ -156,6 +238,23 @@ describe("idempotency: parse -> re-serialize reproduces the committed file byte-
     const mutated = {
       ...parsed,
       trails: [{ ...firstTrail, uses: [{ ...firstUse, permitted: !firstUse.permitted }, ...firstTrail.uses.slice(1)] }, ...parsed.trails.slice(1)],
+    };
+    const reserialized = JSON.stringify(mutated, null, 2) + "\n";
+    expect(reserialized).not.toBe(text);
+  });
+
+  /**
+   * Same mutation-diagnostic proof for the trail-conditions artifact specifically (not just
+   * inherited coverage from the trails.json test above) — flip `trailStatus` on the first record
+   * and confirm the byte-for-byte assertion for data/trail-conditions.json actually fails.
+   */
+  it("mutation check: a single flipped trailStatus breaks the trail-conditions byte-for-byte assertion", () => {
+    const text = readFileSync(TRAIL_CONDITIONS_PATH, "utf8");
+    const parsed = TrailConditionsArtifactSchema.parse(JSON.parse(text));
+    const first = parsed.trailConditions[0]!;
+    const mutated = {
+      ...parsed,
+      trailConditions: [{ ...first, trailStatus: `${first.trailStatus}-MUTATED` }, ...parsed.trailConditions.slice(1)],
     };
     const reserialized = JSON.stringify(mutated, null, 2) + "\n";
     expect(reserialized).not.toBe(text);

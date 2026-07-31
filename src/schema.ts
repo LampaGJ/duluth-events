@@ -527,3 +527,153 @@ export const NeighborhoodsArtifactSchema = z
   })
   .refine((a) => a.recordCount === a.neighborhoods.length, { error: "recordCount must equal neighborhoods.length", path: ["recordCount"] });
 export type NeighborhoodsArtifact = z.infer<typeof NeighborhoodsArtifactSchema>;
+
+// ---------------------------------------------------------------------------
+// Reference data — TrailBot live trail-conditions feed (committed snapshot)
+// ---------------------------------------------------------------------------
+//
+// UNLIKE the ArcGIS block above, this is NOT a published API — it is TrailBot's undocumented
+// Next.js SSR payload (`__NEXT_DATA__.props.pageProps.trails`), embedded by COGGS
+// (https://www.coggs.com/trail-conditions) via `<iframe src="https://trailbot.com/widgets/feed?
+// keys=<uuid>[,<uuid>...]">` tags. It can change shape without notice — see
+// `data/trail-conditions.SOURCE.md` for the observed shape and the defensive-parsing rationale.
+// Field order below is matched by `scripts/fetch-trailbot.mjs`'s object-construction order — same
+// discipline as the ArcGIS block (Zod rebuilds output in schema field order, not input order).
+//
+// This vendors the CONDITION-dependent dimension the ArcGIS trails layer cannot express: the
+// ArcGIS `season` field is a permanent, coarse Summer/Winter/Both fact; `trailStatus`/`statusTags`/
+// `last24Precip` here are the City's actual closure rule in effect RIGHT NOW ("closed each Spring/
+// Fall until dry enough or frozen enough"; "24 hours after a rainfall event to reopen").
+
+/**
+ * @displayName Trail Condition
+ * @strategicPurpose One live status record from a single TrailBot embed key, as surfaced on COGGS'
+ *   trail-conditions page. Captures the condition-dependent closure state (`trailStatus`,
+ *   `statusTags`, `last24Precip`, `weatherPolicy`) that the vendored ArcGIS trails layer
+ *   (`src/trails.ts`) structurally cannot — that layer's `season` is a permanent Summer/Winter/Both
+ *   fact, not "is this trail open today."
+ * @tacticalObjective Promote the fields this project actually consumes (identity, status,
+ *   condition, location, attribution) to named/typed properties; preserve the COMPLETE untouched
+ *   TrailBot record under `raw` so nothing this schema doesn't name is ever silently discarded —
+ *   essential given the source is an undocumented SSR payload that can add/remove/rename fields
+ *   without notice.
+ */
+export const TrailConditionSchema = z.object({
+  /** The TrailBot embed key (UUID) requested to fetch this record — one key returned exactly one
+   *  trail in every observed case, so this doubles as the stable join/sort key for this artifact
+   *  (matches `data/trail-conditions.SOURCE.md`'s discovered `keys` list). */
+  embedKey: z.string().min(1),
+  /** TrailBot's own internal trail identifier (source `_id`/`trailId`, always identical in every
+   *  observed record) — opaque, but stable, and independent of `embedKey`. */
+  trailId: z.string().min(1),
+  /** Human-legible trail-system name. Observed to sometimes name several trail systems at once
+   *  (e.g. "Piedmont/Brewer/Enger/Keene") — COGGS' own multi-system grouping convention, not a
+   *  parsing artifact. See `data/trail-conditions.SOURCE.md` for the join-proposal analysis this
+   *  implies against the ArcGIS `Name`/`Park` fields. */
+  trailName: z.string().min(1),
+  slug: z.string().min(1),
+  /** Free-text status vocabulary observed so far: "Open", "Closed", "Partially Open". Left as a
+   *  plain string, not a closed enum — the same reasoning as `Trail.type` in `src/schema.ts`: this
+   *  is an undocumented source and a fabricated closed union would be a completeness guarantee this
+   *  dataset doesn't back up. */
+  trailStatus: z.string().min(1),
+  /** Short condition tags (observed: "dry", "hero", "wet", "dusty", ...) — supplementary detail
+   *  alongside `trailStatus`, not a replacement for it. */
+  statusTags: z.array(z.string()),
+  /** Trail-maintainer-authored status note. Can legitimately be an empty string (observed on
+   *  records where `notes` carries the substantive text instead — see `raw.notes`). */
+  description: z.string(),
+  /** The maintaining authority's stated reopening rule in prose (e.g. "closed when raining,
+   *  reopened ... typically 12-24 hours after a rain event") — the closest thing this source has to
+   *  a machine-readable closure policy. Missing on some records (observed 6/9 present, 3/9 absent —
+   *  privately-run trail systems like Spirit Mountain don't publish one); absence normalizes to
+   *  `null` at fetch time (see `nullIfMissing` in `scripts/fetch-trailbot.mjs`), never an omitted
+   *  key, so every record has the property. */
+  weatherPolicy: z.string().min(1).nullable(),
+  /** Free-text activity code (observed: "mtb" on every record so far; TrailBot's own schema is not
+   *  scoped to mountain biking, so other values are expected as COGGS/TrailBot expand coverage). */
+  activity: z.string().min(1),
+  /** The trail-system's maintaining organization's display name (e.g. "COGGS", "Spirit Mountain",
+   *  "Lake County MTB") — distinct from `organization.name`, which is TrailBot's own account-level
+   *  attribution and was observed to always match. Kept as its own field because it is the label
+   *  the widget itself surfaces as the authority. */
+  authority: z.string().min(1),
+  /** The governing agency/landowner (e.g. "City of Duluth, MN", "City of Superior, Wisconsin",
+   *  "Private") — NOT always Duluth; several discovered keys cover trail systems in neighboring
+   *  jurisdictions (Superior WI, Cloquet MN, Lake County). See SOURCE.md. */
+  agency: z.string().min(1),
+  region: z.string().min(1),
+  regions: z.array(z.string()),
+  /** Decimal-degree latitude as TrailBot returns it — a STRING in the source, not a number (see
+   *  `raw.lat` for the source's own parsed-float duplicate of the same value). Kept as the source
+   *  represents it rather than silently reinterpreting the type. */
+  latitude: z.string().min(1),
+  longitude: z.string().min(1),
+  /** Observed empty (`""`) on one remote trailhead (Split Rock Wilds, Beaver Bay Township — no
+   *  street address to give); the fetcher normalizes empty/whitespace-only to `null`, same
+   *  discipline as `scripts/fetch-arcgis.mjs`'s `nullIfEmpty`. */
+  street: z.string().min(1).nullable(),
+  city: z.string().min(1),
+  state: z.string().min(1),
+  zipcode: z.string().min(1),
+  timezone: z.string().min(1),
+  /** Inches(?) of precipitation in the last 24 hours — the machine-readable half of the closure
+   *  rule ("24 hours after a rainfall event to reopen"); units are unconfirmed by TrailBot (not
+   *  documented anywhere on the source), reported as-is. */
+  last24Precip: z.number(),
+  last24PrecipType: z.string().min(1).nullable(),
+  /** Epoch milliseconds — the source's own last-update time for this specific trail record. Max
+   *  across all records becomes `sourceWatermark` in `TrailConditionsArtifactSchema` below. */
+  updatedAt: z.number().int(),
+  /** Epoch milliseconds — when TrailBot last reminded the maintainer to post an update (distinct
+   *  from `updatedAt`; can be older or newer). */
+  remindedAt: z.number().int(),
+  sourceDescription: z.string().min(1),
+  /** Observed empty (`""`) on the same Split Rock Wilds record as `street` — no published page.
+   *  Normalized to `null` at fetch time for the same reason. */
+  url: z.url().nullable(),
+  /** Social-account handles/URLs keyed by platform name (e.g. "Instagram" -> "spiritmtduluth").
+   *  Values are NOT uniformly URLs (some are bare handles), so this is `string -> string`, not
+   *  `string -> url`. Can be `{}`. */
+  socials: z.record(z.string(), z.string()),
+  /** TrailBot's own account-level attribution for this trail record — a small subset (name + slug)
+   *  of a much larger object; the complete organization object survives at `raw.organization`. */
+  organization: z.object({
+    name: z.string().min(1),
+    slug: z.string().min(1),
+  }),
+  /** The complete, untouched TrailBot record for this trail (keys sorted alphabetically by the
+   *  fetcher for determinism) — the full-fidelity escape hatch for every field this schema doesn't
+   *  promote (`amenities`, `coverUrl`, `donationUrl`, `ebikePolicy`, `joinUrl`, `volunteerUrl`,
+   *  `waiverUrl`, `customFields`, `attributes`, `fields`, `counts`, `pictures`, `visibility`,
+   *  `active`, `country`, `source`, `createdAt`, `organizationId`, `slugAliases`, `updatedBy`,
+   *  `logoUrl`, `maps`, `notes`, `latestUpdateId`, and the un-normalized originals of every field
+   *  above), and the safety net if this schema's promoted fields ever drift from the live shape. */
+  raw: z.record(z.string(), z.unknown()),
+});
+export type TrailCondition = z.infer<typeof TrailConditionSchema>;
+
+/**
+ * @displayName Trail Conditions Artifact
+ * @strategicPurpose The committed `data/trail-conditions.json` envelope — one fetch across every
+ *   discovered TrailBot embed key, vendored the same way `TrailsArtifactSchema` vendors the ArcGIS
+ *   layer, but sourced from an undocumented SSR payload rather than a published API.
+ * @tacticalObjective Record exactly which embed keys were discovered/fetched (`keys`), the source's
+ *   own change watermark (`sourceWatermark` — max `updatedAt` across records, NEVER a wall-clock
+ *   fetch time), and the full trail-condition list.
+ */
+export const TrailConditionsArtifactSchema = z
+  .object({
+    /** The TrailBot widget endpoint pattern (not a single queryable resource — each record was
+     *  fetched by its own `?keys=<embedKey>` request). */
+    source: z.url(),
+    /** The COGGS page the embed keys were discovered from. */
+    discoverySource: z.url(),
+    /** Every embed key discovered on `discoverySource` and successfully fetched, sorted. */
+    keys: z.array(z.string().min(1)),
+    sourceWatermark: z.iso.datetime({ offset: true }),
+    recordCount: z.number().int().nonnegative(),
+    trailConditions: z.array(TrailConditionSchema),
+  })
+  .refine((a) => a.recordCount === a.trailConditions.length, { error: "recordCount must equal trailConditions.length", path: ["recordCount"] });
+export type TrailConditionsArtifact = z.infer<typeof TrailConditionsArtifactSchema>;
