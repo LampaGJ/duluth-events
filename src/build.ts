@@ -3,6 +3,7 @@ import { runPipeline } from "./pipeline.js";
 import { buildFeed, filterEvents } from "./feed.js";
 import { SPECS, placeSpecs } from "./feeds-config.js";
 import { renderIndex, type Row } from "./render-index.js";
+import { renderPlaces } from "./render-places.js";
 import { logger } from "./logger.js";
 
 /**
@@ -28,5 +29,6 @@ for (const spec of allSpecs) {
   rows.push({ title: spec.title, desc: spec.desc, count: filterEvents(events, spec.filter).length, file: spec.file, group: spec.group });
 }
 await writeFile(`${OUT}/index.html`, renderIndex(rows, Object.keys(stats.perSource).length, new Date().toISOString(), BASE), "utf8");
+await writeFile(`${OUT}/places.html`, renderPlaces(rows, BASE), "utf8");
 
 logger.info({ feeds: allSpecs.length, events: events.length, sources: Object.keys(stats.perSource).length, out: OUT }, "static site built");
