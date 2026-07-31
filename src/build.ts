@@ -5,6 +5,7 @@ import { SPECS, placeSpecs } from "./feeds-config.js";
 import { renderIndex, type Row } from "./render-index.js";
 import { renderPlaces } from "./render-places.js";
 import { logger } from "./logger.js";
+import { progress } from "./progress.js";
 
 /**
  * Static-site generator for GitHub Pages. Runs the pipeline once, then writes a CURATED set of
@@ -22,12 +23,18 @@ await rm(OUT, { recursive: true, force: true });
 await mkdir(`${OUT}/feeds/place`, { recursive: true });
 await writeFile(`${OUT}/.nojekyll`, "");
 
+// Two long phases worth polling rather than blocking on: `runPipeline()` above heartbeats per
+// source, this one per feed written. Both land in reports/.progress/build.json.
 const allSpecs = [...SPECS, ...placeSpecs()];
+const p = progress("build-feeds", { total: allSpecs.length });
 const rows: Row[] = [];
+let written = 0;
 for (const spec of allSpecs) {
   await writeFile(`${OUT}/feeds/${spec.file}`, buildFeed(events, spec.filter), "utf8");
   rows.push({ title: spec.title, desc: spec.desc, count: filterEvents(events, spec.filter).length, file: spec.file, group: spec.group });
+  p.tick(++written, { file: spec.file });
 }
+p.done({ feeds: allSpecs.length, events: events.length });
 await writeFile(`${OUT}/index.html`, renderIndex(rows, Object.keys(stats.perSource).length, new Date().toISOString(), BASE), "utf8");
 await writeFile(`${OUT}/places.html`, renderPlaces(rows, BASE), "utf8");
 
