@@ -1,6 +1,7 @@
 import ical, { ICalEventStatus, type ICalCalendar } from "ical-generator";
 import type { AgeSchema, CostSchema, DuluthEvent, FeedMeta } from "./schema.js";
 import type { z } from "zod";
+import { decodeEntities } from "./normalize.js";
 
 type Cost = z.infer<typeof CostSchema>;
 type Age = z.infer<typeof AgeSchema>;
@@ -131,14 +132,21 @@ export function emitFeed(events: DuluthEvent[], meta: FeedMeta): string {
       start: new Date(e.start),
       end: e.end ? new Date(e.end) : undefined,
       allDay: e.allDay,
-      summary: e.title,
-      description: buildDescription(e),
+      // Entities are decoded HERE, at the emission boundary, and nowhere upstream. Sources hand us
+      // CMS-encoded text ("Lydia Boyum &#038; Ryan Lane"); `cleanText` already decodes it for every
+      // MATCHING surface (classify/facets/place-resolve) but the stored model deliberately keeps the
+      // publisher's bytes verbatim. An ICS file is not HTML, so an HTML entity that survives to a
+      // subscriber's calendar app is displayed literally — decoding is a reformat of an encoding
+      // artifact, not a change to what the publisher said. Doing it here rather than at ingestion
+      // keeps dedupe's inputs byte-identical, so this cannot move a merge decision.
+      summary: decodeEntities(e.title),
+      description: decodeEntities(buildDescription(e)),
       location: {
-        title: formatLocation(e),
+        title: decodeEntities(formatLocation(e)),
         geo: e.location.geo ? { lat: e.location.geo.lat, lon: e.location.geo.lon } : undefined,
       },
       status: mapStatus(e.status),
-      categories: e.categories.map((name) => ({ name })),
+      categories: e.categories.map((name) => ({ name: decodeEntities(name) })),
       stamp,
       x: buildXProps(e),
     });
