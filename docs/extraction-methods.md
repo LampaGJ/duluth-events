@@ -155,12 +155,55 @@ Not a platform — a wall that sits in front of one. Escalation ladder:
 - **WP custom post type** (no TEC): `GET {base}/wp-json/wp/v2/{cpt}` — DSSO `concert`, Ursa Minor `event`. Title/permalink confirmed but the DATE is in body prose (no ACF/JSON-LD) → mapper needs a content-regex or page-render. → `structured-api`/new `wp-custom-cpt`.
 
 **Ready to wire (confirmed real data):**
-- FDL Band (revize, 428, high, net-new tribal) · Essentia (sitecore-coveo, 148, med-high) · DISC (ical, high, tz-gotcha) · FDLTCC (tribe-rest, high) · UWS (tribe-rest, high, Superior WI) · DSSO (wp-cpt, med) · Ursa Minor (wp-cpt, med).
-- Ready TEC, **0 events right now** (re-poll at wire time): Zeitgeist Arts, Minnesota Ballet, Sacred Heart Music Center, Spirit Mountain — all `tribe-rest`, zero new code.
+- FDL Band (revize, 428, high, net-new tribal) · Essentia (sitecore-coveo, 148, med-high) · DISC (ical, high, tz-gotcha) · ~~FDLTCC~~ **wired 2026-07-31** · UWS (tribe-rest, high, Superior WI — see the 2026-07-31 sweep before wiring) · DSSO (wp-cpt, med) · Ursa Minor (wp-cpt, med).
+- Ready TEC, **0 events right now** (re-poll at wire time): Zeitgeist Arts, Minnesota Ballet, Sacred Heart Music Center, ~~Spirit Mountain~~ **wired 2026-07-31** — all `tribe-rest`, zero new code.
+  ⚠ **Zeitgeist Arts is `zeitgeistarts.com`, not `.org`.** The `.org` domain does not resolve, so the
+  endpoint recorded here was never actually being polled. Corrected 2026-07-31; the correct domain
+  still returns 0 events, as do Minnesota Ballet and Sacred Heart.
 
 **No feed → html-scrape fallback:** Bayfront Festival Park (Wix, plain-text calendar block — easiest), LSC (`lsc.edu`, REST 401-locked, 1,537 events in one HTML page), Duluth Playhouse/NorShor (Webflow), Heritage Sports Center (Webflow, sparse), CSS/SaintsLife (CampusGroups per-org ICS, ~600 orgs, needs AJAX sniff).
 
 **Social-only / no feed:** AICHO (Weebly blog, index password-gated), 1854 Treaty Authority (Joomla DPCalendar export not locatable), Clyde/Bent Paddle/Blacklist/Pizza Lucé (FB-only), Earth Rider (Wix Events + Eventbrite, unconfirmed), Wussow's (SimpleTix SPA, unconfirmed). **Dead:** The Rex (closed 2023). **Migrating:** St. Luke's→Aspirus (site unstable, recheck later).
+
+## Empty/thin place-feed sweep (2026-07-31)
+
+A different way to pick targets: instead of sweeping a *category* of institution, sweep the venues
+that already have a registered place and a published per-venue feed **with no events in it**. An
+empty place feed is a standing, self-maintaining list of "we know this venue exists and we have
+nothing from it" — a better-aimed worklist than a category sweep, and it only became visible once
+`places.html` listed all 78 venues with live counts.
+
+**Wired (all `tribe-rest`, zero new code):**
+- **Wild State Cider** (`wildstatecider.com`) — 33 upcoming, every event carrying its own venue
+  string. Its place feed went **2 → 34**. Missed by the 2026-07-24 sweep because that sweep
+  catalogued the Lincoln Park taprooms as FB-only *as a group*; true of Clyde/Bent Paddle/Blacklist,
+  wrong about this one. **Lesson: never generalize a no-feed finding across a group of venues.**
+- **Spirit Mountain** (`spiritmt.com`) — 2 upcoming. The re-poll the 2026-07-24 sweep asked for.
+  Thin by nature: a ski hill's winter programming is not in this API in July — re-check seasonally
+  rather than assuming breakage. ⚠ Its events arrive with **no venue string at all**, so they resolve
+  to no place and never reach a place feed. Do NOT infer the venue from the source name: one of the
+  two events is actually at Riverside Bar & Grill.
+- **FDLTCC** (`fdltcc.edu`) — 3 upcoming. Was already on the "ready to wire" list above and simply
+  never wired, which is exactly why its registered place feed was empty.
+
+**Found live but deliberately NOT wired:**
+- **UWS** (`uwsuper.edu`, tribe-rest) — endpoint healthy, **842 events**, but the sample is dominated
+  by internal departmental meetings ("MCS Dept Meeting") carrying no venue. Wiring it would roughly
+  double the corpus with institutional noise. Whether it belongs behind the `institutionalNotice`
+  facet is a judgment call, not a drive-by. Decide before wiring.
+
+**Confirmed no feed (probed 2026-07-31, don't re-probe blind):**
+- **Big Top Chautauqua** (`bigtop.org`) — no TEC, no `?ical=1`, no `/feed/`, **zero JSON-LD blocks**;
+  `/sitemap.xml` is the only structured artifact. Scrape candidate only, and it is in Bayfield WI.
+- **Carmody Irish Pub** — root returns HTTP 200 with a **zero-byte body**; JS-only or gated.
+- **Blacklist** — Squarespace, but `?format=json` yields no items on `/events`, `/calendar`,
+  `/shows`, `/happenings`. Squarespace alone does not imply a reachable Events collection.
+- **Zenith Bookstore, Carmody** — `?ical=1` returns **HTTP 200 with `text/html`**. A soft-404.
+  **Always check `content-type`, never just the status code**, before believing an ICS endpoint.
+
+**Expected-empty, not defects:** city parks and landmarks (Enger Tower, Olcott/McFarland/Webster/
+Bennett/Carl Gullo Park) publish through the Parks catalog only when something is scheduled; venue
+rooms and sub-venues (Rathskeller, SS William A. Irvin) are covered by their parent source.
 
 ## Reverse-engineering recipe (for a new/unknown site)
 
