@@ -380,6 +380,9 @@ export function mapEventenySession(raw: EventenySession, source: SourceDef, retr
     timezone: tz,
     venueRaw: venueName,
     location: { city: "Duluth", state: "MN", inDuluth: true },
+    // Set explicitly so finalizeEvent keeps it: everything an Eventeny schedule publishes is a
+    // convention session, and no title-level signal would recover that from prose.
+    eventType: "convention" as const,
     // Publisher categories — track ("TTRPG") plus its own tags. Doctrine: these outrank our regex.
     categories: [raw.track_title?.trim(), ...(raw.tags ?? "").split(",").map((t) => t.trim())].filter(
       (c): c is string => Boolean(c),

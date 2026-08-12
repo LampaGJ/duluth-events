@@ -129,6 +129,15 @@ export const EVENT_TYPES = [
   "food-drink",
   "education", // lectures, university talks, author events
   "community", // general community / civic events
+  /**
+   * A session inside a multi-day convention — panels, tournaments, tabletop sittings, cosplay
+   * contests. This is a TYPE and not a facet because it answers WHAT the thing is: a subscriber
+   * wanting a convention's programming wants the whole schedule, not the subset our regex would
+   * scatter across `education`, `community` and `performing-arts`. It is set by the ADAPTER (an
+   * Eventeny schedule publishes nothing but convention sessions), never guessed from prose, because
+   * no title-level signal distinguishes a con panel from an ordinary author talk.
+   */
+  "convention",
   "other",
 ] as const;
 

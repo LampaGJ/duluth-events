@@ -49,6 +49,16 @@ describe("feed catalog", () => {
     // …but it is still reachable, never discarded.
     expect(filterEvents([notice], SPECS.find((s) => s.file === "notices.ics")!.filter)).toHaveLength(1);
   });
+
+  it("routes convention sessions to conventions.ics and emits no bare convention.ics", () => {
+    // The curated spec owns the type, the same way family.ics owns the audience feed.
+    expect(SPECS.filter((s) => s.file === "convention.ics")).toHaveLength(0);
+    const con = finalizeEvent(makeEvent({ title: "Artemis Experience", eventType: "convention" }));
+    const spec = SPECS.find((s) => s.file === "conventions.ics")!;
+    expect(spec).toBeDefined();
+    expect(filterEvents([con], spec.filter)).toHaveLength(1);
+    expect(filterEvents([makeEvent()], spec.filter)).toHaveLength(0);
+  });
 });
 
 describe("place feeds", () => {

@@ -186,6 +186,8 @@ describe("mapEventenySession", () => {
     expect(e!.source.confidence).toBe("high");
     expect(e!.source.verified).toBe(true);
     expect(e!.source.sourceEventId).toBe("104513");
+    // Set by the adapter, not guessed: finalizeEvent only classifies when the type is still "other".
+    expect(e!.eventType).toBe("convention");
   });
 
   it("emits no end when the publisher hides it", () => {
