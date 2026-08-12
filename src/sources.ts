@@ -1,4 +1,4 @@
-import type { Source } from "./schema.js";
+import type { EventType, Source } from "./schema.js";
 
 /**
  * The source registry — every Duluth events origin, its adapter, and its confidence tier.
@@ -11,7 +11,7 @@ import type { Source } from "./schema.js";
  * `enabled: false` sources are wired but not yet fetched (stub adapters / needs work).
  * URLs marked CONFIRMED were fetched during research (2026-07-23) and returned real VCALENDAR.
  */
-export type AdapterKind = "ical" | "structured-api" | "jsonld" | "rec1" | "html" | "pdf-llm";
+export type AdapterKind = "ical" | "structured-api" | "jsonld" | "rec1" | "html" | "pdf-llm" | "manual";
 
 export interface SourceDef {
   name: string;
@@ -27,6 +27,11 @@ export interface SourceDef {
   viaProxy?: boolean;
   /** iCal feed URL, JSON API base, HTML calendar URL, or PDF URL depending on adapter. */
   url?: string;
+  /** For adapter="manual": the curated JSON file. `url` stays the page a human transcribed FROM. */
+  file?: string;
+  /** Force the event type for sources where every item is one kind and no prose signal recovers it
+   *  (a convention schedule). Left undefined, classify.ts decides per event, as it does everywhere. */
+  eventType?: EventType;
   type: Source["type"];
   confidence: Source["confidence"];
   enabled: boolean;
@@ -213,6 +218,19 @@ export const SOURCES: SourceDef[] = [
     enabled: true,
     notes:
       "CRACKED 2026-08-12 (102 sessions). Eventeny convention schedule at the DECC, 2026-08-15/16. The embed page renders nothing; its getFilteredSessions() POSTs a form to /funcs/dashboard/events/programming/SessionRoute.php and gets deterministic JSON with no auth. Reads `all_sessions` (complete), not `list` (drops untracked sessions), and leaves track_filter empty so all 6 tracks come back — the shared embed URL pins the TTRPG track only. Per-session `location` is a room inside the DECC, so `venue` above supplies venueRaw. SINGLE-WEEKEND SOURCE: it goes quiet after 2026-08-16, which is exhaustion, not breakage.",
+  },
+  {
+    name: "Excalibur Con — Gaming Schedule (MNSWCA)",
+    adapter: "manual",
+    url: "https://mnswca.org/other-gaming-events",
+    file: "data/manual/excalibur-con-gaming.json",
+    venue: "Duluth Entertainment Convention Center",
+    eventType: "convention",
+    type: "manual",
+    confidence: "medium",
+    enabled: true,
+    notes:
+      "Hand-transcribed 2026-08-12 from the organizer's gaming page. This is the SECOND half of Excalibur Con's programming: the Eventeny endpoint carries the 102 panel/TTRPG sessions and NONE of the tournaments, demos or meet-ups here (Star Wars Unlimited, Lorcana, Nostalgix, Ward, board-game demos, miniature painting, Harry Potter meet-up, Drink & Draw). The host exposes no feed, no JSON-LD and no ?format=json, and the page is prose, so transcription is the method and `medium` is the honest ceiling. ⚠ Every date on that page is a year stale (it writes the 2025 weekday-dates); the file dates from the WEEKDAY and records the correction — see its `_dateCorrection`.",
   },
   {
     name: "Duluth Children's Museum",

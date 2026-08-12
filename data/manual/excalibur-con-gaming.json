@@ -1,0 +1,227 @@
+{
+  "_source": "https://mnswca.org/other-gaming-events",
+  "_transcribedOn": "2026-08-12",
+  "_venue": "Duluth Entertainment Convention Center",
+  "_why": [
+    "Excalibur Con publishes its programming in TWO places. The Eventeny schedule endpoint (source",
+    "'Excalibur Con') carries the 102 panel/TTRPG sessions. The tournaments, demos and meet-ups on",
+    "this page are NOT in that endpoint and are reachable no other way — the host exposes no feed,",
+    "no JSON-LD and no ?format=json, and the page is hand-written prose, so a scraper would be",
+    "parsing sentences. Hand transcription is the honest method here, and the confidence tier says so."
+  ],
+  "_dateCorrection": [
+    "EVERY date on the source page is one year stale: it writes 'Saturday August 16' and 'Sunday",
+    "August 17', which were the 2025 weekdays. In 2026 the convention runs Saturday 2026-08-15 and",
+    "Sunday 2026-08-16, and the page's own copyright reads 2026.",
+    "The WEEKDAY is what the page gets right, so every event below is dated from its weekday.",
+    "Corroborated against the authoritative Eventeny feed: this page lists the Artemis simulator as",
+    "'Saturday August 16 ... Gooseberry Room 3' and Eventeny has Artemis Experience hourly on",
+    "Saturday 2026-08-15 in Gooseberry 3 — same event, same room, one year off on the date.",
+    "RE-VERIFY THIS on the next pull; if the publisher fixes its dates, drop the shift, do not",
+    "double-apply it."
+  ],
+  "_omitted": {
+    "Artemis Spaceship Bridge Simulator": "Already ingested from Eventeny as 'Artemis Experience' (hourly, Gooseberry 3). Re-adding it here would publish a second copy at a conflicting start time (this page says 11:00 on the hour, Eventeny says 11:30), and dedupe cannot merge across that gap. The authoritative feed wins.",
+    "Official Excalibur Con Cosplay Contest": "Eventeny already publishes the cosplay programming under its 'Cosplay Event' track, with real times. This page states no times."
+  },
+  "events": [
+    {
+      "id": "swu-constructed",
+      "title": "Star Wars Unlimited Constructed Tournament",
+      "date": "2026-08-15",
+      "start": "12:00",
+      "room": "Level Up Gaming Pavilion",
+      "description": "Star Wars Unlimited Constructed tournament. 8 people minimum, 16 people max. 3 rounds of Swiss, cut to top 4. 1st place sealed box.",
+      "categories": ["tournament", "trading card game", "Star Wars Unlimited"]
+    },
+    {
+      "id": "lorcana-tournament",
+      "title": "Disney Lorcana Tournament & Learn to Play",
+      "date": "2026-08-16",
+      "start": "12:00",
+      "room": "Level Up Gaming Pavilion",
+      "description": "Constructed 60 card decks. 5 rounds of Swiss, no cut to top. Pack per round win, sealed box to first place. 30 player cap. Learn to play runs throughout the day in the Level Up Gaming Pavilion.",
+      "cost": { "kind": "paid", "priceMin": 30, "note": "$30 buy in" },
+      "categories": ["tournament", "trading card game", "Disney Lorcana"]
+    },
+    {
+      "id": "nostalgix-tournament",
+      "title": "Nostalgix TCG Tournament",
+      "date": "2026-08-15",
+      "start": "14:00",
+      "room": "Level Up Gaming Pavilion",
+      "description": "Official Nostalgix tournament. Full details available at the event. Nostalgix TCG also runs game demos in the Community Gaming Area on the 2nd floor, open to all.",
+      "categories": ["tournament", "trading card game", "Nostalgix"]
+    },
+    {
+      "id": "ward-tournament",
+      "title": "Ward the Card Game Tournament",
+      "date": "2026-08-15",
+      "start": "13:00",
+      "room": "Ward booth, exhibit hall",
+      "description": "Official single elimination, pack crack format. Ward is a locally developed TCG; the booth also runs demos, mini tournaments and giveaways throughout the weekend.",
+      "categories": ["tournament", "trading card game", "Ward"]
+    },
+    {
+      "id": "board-game-demo-wingspan",
+      "title": "Board Game Demo: Wingspan",
+      "date": "2026-08-15",
+      "start": "12:00",
+      "room": "Gaming Pavilion",
+      "description": "Board game demo hosted by local board game expert Ben Myers and colleagues.",
+      "categories": ["board game", "demo"]
+    },
+    {
+      "id": "board-game-demo-dice-miner",
+      "title": "Board Game Demo: Dice Miner",
+      "date": "2026-08-15",
+      "start": "14:00",
+      "room": "Gaming Pavilion",
+      "description": "Board game demo hosted by local board game expert Ben Myers and colleagues.",
+      "categories": ["board game", "demo"]
+    },
+    {
+      "id": "board-game-demo-all-hallows-eve",
+      "title": "Board Game Demo: All Hallows Eve",
+      "date": "2026-08-15",
+      "start": "16:00",
+      "room": "Gaming Pavilion",
+      "description": "Board game demo hosted by local board game expert Ben Myers and colleagues.",
+      "categories": ["board game", "demo"]
+    },
+    {
+      "id": "board-game-demo-pokemon-splendor",
+      "title": "Board Game Demo: Pokemon Splendor",
+      "date": "2026-08-15",
+      "start": "18:00",
+      "room": "Gaming Pavilion",
+      "description": "Board game demo hosted by local board game expert Ben Myers and colleagues.",
+      "categories": ["board game", "demo"]
+    },
+    {
+      "id": "board-game-demo-ticket-to-ride",
+      "title": "Board Game Demo: Ticket to Ride",
+      "date": "2026-08-16",
+      "start": "12:00",
+      "room": "Gaming Pavilion",
+      "description": "Board game demo hosted by local board game expert Ben Myers and colleagues.",
+      "categories": ["board game", "demo"]
+    },
+    {
+      "id": "board-game-demo-expressions",
+      "title": "Board Game Demo: Expressions",
+      "date": "2026-08-16",
+      "start": "14:00",
+      "room": "Gaming Pavilion",
+      "description": "Board game demo hosted by local board game expert Ben Myers and colleagues.",
+      "categories": ["board game", "demo"]
+    },
+    {
+      "id": "board-game-demo-wits-and-wagers",
+      "title": "Board Game Demo: Wits & Wagers",
+      "date": "2026-08-16",
+      "start": "16:00",
+      "room": "Gaming Pavilion",
+      "description": "Board game demo hosted by local board game expert Ben Myers and colleagues.",
+      "categories": ["board game", "demo"]
+    },
+    {
+      "id": "mini-painting-beginner-sat",
+      "title": "Miniature Painting Class: Beginner",
+      "date": "2026-08-15",
+      "start": "11:30",
+      "end": "13:30",
+      "room": "Gooseberry Room 2",
+      "description": "Taught by local miniature artist Elle Firespray. Limited to 25 participants; sign up early. Bring number 2 brushes if possible — brushes provided if needed. Miniatures, paints and supplies provided by Hobby Town Hermantown.",
+      "categories": ["class", "miniature painting"]
+    },
+    {
+      "id": "mini-painting-osl-sat",
+      "title": "Miniature Painting Class: Intermediate/Advanced — OSL",
+      "date": "2026-08-15",
+      "start": "13:30",
+      "end": "15:30",
+      "room": "Gooseberry Room 2",
+      "description": "Object source lighting, taught by local miniature artist Elle Firespray. Limited to 25 participants; sign up early. Miniatures, paints and supplies provided by Hobby Town Hermantown.",
+      "categories": ["class", "miniature painting"]
+    },
+    {
+      "id": "mini-painting-beginner-sun",
+      "title": "Miniature Painting Class: Beginner",
+      "date": "2026-08-16",
+      "start": "13:00",
+      "end": "15:00",
+      "room": "Gooseberry Room 2",
+      "description": "Taught by local miniature artist Elle Firespray. Limited to 25 participants; sign up early. Miniatures, paints and supplies provided by Hobby Town Hermantown.",
+      "categories": ["class", "miniature painting"]
+    },
+    {
+      "id": "harry-potter-meetup",
+      "title": "Harry Potter Meet-Up",
+      "date": "2026-08-16",
+      "start": "11:30",
+      "end": "13:30",
+      "room": "Gooseberry Room 3 (the Hogwarts Great Hall)",
+      "description": "Wand making, spell-casting and a side quest with the Marauder's Map, plus a chance to win an exclusive Excalibur Con wand created by Wands of May. Invitation only — watch for your Owl Post letter.",
+      "categories": ["meet-up", "Harry Potter"]
+    },
+    {
+      "id": "drink-and-draw",
+      "title": "Dylan's Drink and Draw",
+      "date": "2026-08-15",
+      "start": "20:00",
+      "venue": "Radisson Harborview Tiki Bar",
+      "description": "Comic artist Dylan Jacobson hosts his Drink & Draw, featuring local artists. No artistic ability needed. Cash bar. Space is limited, first come first served. NOTE: this one is OFF-SITE at the Radisson, not at the DECC.",
+      "age": { "allAges": false, "minAge": 21, "note": "21+ crowd event" },
+      "categories": ["art", "nightlife", "21+"]
+    },
+    {
+      "id": "disney-princess-tea-party",
+      "title": "Disney Princess Tea Party",
+      "date": "2026-08-16",
+      "allDay": true,
+      "room": "Gooseberry Room 3 (the Ballroom)",
+      "description": "Meet Disney princesses, learn to paint with tea, and learn Lorcana. The publisher states no start time — this is an all-day placeholder, so check the on-site schedule.",
+      "categories": ["family", "meet-up"]
+    },
+    {
+      "id": "dwarven-axe-painting-competition",
+      "title": "Dwarven Axe Miniature Painting Competition",
+      "date": "2026-08-15",
+      "allDay": true,
+      "endDate": "2026-08-16",
+      "description": "Miniature painting competition running the weekend. Cost of entry is an event badge (day or weekend) — no separate fee. Trophies for best in show and first place in each category; placement coins for all entries. One entry per category per person — categories at https://www.dwarvenaxe.com/categories. Interviews and entry videos stream at https://twitch.tv/dwarvenaxepainting. The publisher states no start time.",
+      "categories": ["competition", "miniature painting"]
+    },
+    {
+      "id": "hobby-town-model-contest",
+      "title": "Hobby Town Model Painting Contest",
+      "date": "2026-08-15",
+      "allDay": true,
+      "endDate": "2026-08-16",
+      "description": "Bring your best models in person to enter, or use the QR code to enter online. Prizes provided by Hobby Town. Runs all weekend; the publisher states no start time.",
+      "categories": ["competition", "modeling"]
+    },
+    {
+      "id": "rpg-demos",
+      "title": "RPG Gameplay and Demos",
+      "date": "2026-08-15",
+      "allDay": true,
+      "endDate": "2026-08-16",
+      "room": "Gaming area",
+      "description": "RPG demos and one-shots throughout the weekend, from classic Dungeons & Dragons one-shots by local Dungeon Masters to more niche games, for all ages and abilities. A local DM runs demos through the day Saturday to introduce players to D&D — aimed at youth, but open to anyone. Sign up at https://docs.google.com/forms/d/1xSRtkIWJhd348autYL6izUES0WlBXp0A1c56JPw377Q/viewform. The publisher states no per-session times.",
+      "categories": ["role playing game", "demo"]
+    },
+    {
+      "id": "teeb-player-events",
+      "title": "Teeb Player Events & Side Quest",
+      "date": "2026-08-15",
+      "allDay": true,
+      "endDate": "2026-08-16",
+      "room": "Exhibit hall, community area and Level Up Gaming Pavilion",
+      "description": "Contests, art activities, giveaways and SWAG trading at no cost, plus a special side quest sponsored by Teeb Players with an exclusive ribbon for completing it. The publisher states no start time.",
+      "cost": { "kind": "free" },
+      "categories": ["activity", "scavenger hunt"]
+    }
+  ]
+}
