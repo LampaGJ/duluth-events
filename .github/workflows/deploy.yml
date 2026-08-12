@@ -3,6 +3,12 @@ name: Build & deploy feeds
 on:
   schedule:
     - cron: "0 */6 * * *" # every 6 hours
+    # TEMPORARY — Excalibur Con (DECC, 2026-08-15/16). A convention schedule is edited right up to
+    # and during the event (rooms move, panels get added), and the Eventeny source is re-read whole
+    # on every build, so hourly refresh is how a same-day change reaches subscribers. The 6h cadence
+    # above would ship a schedule up to six hours stale during the con itself.
+    # REVERT after 2026-08-17: delete this one cron line. Tracked by issue #6.
+    - cron: "0 * * * *" # hourly, through the convention weekend
   workflow_dispatch: {} # manual "Run workflow" button
   push:
     branches: [main]
