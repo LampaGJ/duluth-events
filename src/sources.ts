@@ -17,7 +17,11 @@ export interface SourceDef {
   name: string;
   adapter: AdapterKind;
   /** For adapter="structured-api": which per-source JSON mapper to use. */
-  mapper?: "legistar" | "tribe-rest" | "squarespace" | "rec1";
+  mapper?: "legistar" | "tribe-rest" | "squarespace" | "rec1" | "eventeny";
+  /** The building this source's events happen in, for sources whose per-item location is a ROOM
+   *  inside one site rather than an address (a convention schedule). Becomes venueRaw; the room
+   *  string stays in the description, because place resolution keys on venue identity. */
+  venue?: string;
   /** Route this source's fetch through SCRAPER_PROXY (residential IP) — for datacenter-IP-blocked
    *  hosts. No-op when SCRAPER_PROXY is unset (falls back to a direct fetch). */
   viaProxy?: boolean;
@@ -197,6 +201,18 @@ export const SOURCES: SourceDef[] = [
     confidence: "high",
     enabled: true,
     notes: "CONFIRMED working (returned a real past event) but 0 upcoming posted right now — birding/nature programming ~40mi north of Duluth. Harmless when empty; contributes when populated.",
+  },
+  {
+    name: "Excalibur Con",
+    adapter: "structured-api",
+    mapper: "eventeny",
+    url: "https://www.eventeny.com/events/embed/?ev=24183&type=schedule",
+    venue: "Duluth Entertainment Convention Center",
+    type: "json-api",
+    confidence: "high",
+    enabled: true,
+    notes:
+      "CRACKED 2026-08-12 (102 sessions). Eventeny convention schedule at the DECC, 2026-08-15/16. The embed page renders nothing; its getFilteredSessions() POSTs a form to /funcs/dashboard/events/programming/SessionRoute.php and gets deterministic JSON with no auth. Reads `all_sessions` (complete), not `list` (drops untracked sessions), and leaves track_filter empty so all 6 tracks come back — the shared embed URL pins the TTRPG track only. Per-session `location` is a room inside the DECC, so `venue` above supplies venueRaw. SINGLE-WEEKEND SOURCE: it goes quiet after 2026-08-16, which is exhaustion, not breakage.",
   },
   {
     name: "Duluth Children's Museum",
