@@ -3,12 +3,6 @@ name: Build & deploy feeds
 on:
   schedule:
     - cron: "0 */6 * * *" # every 6 hours
-    # TEMPORARY — Excalibur Con (DECC, 2026-08-15/16). A convention schedule is edited right up to
-    # and during the event (rooms move, panels get added), and the Eventeny source is re-read whole
-    # on every build, so hourly refresh is how a same-day change reaches subscribers. The 6h cadence
-    # above would ship a schedule up to six hours stale during the con itself.
-    # REVERT after 2026-08-17: delete this one cron line. Tracked by issue #6.
-    - cron: "0 * * * *" # hourly, through the convention weekend
   workflow_dispatch: {} # manual "Run workflow" button
   push:
     branches: [main]
@@ -30,7 +24,9 @@ permissions:
 #
 # `true` makes a newer run supersede a stuck older one, so that jam cannot recur unattended. The
 # trade is real but small here: this build regenerates `public/` wholesale from source, so a
-# superseded run loses no work, and the next run redeploys within the hour.
+# superseded run loses no work, and the next scheduled run redeploys. This is INDEPENDENT of the
+# temporary hourly cron it was introduced alongside — that cron is gone, the jam it guards against
+# is not, and the incident above happened on the ordinary 6-hourly schedule.
 #
 # Diagnosing a suspected jam: `gh api 'repos/LampaGJ/duluth-events/actions/runs?status=queued'` —
 # a `created_at` older than ~20 minutes IS the jam.
