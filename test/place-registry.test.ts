@@ -101,6 +101,7 @@ describe("the shipped registry", () => {
       "bayfront-festival-park", "bennett-park", "bent-paddle-taproom", "big-top-chautauqua",
       "blacklist-brewing-company", "brighton-beach-park", "carl-gullo-park", "carmody-irish-pub",
       "chambers-grove-park", "chester-bowl-park", "chet-anderson-stadium", "dai-lincoln-park-building",
+      "decc",
       "dubh-linn-irish-pub", "duluth-flame-nightclub", "duluth-folk-school", "duluth-heights-park",
       "duluth-public-library-main",
       "ed-robson-arena", "elmen-center", "enger-tower", "fond-du-lac-tribal-and-community-college",

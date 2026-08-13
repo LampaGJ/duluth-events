@@ -42,6 +42,64 @@ export const PLACES: PlaceInput[] = [
     },
   },
   {
+    // Duluth's largest venue, and the one every convention, home show and arena act runs through.
+    // Registered 2026-08-13 so the ~122 Excalibur Con events (and everything else the aggregators
+    // list at 350 Harbor Dr) resolve to a real entity with a public feed instead of a provisional
+    // place that can never have one.
+    //
+    // `amsoil-arena` and `bayfront-festival-park` are SEPARATE registered places, not rooms here.
+    // Both sit on this campus and decc.org lists them under its own "venues", but each has its own
+    // id, feed URL and geo, and collapsing either into this entry would break a live subscriber
+    // link. They are deliberately absent from `rooms` below for that reason.
+    id: "decc",
+    name: "Duluth Entertainment Convention Center",
+    nameAliases: ["DECC", "Duluth Entertainment Convention Center (DECC)", "The DECC"],
+    addressAliases: ["350 Harbor Drive", "350 Harbor Dr"],
+    address: { street: "350 Harbor Drive", city: "Duluth", state: "MN", geo: { lat: 46.781072, lon: -92.098577 }, inDuluth: true },
+    // The DECC's OWN room names, from decc.org/venues-facilities/private-events-meeting-rooms/ and
+    // decc.org/venues/ (read 2026-08-13) — the building runs 250,000 sq ft across two convention
+    // centers, so anything derived from a single event's schedule badly understates it.
+    //
+    // Two rules govern this list:
+    //   1. A space that is its OWN registered place is excluded, because a place is not a room of
+    //      another place: `amsoil-arena` and `bayfront-festival-park` both appear under "venues" on
+    //      decc.org but each has its own id and live feed URL.
+    //   2. Event dressing is not a room. "Level Up Gaming Pavilion" and "TTRPG Area" are one
+    //      weekend's names for a space; `rooms` describes the building, not the booking.
+    //
+    // Canonical names are used, so a source writing "Gooseberry 3" or "French River Room 2" is a
+    // subdivision of the canonical room below, not a separate space. The two unnamed lower-level
+    // Harbor Side rooms are omitted because the DECC does not name them.
+    rooms: [
+      "DECC Arena",
+      "Symphony Hall",
+      "Pioneer Hall",
+      "Paulucci Hall",
+      "City Side Convention Center",
+      "Harbor Side Convention Center",
+      "Lake Superior Ballroom",
+      "Harbor Side Ballroom",
+      "French River Room",
+      "St. Louis River Room",
+      "Gooseberry Falls Room",
+      "Split Rock Room",
+      "Edmund Fitzgerald Exhibit Hall",
+      "Board Room",
+      "Reception Area",
+      "Harbor Deck",
+      "Room 201",
+      "Room 202",
+      "Room 203",
+      "Room 204",
+      "Room 205",
+    ],
+    gersId: "6c2e7098-509b-44fc-9ef1-7ace0e0f3d3c",
+    // Name, address and coordinates all read from the vendored Overture record, so Overture is what
+    // is credited — this is the FIRST shipping place that descends from it, and `creditsFor()` will
+    // now add the Overture line to the public page on its own.
+    provenance: { source: "web", ref: "overture:6c2e7098-509b-44fc-9ef1-7ace0e0f3d3c" },
+  },
+  {
     id: "lake-superior-estuarium",
     name: "Lake Superior Estuarium",
     addressAliases: ["3 Marina Drive", "3 Marina Dr"],
