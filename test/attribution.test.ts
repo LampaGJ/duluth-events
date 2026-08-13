@@ -61,9 +61,11 @@ describe("attribution", () => {
   });
 
   it("credits exactly the datasets the shipped registry actually uses — no more", () => {
-    // Over-crediting is a false provenance claim. Overture is vendored as reference data but NO
-    // place descends from it yet, so it must NOT appear on the page. When one does, the test above
-    // proves the line appears automatically, and this expectation is the one that changes.
-    expect(creditsFor(PLACES).map((c) => c.key)).toEqual(["homegrown", "osm"]);
+    // Over-crediting is a false provenance claim, and under-crediting is a licence violation, so
+    // this pins the set exactly. `overture` joined it on 2026-08-13: `decc` is the first shipping
+    // place whose name, address and coordinates were read from the vendored Overture record, and
+    // the line appeared on the public page with no change to attribution.ts — which is precisely
+    // the behaviour the previous expectation was written to predict.
+    expect(creditsFor(PLACES).map((c) => c.key)).toEqual(["homegrown", "osm", "overture"]);
   });
 });

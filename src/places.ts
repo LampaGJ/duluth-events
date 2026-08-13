@@ -42,6 +42,32 @@ export const PLACES: PlaceInput[] = [
     },
   },
   {
+    // Duluth's largest venue, and the one every convention, home show and arena act runs through.
+    // Registered 2026-08-13 so the ~122 Excalibur Con events (and everything else the aggregators
+    // list at 350 Harbor Dr) resolve to a real entity with a public feed instead of a provisional
+    // place that can never have one.
+    //
+    // `amsoil-arena` is a SEPARATE registered place, not a room here. It sits on this campus and
+    // shares the street address, but it has its own id, its own feed URL and its own geo, and
+    // collapsing it into this entry would break a live subscriber link. It is deliberately absent
+    // from `rooms` below for that reason.
+    id: "decc",
+    name: "Duluth Entertainment Convention Center",
+    nameAliases: ["DECC", "Duluth Entertainment Convention Center (DECC)", "The DECC"],
+    addressAliases: ["350 Harbor Drive", "350 Harbor Dr"],
+    address: { street: "350 Harbor Drive", city: "Duluth", state: "MN", geo: { lat: 46.781072, lon: -92.098577 }, inDuluth: true },
+    // EVIDENCE-DERIVED AND NON-EXHAUSTIVE: the north-shore-landmark meeting rooms observed in the
+    // ingested Excalibur Con schedule, plus Pioneer Hall from the Overture record. Event-specific
+    // dressing ("Level Up Gaming Pavilion", "TTRPG Area") is NOT a room — it is one weekend's name
+    // for a space, and `rooms` describes the building.
+    rooms: ["Pioneer Hall", "Split Rock Room", "French River Room 1", "French River Room 2", "Gooseberry 1", "Gooseberry 2", "Gooseberry 3"],
+    gersId: "6c2e7098-509b-44fc-9ef1-7ace0e0f3d3c",
+    // Name, address and coordinates all read from the vendored Overture record, so Overture is what
+    // is credited — this is the FIRST shipping place that descends from it, and `creditsFor()` will
+    // now add the Overture line to the public page on its own.
+    provenance: { source: "web", ref: "overture:6c2e7098-509b-44fc-9ef1-7ace0e0f3d3c" },
+  },
+  {
     id: "lake-superior-estuarium",
     name: "Lake Superior Estuarium",
     addressAliases: ["3 Marina Drive", "3 Marina Dr"],
