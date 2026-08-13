@@ -19,10 +19,24 @@ permissions:
   pages: write
   id-token: write
 
-# Don't let a scheduled run and a push clobber each other; let running deploys finish.
+# SELF-HEALING BY DESIGN — do not flip this back to `false` without reading why.
+#
+# GitHub's Pages starter workflow ships `cancel-in-progress: false` so a deployment is never
+# interrupted mid-flight. That cost us three days: on 2026-08-10 a scheduled run sat in `queued`
+# for two and a half days without ever being assigned a runner, holding this group. Every later run
+# piled up behind it and was cancelled by the next one — 10 cancellations in 20 runs, and the live
+# site quietly served a stale build the whole time. A cancelled run is not a failed run, so nothing
+# alerted. It took a manual `gh run cancel` on the stuck head to drain the queue.
+#
+# `true` makes a newer run supersede a stuck older one, so that jam cannot recur unattended. The
+# trade is real but small here: this build regenerates `public/` wholesale from source, so a
+# superseded run loses no work, and the next run redeploys within the hour.
+#
+# Diagnosing a suspected jam: `gh api 'repos/LampaGJ/duluth-events/actions/runs?status=queued'` —
+# a `created_at` older than ~20 minutes IS the jam.
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
