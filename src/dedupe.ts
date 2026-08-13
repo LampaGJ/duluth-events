@@ -147,6 +147,47 @@ function mergeGroup(group: DuluthEvent[]): DuluthEvent {
  * standing rule — two sources that write the same moment as `-05:00` local and as `Z` are at the same
  * instant and must group.
  */
+/**
+ * Refusal (e), pass 2 only — ONE SOURCE, ONE TITLE, MANY TIMES IN A DAY IS A SERIES, NOT A DUPLICATE.
+ *
+ * `fuzzyKey` groups on start-DAY, on the assumption that two events sharing a day, a venue and a
+ * title are one event listed twice. A repeating same-day session breaks that assumption, and the
+ * cost is deletion: Excalibur Con runs "Artemis Experience" hourly at the DECC from 11:30 to 17:30,
+ * and the unsplit key collapsed all seven sittings into one, silently dropping six real events a
+ * subscriber could have attended. Four more TTRPG sessions died the same way, 11 of 102 in total.
+ *
+ * The split fires ONLY on the signal that proves a series is present — one source name appearing at
+ * more than one instant inside the group — and then partitions that group by exact instant. Pass 2's
+ * ordinary job is untouched: a group where every source appears once still merges whole, so a listing
+ * whose stated time drifts between two sources still collapses. When the signal IS present the split
+ * costs at most a missed cross-source merge (two sources stating different times for one sitting),
+ * which this module always prefers to a false one.
+ *
+ * This is pass 1's refusal (b) carried into pass 2, weakened from "refuse the group" to "split the
+ * group", because pass 2's key is loose on TIME rather than on identity — instant is the discriminator
+ * pass 1 already trusts, so partitioning on it keeps every genuine same-instant merge.
+ */
+function splitSameSourceSeries(group: DuluthEvent[]): DuluthEvent[][] {
+  if (group.length < 2) return [group];
+
+  const instantsBySource = new Map<string, Set<number>>();
+  for (const e of group) {
+    let instants = instantsBySource.get(e.source.name);
+    if (!instants) instantsBySource.set(e.source.name, (instants = new Set()));
+    instants.add(new Date(e.start).getTime());
+  }
+  if (![...instantsBySource.values()].some((instants) => instants.size > 1)) return [group];
+
+  const byInstant = new Map<number, DuluthEvent[]>();
+  for (const e of group) {
+    const k = new Date(e.start).getTime();
+    const arr = byInstant.get(k);
+    if (arr) arr.push(e);
+    else byInstant.set(k, [e]);
+  }
+  return [...byInstant.values()];
+}
+
 export function dedupe(events: DuluthEvent[]): DuluthEvent[] {
   // --- pass 1: place identity ---
   const placeGroups = new Map<string, DuluthEvent[]>();
@@ -227,5 +268,5 @@ export function dedupe(events: DuluthEvent[]): DuluthEvent[] {
     if (arr) arr.push(e);
     else titleGroups.set(key, [e]);
   }
-  return [...titleGroups.values()].map((g) => (g.length === 1 ? g[0]! : mergeGroup(g)));
+  return [...titleGroups.values()].flatMap(splitSameSourceSeries).map((g) => (g.length === 1 ? g[0]! : mergeGroup(g)));
 }

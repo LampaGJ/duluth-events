@@ -3,6 +3,12 @@ name: Build & deploy feeds
 on:
   schedule:
     - cron: "0 */6 * * *" # every 6 hours
+    # TEMPORARY — Excalibur Con (DECC, 2026-08-15/16). A convention schedule is edited right up to
+    # and during the event (rooms move, panels get added), and the Eventeny source is re-read whole
+    # on every build, so hourly refresh is how a same-day change reaches subscribers. The 6h cadence
+    # above would ship a schedule up to six hours stale during the con itself.
+    # REVERT after 2026-08-17: delete this one cron line. Tracked by issue #6.
+    - cron: "0 * * * *" # hourly, through the convention weekend
   workflow_dispatch: {} # manual "Run workflow" button
   push:
     branches: [main]
@@ -13,10 +19,24 @@ permissions:
   pages: write
   id-token: write
 
-# Don't let a scheduled run and a push clobber each other; let running deploys finish.
+# SELF-HEALING BY DESIGN — do not flip this back to `false` without reading why.
+#
+# GitHub's Pages starter workflow ships `cancel-in-progress: false` so a deployment is never
+# interrupted mid-flight. That cost us three days: on 2026-08-10 a scheduled run sat in `queued`
+# for two and a half days without ever being assigned a runner, holding this group. Every later run
+# piled up behind it and was cancelled by the next one — 10 cancellations in 20 runs, and the live
+# site quietly served a stale build the whole time. A cancelled run is not a failed run, so nothing
+# alerted. It took a manual `gh run cancel` on the stuck head to drain the queue.
+#
+# `true` makes a newer run supersede a stuck older one, so that jam cannot recur unattended. The
+# trade is real but small here: this build regenerates `public/` wholesale from source, so a
+# superseded run loses no work, and the next run redeploys within the hour.
+#
+# Diagnosing a suspected jam: `gh api 'repos/LampaGJ/duluth-events/actions/runs?status=queued'` —
+# a `created_at` older than ~20 minutes IS the jam.
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:

@@ -31,6 +31,20 @@ Shared fetch seams: `fetchIcsText` (ical), `fetchJsonLdEvents` (`fetchers/headle
 - **Sources:** Visit Duluth, Do Duluth, Whole Foods Co-op.
 - **⚠ Gotcha:** if the whole origin is Cloudflare-gated, this REST endpoint is *also* WAF-blocked even from a cleared browser → fall back to **JSON-LD render** (see PDD).
 
+### Eventeny — convention schedule (POST form → JSON)
+- **Fingerprint:** an embed iframe at `eventeny.com/events/embed/?ev={id}&type=schedule`; the page ships a FullCalendar shell and **no session data**.
+- **Endpoint:** `POST https://www.eventeny.com/funcs/dashboard/events/programming/SessionRoute.php`, multipart form: `post_type=fetch_filtered_list`, `view_group=event`, `event_id={id}`, `acct_id=0`, `time_limit_min`/`time_limit_max` (**MM-DD-YYYY**), `visibility_filter=public`, and empty `search`/`status_filter`/`track_filter`/`tag_filter`/`session_filter`/`guest_filter`/`agent_filter`/`handler_filter`/`location_filter`. Found by reading `getFilteredSessions()` in `/js/dashboard/events/event-programming/schedule/schedule-async.js`.
+- **Access:** plain `fetch`, **no auth and no cookie** despite the `dashboard/` path. Deterministic JSON, no scraping, no LLM.
+- **Response:** `{list, all_sessions, timezone, success, err_msg}`.
+- **Adapter:** `structured-api` / `eventeny`. **Confidence:** `high` (the convention's own programming record).
+- **Sources:** Excalibur Con (DECC, 2026-08-15/16).
+- **⚠ Read `all_sessions`, not `list`.** `list` groups sessions by track and therefore **omits any session belonging to no track** — Excalibur Con: 100 in `list`, 102 in `all_sessions`.
+- **⚠ Leave `track_filter` EMPTY.** A shared embed URL usually pins one track (`&track=93205` = TTRPG only, 42 of 102); empty returns all six.
+- **⚠ Ignore `start_time`/`end_time`; read `start_calendar`/`end_calendar` against `timezone`.** The epochs disagree with Eventeny's own rendering by a constant 4 hours, which is not the `America/Chicago` offset in either direction — session 104513 renders "11:30 AM" while its epoch decodes to 10:30 CDT. Trusting the epoch ships every session an hour early.
+- **⚠ `location` is a ROOM, not an address** ("TTRPG Area", "Split Rock Room"). It must not become `venueRaw`, because place resolution keys on venue identity. The venue comes from the source's `venue` field and the room goes to the description.
+- **⚠ A convention schedule is a SERIES publisher.** One title repeating hourly on one day at one venue is N real events, and `fuzzyKey` groups on start-*day*. See `splitSameSourceSeries` in `src/dedupe.ts` — without it, 11 of these 102 sessions were deleted.
+- **Per-session permalink:** `https://www.eventeny.com/events/schedule/?id={eventId}&session={sessionId}`.
+
 ### Legistar / Granicus — OData Web API
 - **Fingerprint:** government meetings; portal at `{client}.legistar.com`.
 - **Endpoint:** `https://webapi.legistar.com/v1/{client}/events?$filter=EventDate ge datetime'YYYY-MM-DD'&$orderby=EventDate&$top=N` → OData JSON `[{EventId, EventBodyName, EventDate, EventTime, EventLocation, EventInSiteURL, EventAgendaFile}]`. Supports `$filter`/`$top`/`$skip`.

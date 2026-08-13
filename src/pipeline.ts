@@ -6,6 +6,7 @@ import { importJsonLd } from "./adapters/jsonld.js";
 import { importRec1 } from "./adapters/rec1.js";
 import { importHtml } from "./adapters/html-scrape.js";
 import { importPdfLlm } from "./adapters/pdf-llm.js";
+import { importManual } from "./adapters/manual.js";
 import { dedupe } from "./dedupe.js";
 import { finalizeEvent } from "./classify.js";
 import type { DuluthEvent } from "./schema.js";
@@ -19,6 +20,7 @@ const ADAPTERS: Record<AdapterKind, Adapter> = {
   rec1: importRec1,
   html: importHtml,
   "pdf-llm": importPdfLlm,
+  manual: importManual,
 };
 
 export interface PipelineStats {

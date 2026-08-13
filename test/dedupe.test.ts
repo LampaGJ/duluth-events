@@ -104,3 +104,58 @@ describe("dedupe keys on resolved place identity", () => {
     expect(dedupe([a, b])).toHaveLength(1); // same as the pre-migration key produced
   });
 });
+
+/**
+ * Regression: a recurring same-day session series must survive pass 2. Measured against the live
+ * Excalibur Con pull (2026-08-12) — 11 of 102 convention sessions were being deleted before the
+ * `splitSameSourceSeries` refusal existed.
+ */
+describe("dedupe keeps a same-day session series intact", () => {
+  const con = {
+    name: "Excalibur Con",
+    type: "json-api" as const,
+    url: "https://www.eventeny.com/events/embed/?ev=24183&type=schedule",
+    extractionMethod: "structured-api" as const,
+    retrievedAt: "2026-08-12T09:00:00-05:00",
+    confidence: "high" as const,
+  };
+  /** The real series: hourly sittings of one activity at one venue on one day. */
+  const sitting = (hour: number) =>
+    finalizeEvent(
+      makeEvent({
+        uid: `excalibur-con:artemis-${hour}@duluth-events`,
+        title: "Artemis Experience",
+        start: `2026-08-15T${String(hour).padStart(2, "0")}:30:00-05:00`,
+        end: `2026-08-15T${String(hour + 1).padStart(2, "0")}:30:00-05:00`,
+        venueRaw: "Duluth Entertainment Convention Center",
+        source: con,
+      }),
+    );
+
+  it("keeps all seven hourly sittings rather than collapsing them into one", () => {
+    const series = [11, 12, 13, 14, 15, 16, 17].map(sitting);
+    const out = dedupe(series);
+    expect(out).toHaveLength(7);
+    expect(new Set(out.map((e) => e.start)).size).toBe(7);
+  });
+
+  it("still folds two identical sittings at the SAME instant", () => {
+    // Two tables of one game at one clock time are indistinguishable to a subscriber, so they merge.
+    const out = dedupe([sitting(14), { ...sitting(14), uid: "excalibur-con:artemis-14b@duluth-events" }]);
+    expect(out).toHaveLength(1);
+  });
+
+  it("still merges two sources stating different times for one event (no series present)", () => {
+    // The split must not fire when no source repeats — this is pass 2's ordinary job and it stays.
+    const mine = finalizeEvent(makeEvent({ title: "Homegrown Kickoff Show", start: "2026-05-01T19:00:00-05:00" }));
+    const theirs = finalizeEvent(
+      makeEvent({
+        uid: "do-duluth:501@duluth-events",
+        title: "Homegrown Kickoff Show",
+        start: "2026-05-01T19:30:00-05:00",
+        source: { ...con, name: "Do Duluth", confidence: "medium" as const },
+      }),
+    );
+    expect(dedupe([mine, theirs])).toHaveLength(1);
+  });
+});

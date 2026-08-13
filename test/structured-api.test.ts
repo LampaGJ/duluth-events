@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { mapLegistarEvent, mapTribeEvent, mapSquarespaceEvent } from "../src/adapters/structured-api.js";
+import { mapLegistarEvent, mapTribeEvent, mapSquarespaceEvent, mapEventenySession } from "../src/adapters/structured-api.js";
 import type { SourceDef } from "../src/sources.js";
 
 const AT = "2026-07-20T09:00:00-05:00";
@@ -139,5 +139,70 @@ describe("mapSquarespaceEvent", () => {
 
   it("drops an item with no title or startDate", () => {
     expect(mapSquarespaceEvent({ title: "No date" }, sqSource, AT, "https://x.org")).toBeNull();
+  });
+});
+
+const eventenySource: SourceDef = {
+  name: "Excalibur Con",
+  adapter: "structured-api",
+  mapper: "eventeny",
+  url: "https://www.eventeny.com/events/embed/?ev=24183&type=schedule",
+  venue: "Duluth Entertainment Convention Center",
+  type: "json-api",
+  confidence: "high",
+  enabled: true,
+};
+
+/** Shape taken verbatim from a live SessionRoute.php response (session 104513, fetched 2026-08-12). */
+const liveSession = {
+  id: "104513",
+  title: "TTRPG 20-Minute Intro Encounters",
+  // Wall clock as the publisher renders it. Its sibling epoch (start_time 1786807800) decodes to
+  // 10:30 CDT — an hour early — which is why the mapper reads these fields and not the epochs.
+  start_calendar: "2026-08-15T11:30:00",
+  end_calendar: "2026-08-15T17:00:00",
+  hide_end_time: "0",
+  location: "TTRPG Area",
+  description: "Veteran GM Clint Considine will be running 20-minute mini sessions.",
+  track_title: "TTRPG",
+  tags: "Free TTRPG Sessions",
+  access_type: "public",
+  status: "active",
+  active: "1",
+};
+
+describe("mapEventenySession", () => {
+  it("maps a convention session, keeping the room out of the venue", () => {
+    const e = mapEventenySession(liveSession, eventenySource, AT, "America/Chicago");
+    expect(e).not.toBeNull();
+    expect(e!.title).toBe("TTRPG 20-Minute Intro Encounters");
+    // The venue is the building; the room stays in the description so it can never act as a venue key.
+    expect(e!.venueRaw).toBe("Duluth Entertainment Convention Center");
+    expect(e!.description).toContain("Room: TTRPG Area");
+    expect(e!.start).toBe("2026-08-15T11:30:00-05:00");
+    expect(e!.end).toBe("2026-08-15T17:00:00-05:00");
+    expect(e!.categories).toEqual(["TTRPG", "Free TTRPG Sessions"]);
+    expect(e!.url).toBe("https://www.eventeny.com/events/schedule/?id=24183&session=104513");
+    expect(e!.source.confidence).toBe("high");
+    expect(e!.source.verified).toBe(true);
+    expect(e!.source.sourceEventId).toBe("104513");
+    // Set by the adapter, not guessed: finalizeEvent only classifies when the type is still "other".
+    expect(e!.eventType).toBe("convention");
+  });
+
+  it("emits no end when the publisher hides it", () => {
+    const e = mapEventenySession({ ...liveSession, hide_end_time: "1" }, eventenySource, AT, "America/Chicago");
+    expect(e!.end).toBeUndefined();
+  });
+
+  it("drops sessions that are not live and public", () => {
+    expect(mapEventenySession({ ...liveSession, active: "0" }, eventenySource, AT, "America/Chicago")).toBeNull();
+    expect(mapEventenySession({ ...liveSession, status: "draft" }, eventenySource, AT, "America/Chicago")).toBeNull();
+    expect(mapEventenySession({ ...liveSession, access_type: "ticketed" }, eventenySource, AT, "America/Chicago")).toBeNull();
+  });
+
+  it("drops a session with no title or no start", () => {
+    expect(mapEventenySession({ ...liveSession, title: "  " }, eventenySource, AT, "America/Chicago")).toBeNull();
+    expect(mapEventenySession({ ...liveSession, start_calendar: "" }, eventenySource, AT, "America/Chicago")).toBeNull();
   });
 });

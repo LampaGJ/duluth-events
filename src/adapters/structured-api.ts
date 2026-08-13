@@ -291,6 +291,169 @@ async function squarespaceMapper(source: SourceDef): Promise<DuluthEvent[]> {
 }
 
 // ---------------------------------------------------------------------------
+// Eventeny convention schedule — POST /funcs/dashboard/events/programming/SessionRoute.php.
+// confidence: high (the convention's own programming record).
+//
+// The /events/embed/?ev=…&type=schedule page renders no sessions server-side; its
+// getFilteredSessions() posts a multipart form to SessionRoute.php and draws the JSON.
+// No auth and no cookie are required, so this is a deterministic structured-API pull.
+//
+// Two shape facts drive the code below:
+//   - `all_sessions` (flat id -> session) is COMPLETE; `list` (grouped by track) is NOT — a session
+//     belonging to no track is absent from every group. Excalibur Con: 102 vs 100.
+//   - `location` is a ROOM inside one building ("TTRPG Area", "Split Rock Room"), never an address.
+//     It must not become venueRaw, because place resolution keys on venue identity and a room string
+//     would either resolve to nothing or, worse, invent a venue. The venue comes from source.venue
+//     and the room is carried in the description.
+//
+// TIME — read `start_calendar`/`end_calendar` (naive local wall time) against the response's
+// `timezone`, and IGNORE the `start_time`/`end_time` epochs. Eventeny's epochs are internally
+// inconsistent with its own rendering: for every one of Excalibur Con's 102 sessions the epoch sits
+// a constant 4 hours behind the wall time it displays, which is not the America/Chicago offset
+// (CDT = UTC-5) in either direction. Session 104513 renders "11:30 AM" while its epoch decodes to
+// 10:30 CDT. Trusting the epoch would ship every convention session an hour early.
+// ---------------------------------------------------------------------------
+
+interface EventenySession {
+  id?: string;
+  title?: string;
+  /** Naive LOCAL wall time, "2026-08-15T11:30:00" — authoritative. See epoch note above. */
+  start_calendar?: string;
+  end_calendar?: string;
+  hide_end_time?: string; // "1" -> publisher declined to state an end
+  location?: string; // room within the venue
+  description?: string;
+  track_title?: string;
+  tags?: string; // comma-separated publisher tags
+  access_type?: string;
+  status?: string;
+  active?: string;
+}
+interface EventenyResponse {
+  all_sessions?: Record<string, EventenySession>;
+  timezone?: string;
+  success?: boolean;
+  err_msg?: string;
+}
+
+/** Eventeny's window bounds are MM-DD-YYYY, not ISO. */
+function eventenyDate(d: Date): string {
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())}-${d.getUTCFullYear()}`;
+}
+
+/** "2026-08-15T11:30:00" (naive local) -> a resolved instant in `tz`. */
+function parseEventenyWall(raw: string | undefined, tz: string): string | null {
+  const m = raw?.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/);
+  if (!m) return null;
+  return wallTimeToIso(Number(m[1]), Number(m[2]), Number(m[3]), Number(m[4]), Number(m[5]), Number(m[6] ?? "0"), tz);
+}
+
+export function mapEventenySession(raw: EventenySession, source: SourceDef, retrievedAt: string, tz: string): DuluthEvent | null {
+  const title = raw.title?.trim();
+  if (!title) return null;
+  // Only publicly-visible, live sessions. A cancelled or draft session is not an event.
+  if (raw.active === "0" || (raw.status && raw.status !== "active")) return null;
+  if (raw.access_type && raw.access_type !== "public") return null;
+
+  const start = parseEventenyWall(raw.start_calendar, tz);
+  if (!start) return null;
+  // hide_end_time is the publisher saying "no stated end" — respect it rather than emitting one.
+  const end = raw.hide_end_time === "1" ? undefined : (parseEventenyWall(raw.end_calendar, tz) ?? undefined);
+
+  // The venue is the convention's building, declared on the source; `location` is a room inside it.
+  const venueName = source.venue?.trim() || "See listing";
+  const room = raw.location?.trim();
+
+  const descParts: string[] = [];
+  if (room) descParts.push(`Room: ${room}`);
+  if (raw.description?.trim()) descParts.push(stripHtml(raw.description));
+  const eventId = new URL(source.url!).searchParams.get("ev");
+
+  const candidate = {
+    uid: makeUid(source.name, raw.id, title, start, venueName),
+    title: stripHtml(title),
+    description: descParts.length ? descParts.join("\n").slice(0, 1500) : undefined,
+    start,
+    end,
+    allDay: false,
+    timezone: tz,
+    venueRaw: venueName,
+    location: { city: "Duluth", state: "MN", inDuluth: true },
+    // Set explicitly so finalizeEvent keeps it: everything an Eventeny schedule publishes is a
+    // convention session, and no title-level signal would recover that from prose.
+    eventType: "convention" as const,
+    // Publisher categories — track ("TTRPG") plus its own tags. Doctrine: these outrank our regex.
+    categories: [raw.track_title?.trim(), ...(raw.tags ?? "").split(",").map((t) => t.trim())].filter(
+      (c): c is string => Boolean(c),
+    ),
+    url: eventId && raw.id ? `${new URL(source.url!).origin}/events/schedule/?id=${eventId}&session=${raw.id}` : undefined,
+    status: "confirmed" as const,
+    source: {
+      name: source.name,
+      type: source.type,
+      url: source.url,
+      sourceEventId: raw.id,
+      extractionMethod: "structured-api" as const,
+      retrievedAt,
+      confidence: source.confidence, // "high" — the convention's own schedule, first-party
+      verified: true,
+    },
+  };
+
+  const parsed = DuluthEventSchema.safeParse(candidate);
+  if (parsed.success) return parsed.data;
+  logger.warn({ source: source.name, title, issues: parsed.error.issues.slice(0, 3) }, "dropped invalid eventeny session");
+  return null;
+}
+
+async function eventenyMapper(source: SourceDef): Promise<DuluthEvent[]> {
+  const url = new URL(source.url!);
+  const eventId = url.searchParams.get("ev");
+  if (!eventId) throw new Error(`eventeny: source "${source.name}" url has no ?ev= event id`);
+
+  // A convention schedule is published once and lives in a single weekend, so ask for a wide window
+  // (yesterday .. +18 months) and let the response decide what exists. `track_filter` is left EMPTY
+  // on purpose: an embed URL usually pins one track, and we want every track.
+  const now = new Date();
+  const params = new URLSearchParams({
+    post_type: "fetch_filtered_list",
+    view_group: "event",
+    time_limit_min: eventenyDate(new Date(now.getTime() - 86400000)),
+    time_limit_max: eventenyDate(new Date(now.getTime() + 550 * 86400000)),
+    event_id: eventId,
+    acct_id: "0",
+    search: "",
+    visibility_filter: "public",
+    status_filter: "",
+    track_filter: "",
+    tag_filter: "",
+    session_filter: "",
+    guest_filter: "",
+    agent_filter: "",
+    handler_filter: "",
+    location_filter: "",
+  });
+
+  const endpoint = `${url.origin}/funcs/dashboard/events/programming/SessionRoute.php`;
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers: { "User-Agent": BROWSER_UA, Accept: "application/json, */*", Referer: source.url! },
+    body: params,
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${endpoint} (event ${eventId})`);
+  const body = (await res.json()) as EventenyResponse;
+  if (body.success === false) throw new Error(`eventeny: ${body.err_msg ?? "request rejected"} (event ${eventId})`);
+
+  const tz = safeTimezone(body.timezone);
+  const retrievedAt = nowIso();
+  // all_sessions, NOT list: a session with no track is missing from every group in `list`.
+  return Object.values(body.all_sessions ?? {})
+    .map((s) => mapEventenySession(s, source, retrievedAt, tz))
+    .filter((e): e is DuluthEvent => e !== null);
+}
+
+// ---------------------------------------------------------------------------
 
 /** Structured first-party JSON API adapter, dispatched by `source.mapper`. */
 export const importStructuredApi: Adapter = async (source: SourceDef): Promise<DuluthEvent[]> => {
@@ -302,6 +465,8 @@ export const importStructuredApi: Adapter = async (source: SourceDef): Promise<D
       return tribeRestMapper(source);
     case "squarespace":
       return squarespaceMapper(source);
+    case "eventeny":
+      return eventenyMapper(source);
     default:
       throw new Error(`structured-api: source "${source.name}" has unknown mapper "${source.mapper ?? "(none)"}"`);
   }

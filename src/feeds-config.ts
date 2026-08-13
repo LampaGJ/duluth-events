@@ -33,10 +33,19 @@ export const SPECS: FeedSpec[] = [
   { file: "drop-in.ics", title: "Drop-in", desc: "No registration — just show up.", group: "Start here", filter: { registration: ["drop-in"] } },
 
   // --- by kind ---
-  // `family` and `other` are excluded: `family.ics` above is the AUDIENCE feed (82 events vs the
-  // 1 event that lands in the family *type*), and it owns that filename; `other` is always empty
-  // because finalizeEvent resolves every event to a real type or `community`.
-  ...EVENT_TYPES.filter((t) => t !== "other" && t !== "family").map(
+  // `family`, `convention` and `other` are excluded: `family.ics` above is the AUDIENCE feed (82
+  // events vs the 1 event that lands in the family *type*), and it owns that filename; `convention`
+  // is owned by the curated `conventions.ics` below, which carries a real title and the warning that
+  // a con needs a badge; `other` is always empty because finalizeEvent resolves every event to a
+  // real type or `community`.
+  {
+    file: "conventions.ics",
+    title: "Conventions",
+    desc: "Convention programming — panels, tabletop sittings, tournaments and contests, session by session. Admission normally needs a badge for the whole event, not a per-session ticket; check the convention.",
+    group: "By kind",
+    filter: { types: ["convention"] },
+  },
+  ...EVENT_TYPES.filter((t) => t !== "other" && t !== "family" && t !== "convention").map(
     (t) => ({ file: `${t}.ics`, title: t.replace(/-/g, " "), desc: `Only ${t} events.`, group: "By kind", filter: { types: [t], institutionalNotice: false } }) as FeedSpec,
   ),
 
