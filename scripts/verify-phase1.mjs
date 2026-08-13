@@ -1,0 +1,337 @@
+/**
+ * Phase-1 gate: resolution is now emitted, but merge behaviour must be UNCHANGED except for the one
+ * deliberate, measured delta Task 6 introduced (the Buffalo Galaxy address-vs-name merge — see
+ * docs/superpowers/plans/2026-07-28-place-entity-resolution.md Task 6 §4 and Task 7's carry-forward
+ * notes in .superpowers/sdd/2026-07-28-place-entity-resolution/progress.md).
+ *
+ * A naive "any UID lost/gained is a FAIL" gate is WRONG here: it would flag that one true-positive
+ * merge as a regression. This version CLASSIFIES losses instead of just counting them:
+ *
+ *   lost, explained by a same-place same-instant survivor  -> report, do NOT fail
+ *   lost, unexplained                                      -> FAIL
+ *   gained                                                 -> FAIL
+ *
+ * "Explained" is not a heuristic guess — it re-resolves the LOST event's own venue text through the
+ * real `resolvePlace()` (the same function the pipeline uses) to get the place id it WOULD have
+ * received under Phase 1, then checks whether a surviving event in the new feed shares both that
+ * place id (X-PLACE-ID) and the lost event's start instant (DTSTART). Two events can only be the
+ * "same merge" if both hold; matching on instant alone would over-explain unrelated coincidences,
+ * and matching on place alone would over-explain recurring series at the same venue.
+ *
+ * Reusable: Task 11 (the merge-diff gate) needs the identical lost/explained/unexplained/gained
+ * classification, so this is written as an importable function, not just a CLI script.
+ *
+ * Usage: npx tsx scripts/verify-phase1.mjs <baseline.ics> <new.ics>
+ */
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { resolvePlace } from "../src/place-registry.js";
+import { decodeEntities, unescapeIcsText } from "../src/normalize.js";
+
+/** Parse an .ics file's VEVENT blocks into flat property-name -> first-value maps. */
+export function parseIcs(f) {
+  const lines = readFileSync(f, "utf8").replace(/\r?\n[ \t]/g, "").split(/\r?\n/);
+  const evs = [];
+  let cur = null;
+  for (const l of lines) {
+    if (l === "BEGIN:VEVENT") {
+      cur = {};
+      continue;
+    }
+    if (l === "END:VEVENT") {
+      if (cur) evs.push(cur);
+      cur = null;
+      continue;
+    }
+    if (!cur) continue;
+    const i = l.indexOf(":");
+    if (i < 0) continue;
+    const k = l.slice(0, i).split(";")[0];
+    if (cur[k] === undefined) cur[k] = l.slice(i + 1);
+  }
+  return evs;
+}
+
+/** First comma-segment of an unescaped LOCATION value — the venue string, same convention formatLocation uses. */
+function venueOf(e) {
+  return unescapeIcsText(e.LOCATION ?? "").split(",")[0].trim();
+}
+
+/**
+ * PHASE-1-SPECIFIC MERGE PRECONDITION — do not carry this into a later phase unchanged.
+ *
+ * This key encodes exactly today's dedupe precondition (`src/dedupe.ts`'s `fuzzyKey`, unmodified
+ * since Task 6): two same-day/same-title events merge when their venue KEY matches, and that key is
+ * the resolved place identity — i.e. same `X-PLACE-ID` at the same `DTSTART` instant. It is correct
+ * for Phase 1, and Phase 1 only.
+ *
+ * Phase 3 (Task 10) is expected to CHANGE the merge rule itself: it adds a cross-source restriction,
+ * a room check, and a title-dissimilarity veto (docs/superpowers/plans/2026-07-28-place-entity-
+ * resolution.md Task 10/11; progress.md's pre-flight note). Under that rule, same-place+same-instant
+ * is no longer sufficient on its own — a title-dissimilar pair at the same venue and instant would be
+ * vetoed, not merged — so this predicate will call some genuine non-merges "explained" and, more
+ * importantly for a future caller, will call some LEGITIMATE new-rule merges "unexplained" whenever
+ * the new rule's extra constraints (cross-source, room) are what actually explains a loss this key
+ * alone can't see.
+ *
+ * ANY task that imports `classify()` from this file after the merge rule changes (Task 11 is the
+ * known case) MUST re-derive this predicate against the CURRENT `fuzzyKey` before trusting the
+ * explained/unexplained split — otherwise the gate reproduces the exact false-alarm failure mode
+ * Task 7 was created to eliminate, one phase later.
+ */
+function phase1MergeExplanationKey(placeId, dtstartInstant) {
+  return `${placeId}|${dtstartInstant}`;
+}
+
+/**
+ * Classify one LOCATION-text change (informational, never gates):
+ *   registry-canonicalization — the venue resolved to a REGISTERED place and the new LOCATION's
+ *     venue segment equals that place's canonical `X-PLACE-NAME`, which the old text didn't already
+ *     match. Checked first: this can look like an entity/quote change too (Wussow's) when the
+ *     registry's canonical spelling also happens to fix an encoding, and registry canonicalization is
+ *     the more specific, more interesting explanation.
+ *   entity-quote-decode — decoding HTML entities in the OLD LOCATION (the same `decodeEntities` the
+ *     pipeline itself runs, from src/normalize.js) reproduces the NEW text exactly. Both sides are
+ *     first UN-escaped from RFC5545 TEXT form (`\,` `\;` `\\`) before comparing — a raw entity like
+ *     `&#8217;` carries a real semicolon, which ical-generator escapes to `\;` on emit and which would
+ *     otherwise mask the entity's own terminator from the decode regex.
+ *   unexplained — neither holds. This is the interesting case even though it doesn't gate; always
+ *     printed in full.
+ */
+function categorizeLocationChange(beforeRaw, afterRaw, afterEvent) {
+  const beforeVenue = venueOf({ LOCATION: beforeRaw });
+  const afterVenue = venueOf({ LOCATION: afterRaw });
+  const placeName = afterEvent["X-PLACE-NAME"];
+  const registered = Boolean(afterEvent["X-PLACE-ID"]) && afterEvent["X-PLACE-PROVISIONAL"] === "false";
+  if (registered && placeName && afterVenue === placeName && beforeVenue !== placeName) {
+    return "registry-canonicalization";
+  }
+  if (decodeEntities(unescapeIcsText(beforeRaw ?? "")) === unescapeIcsText(afterRaw ?? "")) {
+    return "entity-quote-decode";
+  }
+  return "unexplained";
+}
+
+/** Facet/eventType X-properties `deriveFacets` and `classifyByVenue` can move when a venue resolves. */
+const FACET_KEYS = [
+  "X-EVENT-TYPE",
+  "X-ALCOHOL",
+  "X-SETTING",
+  "X-AUDIENCE",
+  "X-COST-TIER",
+  "X-GEO-SCOPE",
+  "X-TIME-OF-DAY",
+  "X-WEEKEND",
+  "X-RECURRING",
+  "X-REGISTRATION",
+  "X-PUBLIC-ADMISSION",
+  "X-HOME-AWAY",
+  "X-INSTITUTIONAL-NOTICE",
+  "X-RESCHEDULED",
+];
+
+/**
+ * Classify baseline (a) vs new (b) parsed event arrays.
+ * Returns { lostExplained, lostUnexplained, possibleRenames, gained, resolvedCount, registeredCount,
+ *           locationChanged, facetChanged }.
+ */
+export function classify(a, b) {
+  const byUidA = new Map(a.map((e) => [e.UID, e]));
+  const byUidB = new Map(b.map((e) => [e.UID, e]));
+
+  const lostUids = [...byUidA.keys()].filter((u) => !byUidB.has(u));
+  const gainedUids = [...byUidB.keys()].filter((u) => !byUidA.has(u));
+
+  // Index survivors by (X-PLACE-ID, DTSTART instant) for O(1) explanation lookup. See
+  // phase1MergeExplanationKey's doc comment before reusing this in a phase where the merge rule moves.
+  const survivorsByPlaceInstant = new Map();
+  for (const e of b) {
+    const placeId = e["X-PLACE-ID"];
+    if (!placeId || !e.DTSTART) continue;
+    const key = phase1MergeExplanationKey(placeId, e.DTSTART);
+    if (!survivorsByPlaceInstant.has(key)) survivorsByPlaceInstant.set(key, []);
+    survivorsByPlaceInstant.get(key).push(e);
+  }
+
+  const lostExplained = [];
+  const lostUnexplainedRaw = [];
+  for (const uid of lostUids) {
+    const lost = byUidA.get(uid);
+    const venue = venueOf(lost);
+    const wouldBePlace = resolvePlace(venue || undefined);
+    const survivors = wouldBePlace
+      ? (survivorsByPlaceInstant.get(phase1MergeExplanationKey(wouldBePlace.id, lost.DTSTART)) ?? [])
+      : [];
+    if (survivors.length) {
+      lostExplained.push({ uid, lost, wouldBePlaceId: wouldBePlace.id, survivors });
+    } else {
+      lostUnexplainedRaw.push({ uid, lost, wouldBePlaceId: wouldBePlace?.id ?? null });
+    }
+  }
+
+  const gainedRaw = gainedUids.map((uid) => ({ uid, event: byUidB.get(uid) }));
+
+  // A lost UID and a gained UID sharing SUMMARY+DTSTART is NOT a place-identity merge (that requires
+  // a place match, above) — it is the same physical event surfacing under a different UID string,
+  // which would mean a makeUid() input changed. That is a genuine regression Task 6 claims did NOT
+  // happen; flag it distinctly so it isn't mistaken for the expected merge shape and isn't silently
+  // dropped into "unexplained" undifferentiated from a naturally-expired event.
+  const gainedBySig = new Map(gainedRaw.map((g) => [`${g.event.SUMMARY}|${g.event.DTSTART}`, g]));
+  const possibleRenames = [];
+  const lostUnexplained = [];
+  for (const x of lostUnexplainedRaw) {
+    const sig = `${x.lost.SUMMARY}|${x.lost.DTSTART}`;
+    const match = gainedBySig.get(sig);
+    if (match) possibleRenames.push({ ...x, renamedTo: match });
+    else lostUnexplained.push(x);
+  }
+  const renamedGainedUids = new Set(possibleRenames.map((r) => r.renamedTo.uid));
+  const gained = gainedRaw.filter((g) => !renamedGainedUids.has(g.uid));
+
+  const resolved = b.filter((e) => e["X-PLACE-ID"]);
+  const registered = resolved.filter((e) => e["X-PLACE-PROVISIONAL"] === "false");
+
+  // Informational only (never affects pass/fail): among events present in BOTH feeds under the SAME
+  // uid, how many changed LOCATION text or a facet/eventType field. Expected deltas #2/#3. LOCATION
+  // changes are categorized (see categorizeLocationChange) so "unexplained" text drift is visible on
+  // its own, not buried in a flat count.
+  const locationChanged = [];
+  const facetChanged = [];
+  for (const [uid, ea] of byUidA) {
+    const eb = byUidB.get(uid);
+    if (!eb) continue;
+    if (ea.LOCATION !== eb.LOCATION) {
+      locationChanged.push({
+        uid,
+        before: ea.LOCATION,
+        after: eb.LOCATION,
+        category: categorizeLocationChange(ea.LOCATION, eb.LOCATION, eb),
+      });
+    }
+    for (const k of FACET_KEYS) {
+      if (ea[k] !== eb[k]) facetChanged.push({ uid, key: k, before: ea[k], after: eb[k] });
+    }
+  }
+  const locationChangedByCategory = {
+    "registry-canonicalization": locationChanged.filter((x) => x.category === "registry-canonicalization"),
+    "entity-quote-decode": locationChanged.filter((x) => x.category === "entity-quote-decode"),
+    unexplained: locationChanged.filter((x) => x.category === "unexplained"),
+  };
+
+  return {
+    baselineCount: a.length,
+    newCount: b.length,
+    lostExplained,
+    lostUnexplained,
+    possibleRenames,
+    gained,
+    resolvedCount: resolved.length,
+    registeredCount: registered.length,
+    locationChanged,
+    locationChangedByCategory,
+    facetChanged,
+  };
+}
+
+// --- CLI entry point ---
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const [baselinePath, newPath] = process.argv.slice(2);
+  if (!baselinePath || !newPath) {
+    console.error("Usage: npx tsx scripts/verify-phase1.mjs <baseline.ics> <new.ics>");
+    process.exit(2);
+  }
+
+  const a = parseIcs(baselinePath);
+  const b = parseIcs(newPath);
+  const r = classify(a, b);
+
+  console.log(`baseline ${r.baselineCount} events | new ${r.newCount} events`);
+  console.log(`resolution: ${r.resolvedCount}/${r.newCount} have a place (${r.registeredCount} registered, ${r.resolvedCount - r.registeredCount} provisional)`);
+
+  console.log(`\nUIDs lost: ${r.lostExplained.length + r.lostUnexplained.length + r.possibleRenames.length} (${r.lostExplained.length} explained, ${r.lostUnexplained.length} unexplained, ${r.possibleRenames.length} possible UID renames)`);
+  console.log(`UIDs gained: ${r.gained.length}`);
+
+  // Full classified detail (every category, uncapped) is always written to disk — see the note at
+  // the bottom of this block. Console output below is not truncated either; the split is: unexplained
+  // LOCATION changes are the interesting case and are always printed in full here too, explained
+  // categories get a short illustrative sample plus their total count, and the file has everything.
+  const detailsPath = "reports/verify-phase1-details.json";
+  mkdirSync("reports", { recursive: true });
+  writeFileSync(
+    detailsPath,
+    JSON.stringify({ locationChanged: r.locationChanged, facetChanged: r.facetChanged }, null, 2),
+  );
+
+  console.log(`\n--- Informational (never affects pass/fail) ---`);
+  console.log(`LOCATION text changed (matched uids): ${r.locationChanged.length}`);
+  console.log(`  registry-canonicalization: ${r.locationChangedByCategory["registry-canonicalization"].length}`);
+  console.log(`  entity-quote-decode:       ${r.locationChangedByCategory["entity-quote-decode"].length}`);
+  console.log(`  unexplained:               ${r.locationChangedByCategory.unexplained.length}`);
+
+  const SAMPLE = 5;
+  for (const cat of ["registry-canonicalization", "entity-quote-decode"]) {
+    const rows = r.locationChangedByCategory[cat];
+    if (!rows.length) continue;
+    console.log(`\n  sample (${cat}, ${Math.min(SAMPLE, rows.length)} of ${rows.length} — full list in ${detailsPath}):`);
+    for (const x of rows.slice(0, SAMPLE)) {
+      console.log(`    ${x.uid}`);
+      console.log(`      before: ${x.before}`);
+      console.log(`      after:  ${x.after}`);
+    }
+  }
+  if (r.locationChangedByCategory.unexplained.length) {
+    console.log(`\n  UNEXPLAINED LOCATION changes — full list, always printed, ${r.locationChangedByCategory.unexplained.length} total:`);
+    for (const x of r.locationChangedByCategory.unexplained) {
+      console.log(`    ${x.uid}`);
+      console.log(`      before: ${x.before}`);
+      console.log(`      after:  ${x.after}`);
+    }
+  }
+
+  console.log(`\nfacet/eventType shifts (matched uids): ${r.facetChanged.length} (full list in ${detailsPath})`);
+  for (const x of r.facetChanged) {
+    console.log(`  ${x.uid}  ${x.key}: ${x.before ?? "(unset)"} -> ${x.after ?? "(unset)"}`);
+  }
+
+  if (r.lostExplained.length) {
+    console.log(`\n--- EXPLAINED losses (absorbed by a same-place same-instant merge; not a failure) ---`);
+    for (const x of r.lostExplained) {
+      console.log(`  LOST   ${x.uid}`);
+      console.log(`         "${x.lost.SUMMARY}" @ ${x.lost.DTSTART}  place=${x.wouldBePlaceId}`);
+      for (const s of x.survivors) {
+        console.log(`         absorbed by -> "${s.SUMMARY}" (${s.UID}) source=${s["X-SOURCE-NAME"] ?? "?"} alsoListedIn=${s["X-ALSO-LISTED-IN"] ?? "-"}`);
+      }
+    }
+  }
+
+  let fail = false;
+  if (r.lostUnexplained.length) {
+    fail = true;
+    console.error(`\n--- UNEXPLAINED losses (FAIL) ---`);
+    for (const x of r.lostUnexplained) {
+      console.error(`  LOST   ${x.uid}`);
+      console.error(`         "${x.lost.SUMMARY}" @ ${x.lost.DTSTART}  venue="${venueOf(x.lost)}"  wouldBePlaceId=${x.wouldBePlaceId ?? "(sentinel/unresolved)"}`);
+    }
+  }
+  if (r.possibleRenames.length) {
+    fail = true;
+    console.error(`\n--- POSSIBLE UID RENAMES (FAIL — same title+instant, different UID; a makeUid() input moved) ---`);
+    for (const x of r.possibleRenames) {
+      console.error(`  ${x.uid} -> ${x.renamedTo.uid}`);
+      console.error(`         "${x.lost.SUMMARY}" @ ${x.lost.DTSTART}`);
+    }
+  }
+  if (r.gained.length) {
+    fail = true;
+    console.error(`\n--- GAINED events (FAIL — Phase 1 must not add events) ---`);
+    for (const g of r.gained) {
+      console.error(`  GAINED ${g.uid}`);
+      console.error(`         "${g.event.SUMMARY}" @ ${g.event.DTSTART}`);
+    }
+  }
+
+  if (fail) {
+    console.error(`\nFAIL: Phase 1 changed which events exist beyond the known place-identity merge.`);
+    process.exit(1);
+  }
+  console.log(`\nPASS: event set unchanged except for explained place-identity merges.`);
+}

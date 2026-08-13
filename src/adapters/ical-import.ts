@@ -4,6 +4,7 @@ import type { SourceDef } from "../sources.js";
 import type { Adapter } from "./types.js";
 import { logger } from "../logger.js";
 import { makeUid, nowIso, toIsoOffset, DEFAULT_TZ } from "../normalize.js";
+import { parseVenueString } from "../place-resolve.js";
 
 /** Minimal shape of a node-ical VEVENT component (the library is loosely typed). */
 interface VEventLike {
@@ -113,12 +114,11 @@ export const importIcs: Adapter = async (source: SourceDef): Promise<DuluthEvent
       end: comp.end ? toIsoOffset(comp.end) : undefined,
       allDay,
       timezone: DEFAULT_TZ,
-      location: {
-        venueName,
-        city: "Duluth",
-        state: "MN",
-        inDuluth: isInDuluth(comp.location),
-      },
+      venueRaw: venueName,
+      location: (() => {
+        const { city, state } = parseVenueString(venueName);
+        return { city: city ?? "Duluth", state: state ?? "MN", inDuluth: isInDuluth(comp.location) && !city };
+      })(),
       categories: Array.isArray(comp.categories) ? comp.categories : [],
       url: extractUrl(comp.url),
       status: mapStatus(comp.status),

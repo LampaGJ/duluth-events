@@ -49,3 +49,58 @@ describe("SourceSchema confidence ceiling (anti-fabrication invariant)", () => {
     expect(SourceSchema.safeParse({ ...base, confidence: "medium" }).success).toBe(true);
   });
 });
+
+import { PlaceSchema, PlaceRefSchema, AddressSchema, DuluthEventSchema } from "../src/schema.js";
+
+describe("PlaceSchema", () => {
+  it("accepts a fully specified place", () => {
+    const p = PlaceSchema.parse({
+      id: "bent-paddle-taproom",
+      name: "Bent Paddle Taproom",
+      nameAliases: ["bent paddle brewing", "bent paddle taproom"],
+      addressAliases: ["1832 w michigan st"],
+      address: { city: "Duluth", state: "MN", street: "1832 W Michigan St" },
+      provenance: { source: "osm", ref: "way/123456", retrievedAt: "2026-07-28T00:00:00-05:00" },
+    });
+    expect(p.address.inDuluth).toBe(true);
+    expect(p.rooms).toEqual([]);
+  });
+
+  it("rejects an id that is not a stable slug", () => {
+    const base = {
+      name: "X", nameAliases: [], addressAliases: [],
+      address: { city: "Duluth", state: "MN" },
+      provenance: { source: "manual" as const },
+    };
+    expect(() => PlaceSchema.parse({ ...base, id: "Bent Paddle" })).toThrow();
+    expect(() => PlaceSchema.parse({ ...base, id: "" })).toThrow();
+  });
+
+  it("requires provenance — a machine-fetched address is not a hand-typed one", () => {
+    expect(() =>
+      PlaceSchema.parse({
+        id: "x", name: "X", nameAliases: [], addressAliases: [],
+        address: { city: "Duluth", state: "MN" },
+      }),
+    ).toThrow();
+  });
+});
+
+describe("PlaceRefSchema", () => {
+  it("defaults provisional to false", () => {
+    expect(PlaceRefSchema.parse({ id: "x", name: "X" }).provisional).toBe(false);
+  });
+});
+
+describe("DuluthEvent place fields", () => {
+  it("accepts an event with no place at all (unresolved)", () => {
+    const e = makeEvent();
+    expect(e.place).toBeUndefined();
+  });
+
+  it("carries the source's raw venue claim alongside the resolved place", () => {
+    const e = makeEvent({ venueRaw: "Bent Paddle Brewing", place: { id: "bent-paddle-taproom", name: "Bent Paddle Taproom" } });
+    expect(e.venueRaw).toBe("Bent Paddle Brewing");
+    expect(e.place?.provisional).toBe(false);
+  });
+});

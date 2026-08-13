@@ -1,0 +1,32 @@
+name: CI
+
+# Gates ONLY — no build:feeds, no Pages, no deploy. `deploy.yml` runs the gates too, but it fires
+# on schedule/dispatch/push-to-main, so before this file existed a pull request got no checks at all
+# and the gates could not run until AFTER a merge. That is backwards: the point of a gate is to
+# refuse the merge.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A PR that is force-pushed twice in a minute does not need three runs of the same check.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npx vitest run

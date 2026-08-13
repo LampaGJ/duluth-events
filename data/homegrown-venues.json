@@ -1,0 +1,1692 @@
+{
+  "generated_at": "2026-04-15T00:00:00Z",
+  "companion_to": "homegrown_2026_schedule.json",
+  "venue_count": 41,
+  "venues": [
+    {
+      "name": "All American Club",
+      "address": "1931 W Michigan St, Duluth, MN 55806",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://allamericanclubduluth.com/",
+      "phone": "218-727-9419",
+      "established": null,
+      "type": "bar / restaurant / reception hall",
+      "capacity": 175,
+      "capacity_source": {
+        "value": 175,
+        "method": "venue-stated (Eventective listing: Max Number of People for an Event: 175)",
+        "url": "https://www.eventective.com/duluth-mn/all-american-club-of-duluth-785159.html",
+        "confidence": "venue-stated"
+      },
+      "notable": "Longtime West End neighborhood bar, restaurant, and reception hall known for catering and BBQ. Situated in the Lincoln Park / West End area of Duluth.",
+      "neighborhood": "Lincoln Park / West End",
+      "sources": [
+        "https://allamericanclubduluth.com/",
+        "https://www.yelp.com/biz/all-american-club-duluth"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual on-sale club licensee list (Legistar PDF)",
+          "note": "Listed on Duluth's annual licensee roster as ALL AMERICAN CLUB. No city general business license number published in available records; Duluth issues hospitality/liquor licenses through the City Clerk."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "on-sale club",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: ALL AMERICAN CLUB"
+        }
+      },
+      "lat": 46.768169557317,
+      "lon": -92.121605589469,
+      "logo_url": "https://img1.wsimg.com/isteam/ip/2b7f18d1-b6ca-4c9b-b45d-bc31be97e80a/AAC%20Logo-0cefbc8.jpg",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Amsoil Arena",
+      "address": "350 Harbor Drive, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://decc.org/venue/amsoil-arena/",
+      "phone": "218-722-5573",
+      "established": "2010",
+      "type": "arena",
+      "capacity": 8500,
+      "notable": "Multipurpose arena attached to the Duluth Entertainment Convention Center (DECC) on the waterfront near the Aerial Lift Bridge. Home to UMD Bulldogs men's and women's hockey. Seats ~6,600 for hockey and ~8,500 for concerts. Opened December 2010, replacing the older DECC Arena.",
+      "neighborhood": "Canal Park / Waterfront",
+      "sources": [
+        "https://decc.org/venue/amsoil-arena/",
+        "https://en.wikipedia.org/wiki/AMSOIL_Arena"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); DECC is a city-operated authority",
+          "note": "DECC/Amsoil Arena is operated by the Duluth Entertainment Convention Center, a city authority. Listed as DULUTH ENTERTAINMENT CONVENTION CENTER on Duluth's on-sale intoxicating license list at 350 Harbor Drive."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: DULUTH ENTERTAINMENT CONVENTION CENTER"
+        }
+      },
+      "lat": 46.78137,
+      "lon": -92.09472,
+      "logo_url": "https://decc.org/wp-content/uploads/2015/08/decc-icon1-55d5ad64v1_site_icon-320x320.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Average Joe's Pub",
+      "address": "1310 N 5th St, Superior, WI 54880",
+      "city": "Superior",
+      "state": "WI",
+      "website": "https://www.theaveragejoespub.com/",
+      "phone": "715-392-1572",
+      "established": null,
+      "type": "neighborhood pub / sports bar",
+      "capacity": null,
+      "notable": "Neighborhood sports bar in Superior's North End, covered by the Superior Telegram as a new pub when it opened.",
+      "neighborhood": "Superior, WI",
+      "sources": [
+        "https://www.theaveragejoespub.com/",
+        "https://www.yelp.com/biz/average-joes-pub-superior",
+        "https://www.superiortelegram.com/business/new-pub-opens-in-superior"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://www.revenue.wi.gov/Pages/OnlineServices/Retail-Alcohol-Beverage-License-Search.aspx",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "Wisconsin DOR Retail Alcohol Beverage License Search API (ww2.revenue.wi.gov/WebServicesPublicWeb/rest/liquor/all); legal entity: SUPERIOR JOES DEC LLC",
+          "note": "DBA listed as AVERAGE JOE'S in WI DOR database. License expires 2026-06-30. City of Superior business license is issued by the City Clerk; individual license number not published in state database."
+        },
+        "liquor": {
+          "url": "https://www.revenue.wi.gov/Pages/OnlineServices/Retail-Alcohol-Beverage-License-Search.aspx",
+          "license_type": "Class B Beer + Class B Liquor (combination)",
+          "license_number": null,
+          "last_renewal": "2026-06-30",
+          "status": "active",
+          "source": "Wisconsin DOR Retail Alcohol Beverage License Search; legal entity: SUPERIOR JOES DEC LLC; lastUpdated: 2026-03-26; expireDate: 2026-06-30"
+        }
+      },
+      "lat": 46.732471677335,
+      "lon": -92.096509734329,
+      "logo_url": "https://static1.squarespace.com/static/66fffca48565ec51b5c42796/t/674b63ed7aa342093c02eb67/1732994033493/Average-Joes-Pub-Ver3-Light.png?format=1500w",
+      "logo_source": "og:image",
+      "markerType": "cube"
+    },
+    {
+      "name": "Bent Paddle Brewing Company Taproom",
+      "address": "1832 W Michigan St, Duluth, MN 55806",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://bentpaddlebrewing.com/",
+      "phone": "218-279-2722",
+      "established": "2013",
+      "type": "brewery taproom",
+      "capacity": 200,
+      "capacity_source": {
+        "value": 200,
+        "method": "venue-stated (full taproom rental page: 140 seated / 200 standing, plus heated patio)",
+        "url": "https://bentpaddlebrewing.com/event-rental-duluth-at-bent-paddle-brewing-co/",
+        "confidence": "venue-stated"
+      },
+      "notable": "Flagship craft brewery and anchor of the Lincoln Park Craft District. Founded in 2013; the expanded taproom opened in Lincoln Park after the brewery outgrew its original West Michigan Street space. Known for Black Ale, Venture Pils, and Cold Press Black.",
+      "neighborhood": "Lincoln Park / Craft District",
+      "sources": [
+        "https://bentpaddlebrewing.com/bent-paddle-taproom/",
+        "https://www.duluthnewstribune.com/business/sneak-peek-at-new-bent-paddle-taproom-lincoln-park-brewery-eyes-spring-opening"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: BENT PADDLE BREWING CO.",
+          "note": "Listed under Breweries/Distilleries/Cideries on Duluth's annual licensee roster."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "brewer on-sale/off-sale (brewery taproom)",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: BENT PADDLE BREWING CO."
+        }
+      },
+      "lat": 46.769033512593,
+      "lon": -92.120241920671,
+      "logo_url": "https://bentpaddlebrewing.com/apple-touch-icon.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Blacklist Brewing Company",
+      "address": "206 E Superior St, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://www.blacklistbeer.com/",
+      "phone": "218-606-1610",
+      "established": "2012",
+      "type": "brewery taproom",
+      "capacity": null,
+      "notable": "Downtown Duluth craft brewery known for Belgian-inspired and experimental ales. Originally founded in Duluth in 2012; moved to the current East Superior Street taproom after expanding from earlier spaces.",
+      "neighborhood": "Downtown Duluth",
+      "sources": [
+        "https://www.blacklistbeer.com/",
+        "https://beerdabbler.com/blacklist-brewing-company-outgrows-their-space-and-expands-to-a-new-facility/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: BLACKLIST BEER, LLC; DBA: BLACKLIST ARTISAN ALES"
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "brewer on-sale/off-sale (brewery taproom)",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: BLACKLIST BEER, LLC; DBA: BLACKLIST ARTISAN ALES"
+        }
+      },
+      "lat": 46.788905821481,
+      "lon": -92.095530643692,
+      "logo_url": "https://static1.squarespace.com/static/6462bcc03d0e2b0eb1367882/t/6462bd3c0168bd5908748a0d/1745271072391/logo+%281%29.png?format=1500w",
+      "logo_source": "og:image",
+      "markerType": "cube"
+    },
+    {
+      "name": "Caddy Shack Indoor Golf & Pub",
+      "address": "2023 W Superior St, Duluth, MN 55806",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://caddyshackduluth.com/",
+      "phone": "218-624-7768",
+      "established": null,
+      "type": "indoor golf simulator / pub",
+      "capacity": null,
+      "notable": "Duluth's only indoor golf simulator bar and pub, located in the Lincoln Park Craft District on West Superior Street.",
+      "neighborhood": "Lincoln Park / Craft District",
+      "sources": [
+        "https://caddyshackduluth.com/",
+        "https://duluthhomegrown.org/venues/caddy-shack/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: CRAZY UNCLE ENTERTAINMENT; DBA: CADDY SHACK-DULUTH INDOOR GOLF & PUB; address: 2023 W SUPERIOR ST"
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: CRAZY UNCLE ENTERTAINMENT"
+        }
+      },
+      "lat": 46.767697383098,
+      "lon": -92.123402575812,
+      "logo_url": "https://caddyshackduluth.com/wp-content/uploads/2024/12/cropped-logo4website-180x180.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Canal Park Brewing Company",
+      "address": "300 Canal Park Dr, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://canalparkbrewery.com/",
+      "phone": "218-464-4790",
+      "established": "2012",
+      "type": "brewpub",
+      "capacity": null,
+      "notable": "Lakeside brewpub with patio views of Lake Superior, located across from the Lakewalk in Canal Park. Opened 2012.",
+      "neighborhood": "Canal Park",
+      "sources": [
+        "https://canalparkbrewery.com/",
+        "https://canalpark.com/listing/canal-park-brewing-company/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: CANAL PARK BREWING CO., LLC; address: 300 CANAL PARK DR"
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "brewer on-sale/off-sale (brewpub)",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list; listed under both On-Sale Intoxicating and Brewery On/Off Sale; legal entity: CANAL PARK BREWING CO., LLC"
+        }
+      },
+      "lat": 46.783536864076,
+      "lon": -92.094410913818,
+      "logo_url": "https://canalparkbrewery.com/app/themes/canalparkbreweryTheme/library/images/favicons/apple-icon-180x180.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Carmody Irish Pub",
+      "address": "308 E Superior St, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://carmodypub.com/",
+      "phone": "218-740-4747",
+      "established": "2006",
+      "type": "irish pub / brewery",
+      "capacity": null,
+      "notable": "Downtown Duluth Irish pub and brewery, family-owned since 2006. Longtime live-music room with traditional Irish sessions and local rock/folk acts.",
+      "neighborhood": "Downtown Duluth",
+      "sources": [
+        "https://carmodypub.com/",
+        "https://visitduluth.com/listings/carmodys-irish-pub/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: HIPPO DOWN THE STREET, LLC; DBA: CARMODY IRISH PUB; address: 308 E SUPERIOR ST",
+          "note": "Legal entity name differs from DBA: HIPPO DOWN THE STREET, LLC operates Carmody Irish Pub."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_type": "on-sale intoxicating + brewer on-sale/off-sale",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list; HIPPO DOWN THE STREET, LLC appears in both On-Sale Intoxicating and Brewery On/Off Sale sections"
+        }
+      },
+      "lat": 46.789843285431,
+      "lon": -92.094266192385,
+      "logo_url": null,
+      "logo_source": null,
+      "markerType": "cube"
+    },
+    {
+      "name": "Chester Bowl Park",
+      "address": "1800 E Skyline Pkwy, Duluth, MN 55812",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://www.chesterbowl.org/",
+      "phone": "218-724-9832",
+      "established": null,
+      "type": "outdoor park / ski area",
+      "capacity": null,
+      "notable": "117-acre city park with an alpine ski hill (double chairlift, 175-foot drop), historic ski jumps, and a chalet. Managed in part by the Chester Bowl Improvement Club. Hosts outdoor summer concerts and the annual Fall Fest.",
+      "neighborhood": "Chester Park / East Hillside",
+      "sources": [
+        "https://www.chesterbowl.org/about/",
+        "https://en.wikipedia.org/wiki/Chester_Park,_Duluth"
+      ],
+      "licenses": {
+        "business": {
+          "url": null,
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "Chester Bowl is a City of Duluth public park managed partly by the Chester Bowl Improvement Club (nonprofit). No city business license record found. Searched duluthmn.gov City Clerk pages and Duluth Legistar; no commercial business license expected for a city park."
+        },
+        "liquor": {
+          "url": null,
+          "license_type": "n/a",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "City park / nonprofit-managed venue. Not found on Duluth annual liquor licensee list. May obtain temporary on-sale permits for specific events; no permanent license identified."
+        }
+      },
+      "lat": 46.812726321548,
+      "lon": -92.09157600947,
+      "logo_url": "https://www.chesterbowl.org/wp-content/uploads/2026/02/cropped-cblogo3-1-180x180.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "sphere"
+    },
+    {
+      "name": "Dovetail Cafe and Marketplace",
+      "address": "1917 W Superior St, Duluth, MN 55806",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://www.dovetailcafe.com/",
+      "phone": "218-481-7888",
+      "established": null,
+      "type": "cafe / community marketplace",
+      "capacity": null,
+      "notable": "Cafe and handcraft marketplace run as a partner project of the Duluth Folk School in the Lincoln Park Craft District. Serves as an intimate listening room for acoustic and folk acts.",
+      "neighborhood": "Lincoln Park / Craft District",
+      "sources": [
+        "https://www.dovetailcafe.com/",
+        "https://duluthhomegrown.org/venues/dovetail-cafe-and-marketplace/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); listed under On-Sale Wine & Beer as DOVETAIL CAFÉ & MARKETPLACE"
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "on-sale wine and beer",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: DOVETAIL CAFÉ & MARKETPLACE"
+        }
+      },
+      "lat": 46.768691169292,
+      "lon": -92.122063424687,
+      "logo_url": "https://www.dovetailcafe.com/wp-content/uploads/2021/12/cropped-DVT-Monogram-Black-RGB-180x180.jpg",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Dubh Linn Irish Pub",
+      "address": "109 W Superior St, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://dubhlinnpub.com/",
+      "phone": "218-727-1559",
+      "established": null,
+      "type": "irish pub / brewpub",
+      "capacity": null,
+      "notable": "Downtown Duluth Irish brew pub with a large scotch and whiskey selection, live Irish music, and regular comedy nights.",
+      "neighborhood": "Downtown Duluth",
+      "sources": [
+        "https://dubhlinnpub.com/",
+        "https://www.yelp.com/biz/dubh-linn-irish-brew-pub-duluth-2"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: DUBH LINN, INC; DBA: DUBH LINN IRISH BREW PUB; address: 109 W SUPERIOR ST"
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: DUBH LINN, INC"
+        }
+      },
+      "lat": 46.785920458056,
+      "lon": -92.099647079258,
+      "logo_url": "https://dubhlinnpub.com/apple-touch-icon.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Duluth Cider",
+      "address": "2307 W Superior St, Duluth, MN 55806",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://duluthcider.com/",
+      "phone": "218-464-1466",
+      "established": "2018",
+      "type": "cidery taproom",
+      "capacity": null,
+      "notable": "Craft cidery and taproom in the Lincoln Park Craft District producing a rotating selection of hard ciders. Opened in 2018.",
+      "neighborhood": "Lincoln Park / Craft District",
+      "sources": [
+        "https://duluthcider.com/",
+        "https://www.yelp.com/biz/duluth-cider-duluth"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); listed under Breweries/Distilleries/Cideries as DULUTH CIDER, LLC; DBA: DULUTH CIDER"
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "brewer on-sale/off-sale (cidery taproom)",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: DULUTH CIDER, LLC. April 2026 AGT agenda also shows a DULUTH CIDER (PICKLEFEST) temporary expansion application."
+        }
+      },
+      "lat": 46.764974762985,
+      "lon": -92.12696407259,
+      "logo_url": "https://duluthcider.com/wp-content/uploads/2019/03/Superior-To-The-Core-White.png",
+      "logo_source": "site_logo_img",
+      "markerType": "cube"
+    },
+    {
+      "name": "Duluth Depot: Great Hall",
+      "address": "506 W Michigan St, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://experiencethedepot.org/",
+      "phone": "218-733-7590",
+      "established": "1892",
+      "type": "historic hall / event space",
+      "capacity": 250,
+      "notable": "The Great Hall is the former general waiting room of the 1892 Union Depot (now the St. Louis County Heritage & Arts Center / The Depot). Features an 88-foot ceiling and twin fireplaces; accommodates up to 250 guests. The Depot served seven railroads before closing as a station in 1969.",
+      "neighborhood": "Downtown Duluth / Civic Center",
+      "sources": [
+        "https://experiencethedepot.org/about",
+        "https://en.wikipedia.org/wiki/Duluth_Depot"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: HISTORIC UNION DEPOT, INC; DBA: SLC HERITAGE & ARTS CTR; address: 506 W MICHIGAN ST",
+          "note": "The building is officially the St. Louis County Heritage & Arts Center (The Depot), operated by Historic Union Depot, Inc."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: HISTORIC UNION DEPOT, INC"
+        }
+      },
+      "lat": 46.781687656685,
+      "lon": -92.103948115081,
+      "logo_url": "https://experiencethedepot.org/apple-touch-icon.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Duluth Flame Nightclub",
+      "address": "28 N 1st Ave W, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://www.flameduluth.com/",
+      "phone": "218-727-2344",
+      "established": null,
+      "type": "nightclub / LGBTQ+ bar",
+      "capacity": 400,
+      "capacity_source": {
+        "value": 400,
+        "method": "venue-stated (venue's own rent-our-space page: upper level 300+, downstairs lounge 100+, combined 400+)",
+        "url": "https://www.flameduluth.com/rent-our-space",
+        "confidence": "venue-stated"
+      },
+      "notable": "Downtown Duluth nightclub and LGBTQ+ friendly dance club on 1st Ave West near Superior Street. Hosts drag shows, DJ nights, and live acts.",
+      "neighborhood": "Downtown Duluth",
+      "sources": [
+        "https://www.flameduluth.com/",
+        "https://www.yelp.com/biz/the-flame-nightclub-duluth-duluth"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: FLAME NIGHTCLUB, INC; DBA: FLAME NIGHTCLUB DULUTH; address: 28 N 1 AVE W",
+          "note": "Older Legistar list shows JMBFF, LLC as licensee; more recent list shows FLAME NIGHTCLUB, INC — entity likely changed ownership."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: FLAME NIGHTCLUB, INC"
+        }
+      },
+      "lat": 46.786240293161,
+      "lon": -92.099719402185,
+      "logo_url": "https://static.wixstatic.com/media/c13f3f_8e355c38040f4b2684c9fe8117674b7c%7Emv2.png/v1/fill/w_180%2Ch_180%2Clg_1%2Cusm_0.66_1.00_0.01/c13f3f_8e355c38040f4b2684c9fe8117674b7c%7Emv2.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Gopher Restaurant & Lounge",
+      "address": "402 N Central Ave, Duluth, MN 55807",
+      "city": "Duluth",
+      "state": "MN",
+      "website": null,
+      "phone": "218-624-9793",
+      "established": null,
+      "type": "neighborhood bar / restaurant",
+      "capacity": null,
+      "notable": "Longtime West Duluth neighborhood bar at the corner of Central Ave and Ramsey St, known for wings, Dago Bites, karaoke, and first-Friday live music and comedy. Also listed as Gopher Bar & Grill.",
+      "neighborhood": "West Duluth / Spirit Valley",
+      "sources": [
+        "https://www.yelp.com/biz/gopher-restaurant-and-lounge-duluth",
+        "https://visitduluth.com/listings/gopher-bar-and-grill/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: S & D ENTERPRISES, INC; DBA: GOPHER RESTAURANT/LOUNGE; address: 402 N CENTRAL AVE"
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: S & D ENTERPRISES, INC"
+        }
+      },
+      "lat": 46.739047021546,
+      "lon": -92.166438208784,
+      "logo_url": null,
+      "logo_source": null,
+      "markerType": "cube"
+    },
+    {
+      "name": "Havana's",
+      "address": "1623 Broadway St, Superior, WI 54880",
+      "city": "Superior",
+      "state": "WI",
+      "website": "https://havanaswi.com/",
+      "phone": "715-718-0099",
+      "established": null,
+      "type": "cocktail bar / cuban restaurant",
+      "capacity": null,
+      "notable": "Cuban restaurant and cocktail bar in downtown Superior known for authentic Cuban sandwiches, rum cocktails, and live music nights.",
+      "neighborhood": "Superior, WI",
+      "sources": [
+        "https://havanaswi.com/",
+        "https://www.yelp.com/biz/havana-s-superior"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://www.revenue.wi.gov/Pages/OnlineServices/Retail-Alcohol-Beverage-License-Search.aspx",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "Wisconsin DOR Retail Alcohol Beverage License Search API; legal entity: HAVANAS LLC; DBA: HAVANAS; address: 1623 BROADWAY STREET, SUPERIOR; expireDate: 2026-06-30; lastUpdated: 2026-03-26",
+          "note": "DBA listed as HAVANAS (without apostrophe) in WI DOR database."
+        },
+        "liquor": {
+          "url": "https://www.revenue.wi.gov/Pages/OnlineServices/Retail-Alcohol-Beverage-License-Search.aspx",
+          "license_type": "Class B Beer + Class B Liquor (combination)",
+          "license_number": null,
+          "last_renewal": "2026-06-30",
+          "status": "active",
+          "source": "Wisconsin DOR Retail Alcohol Beverage License Search; legal entity: HAVANAS LLC; expireDate: 2026-06-30; lastUpdated: 2026-03-26"
+        }
+      },
+      "lat": 46.726662970444,
+      "lon": -92.10125323761,
+      "logo_url": "https://havanaswi.com/wp-content/uploads/2023/10/cropped-havanas_logo-1-removebg-preview-e1700510977626-180x180.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Kom-on-Inn",
+      "address": "332 N 57th Ave W, Duluth, MN 55807",
+      "city": "Duluth",
+      "state": "MN",
+      "website": null,
+      "phone": "218-624-3385",
+      "established": null,
+      "type": "neighborhood bar",
+      "capacity": null,
+      "notable": "Classic West Duluth neighborhood dive bar famous for its hand-painted interior murals depicting Duluth history and Lake Superior scenes. A Homegrown Music Festival staple.",
+      "neighborhood": "West Duluth",
+      "sources": [
+        "https://www.yelp.com/biz/kom-on-inn-duluth",
+        "https://www.perfectduluthday.com/2021/06/04/the-slice-tour-of-murals-at-the-kom-on-inn/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: JMM LLLP; DBA: KOM ON INN; address: 332 N 57TH AVE W",
+          "note": "Legal entity name differs from DBA: JMM LLLP operates Kom-on-Inn."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: JMM LLLP"
+        }
+      },
+      "lat": 46.737543919146,
+      "lon": -92.169813256738,
+      "logo_url": null,
+      "logo_source": null,
+      "markerType": "cube"
+    },
+    {
+      "name": "Lake Superior Zoo",
+      "address": "7210 Fremont St, Duluth, MN 55807",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://lszoo.org/",
+      "phone": "218-730-4500",
+      "established": "1923",
+      "type": "zoo / outdoor venue",
+      "capacity": null,
+      "notable": "Zoo in Fairmont Park in far West Duluth, founded 1923. Grounds host occasional outdoor concerts and after-hours events.",
+      "neighborhood": "West Duluth / Fairmont",
+      "sources": [
+        "https://lszoo.org/",
+        "https://en.wikipedia.org/wiki/Lake_Superior_Zoo"
+      ],
+      "licenses": {
+        "business": {
+          "url": null,
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "Lake Superior Zoo is a city-operated facility. Not found on Duluth annual liquor licensee list. Searched duluthmn.gov and Duluth Legistar; no commercial liquor license expected for a zoo."
+        },
+        "liquor": {
+          "url": null,
+          "license_type": "n/a",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "No liquor license found. City zoo; may use temporary permits for special events."
+        }
+      },
+      "lat": 46.726102758099,
+      "lon": -92.189541282372,
+      "logo_url": "https://lszoo.org/wp-content/uploads/2019/05/lake-superior-zoo-logo.png",
+      "logo_source": "site_logo_img",
+      "markerType": "cube"
+    },
+    {
+      "name": "Legacy Cannabis",
+      "address": "1906 W Superior St, Duluth, MN 55806",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://legacycannabisduluth.com/",
+      "phone": "218-720-0747",
+      "established": "2023",
+      "type": "cannabis dispensary / event space",
+      "capacity": null,
+      "notable": "Reported as Minnesota's first licensed adult-use cannabis dispensary, operated by the Red Lake Nation in the Lincoln Park Craft District.",
+      "neighborhood": "Lincoln Park / Craft District",
+      "sources": [
+        "https://legacycannabisduluth.com/",
+        "https://www.duluthnewstribune.com/business/duluths-legacy-cannabis-is-minnesotas-first-licensed-dispensary"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluthmn.gov/city-clerk/licenses-permits/",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth Cannabis Registration program; operated under Red Lake Nation tribal authority with state OCM license",
+          "note": "Legacy Cannabis holds a Minnesota Office of Cannabis Management license as Minnesota's first legal adult-use cannabis retailer. City of Duluth has a Cannabis Registration program (separate from business licensing). No Duluth business license number found in publicly available records."
+        },
+        "liquor": {
+          "url": null,
+          "license_type": "n/a",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "Cannabis dispensary; no alcohol license held or expected."
+        }
+      },
+      "lat": 46.768700366492,
+      "lon": -92.121822524589,
+      "logo_url": "https://legacycannabisduluth.com/wp-content/uploads/2025/10/flower.png.webp",
+      "logo_source": "og:image",
+      "markerType": "cube"
+    },
+    {
+      "name": "Mr. D's Bar & Grill",
+      "address": "5622 Grand Ave, Duluth, MN 55807",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://mrdsbar.com/",
+      "phone": "218-624-4178",
+      "established": null,
+      "type": "neighborhood bar / grill",
+      "capacity": null,
+      "notable": "West Duluth neighborhood bar and grill on Grand Avenue, known for live rock and tribute acts.",
+      "neighborhood": "West Duluth",
+      "sources": [
+        "https://mrdsbar.com/",
+        "https://www.yelp.com/biz/mr-ds-bar-and-grill-duluth"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: D & D ENTERPRISES OF CLOQUET, INC; DBA: MR. D'S SPIRIT VALLEY; address: 5622 GRAND AVE"
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: D & D ENTERPRISES OF CLOQUET, INC"
+        }
+      },
+      "lat": 46.73971123763,
+      "lon": -92.168056849048,
+      "logo_url": "https://mrdsbar.com/wp-content/uploads/2020/09/cropped-512-180x180.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Norway Hall Event Center",
+      "address": "21 N Lake Ave, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://www.norwayhalleventcenter.com/",
+      "phone": null,
+      "established": null,
+      "type": "historic hall / event center",
+      "capacity": 285,
+      "capacity_source": {
+        "value": 285,
+        "method": "venue-stated (Duluth News Tribune: up to 135 for dinner / 285 for cocktails; 285 is stated maximum)",
+        "url": "https://www.duluthnewstribune.com/business/norway-hall-event-center-ready-for-booking",
+        "confidence": "venue-stated"
+      },
+      "notable": "Historic second-floor ballroom at 21 N Lake Ave, reopened as an event center in 2024. The building has Scandinavian fraternal roots; the ballroom is roughly 2,000 square feet and is also operated as Wild Rose Company at Norway Hall.",
+      "neighborhood": "Downtown Duluth",
+      "sources": [
+        "https://www.norwayhalleventcenter.com/",
+        "https://www.duluthnewstribune.com/business/norway-hall-event-center-ready-for-booking"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: WILD ROSE COMPANY LLC",
+          "note": "Norway Hall Event Center is operated by Wild Rose Company LLC, which also operates The Bridge Cocktail Room. Both DBAs appear to share the on-sale intoxicating license. Legal entity: WILD ROSE COMPANY LLC."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: WILD ROSE COMPANY LLC"
+        }
+      },
+      "lat": 46.787068712719,
+      "lon": -92.098498960458,
+      "logo_url": null,
+      "logo_source": null,
+      "markerType": "cube"
+    },
+    {
+      "name": "Owls Club",
+      "address": "118 E 2nd St, Duluth, MN 55805",
+      "city": "Duluth",
+      "state": "MN",
+      "website": null,
+      "phone": "218-727-3109",
+      "established": null,
+      "type": "fraternal club / bottle club",
+      "capacity": null,
+      "notable": "Fraternal organization (Order of Owls) over 115 years old, housed in a former funeral home on the northern edge of downtown Duluth. Private bottle club that has recently seen a surge of young members and become a distinctive Homegrown Festival venue.",
+      "neighborhood": "Downtown Duluth / Central Hillside",
+      "sources": [
+        "https://duluthhomegrown.org/venues/owls-club/",
+        "https://www.duluthnewstribune.com/news/local/northlandia-inside-duluths-mysterious-owls-club"
+      ],
+      "licenses": {
+        "business": {
+          "url": null,
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "Owls Club is a private fraternal bottle club (members bring their own alcohol; no retail liquor sales). Not found on Duluth's annual on-sale or club liquor licensee list. Searched duluthmn.gov Legistar and both annual licensee PDFs; no record located. Private clubs of this type typically do not hold a public liquor license."
+        },
+        "liquor": {
+          "url": null,
+          "license_type": "n/a",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "Bottle club — members bring their own alcohol. No retail liquor license held. Not found in Duluth annual licensee list."
+        }
+      },
+      "lat": 46.789409620095,
+      "lon": -92.098825190073,
+      "logo_url": null,
+      "logo_source": null,
+      "markerType": "cube"
+    },
+    {
+      "name": "Pizza Luce",
+      "address": "11 E Superior St, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://pizzaluce.com/locations/duluth",
+      "phone": "218-727-7400",
+      "established": "2005",
+      "type": "restaurant / music venue",
+      "capacity": null,
+      "notable": "Duluth outpost of the Minneapolis-based Pizza Luce chain. The downtown location has long hosted touring indie and punk acts in its back dining room and bar, and is a perennial Homegrown venue.",
+      "neighborhood": "Downtown Duluth",
+      "sources": [
+        "https://pizzaluce.com/locations/duluth",
+        "https://visitduluth.com/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: PIZZA LUCE III, INC; DBA: PIZZA LUCE; address: 11 E SUPERIOR ST"
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: PIZZA LUCE III, INC"
+        }
+      },
+      "lat": 46.787118750387,
+      "lon": -92.098078806818,
+      "logo_url": "https://pizzaluce.com/dist/icons/favicon-180.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Prøve Gallery",
+      "address": "21 N Lake Ave, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "http://provecollective.org/",
+      "phone": null,
+      "established": "2011",
+      "type": "art gallery / collective",
+      "capacity": null,
+      "notable": "Artist-run contemporary art gallery and collective (PRØVE Collective) in downtown Duluth, founded around 2011. Hosts rotating exhibitions, zine projects, and occasional music events.",
+      "neighborhood": "Downtown Duluth",
+      "sources": [
+        "http://provecollective.org/",
+        "https://www.lakesuperior.com/locations/prove-gallery/"
+      ],
+      "licenses": {
+        "business": {
+          "url": null,
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "Prøve Gallery is a nonprofit artist collective. Not found on Duluth annual liquor licensee list. Searched duluthmn.gov Legistar and annual licensee PDFs. No liquor license expected for an art gallery."
+        },
+        "liquor": {
+          "url": null,
+          "license_type": "n/a",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "Art gallery / nonprofit collective. No liquor license found. May serve wine at receptions under a temporary permit."
+        }
+      },
+      "lat": 46.787068712719,
+      "lon": -92.098498960458,
+      "logo_url": "https://static1.squarespace.com/static/546b8eefe4b0b5dd39a4f705/t/616648c3d1299f7f9ce72865/1634093251877/prove_new-01.png?format=1500w",
+      "logo_source": "og:image",
+      "markerType": "cube"
+    },
+    {
+      "name": "R.T. Quinlan's Saloon",
+      "address": "220 W Superior St, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": null,
+      "phone": "218-722-3573",
+      "established": null,
+      "type": "dive bar / saloon",
+      "capacity": null,
+      "notable": "Downtown Duluth dive bar and live-music room that has been a community staple for over 30 years, and a long-running Homegrown Festival venue.",
+      "neighborhood": "Downtown Duluth",
+      "sources": [
+        "https://visitduluth.com/listings/r-t-quinlans-saloon/",
+        "https://duluthhomegrown.org/venues/r-t-quinlans/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: SILVER HAMMER, INC; DBA: RT QUINLAN'S SALOON",
+          "note": "Legal entity name differs from DBA: SILVER HAMMER, INC operates R.T. Quinlan's Saloon."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: SILVER HAMMER, INC"
+        }
+      },
+      "lat": 46.784790140517,
+      "lon": -92.100859405158,
+      "logo_url": null,
+      "logo_source": null,
+      "markerType": "cube"
+    },
+    {
+      "name": "Ritual Marketplace",
+      "address": "1323 Broadway St, Superior, WI 54880",
+      "city": "Superior",
+      "state": "WI",
+      "website": null,
+      "phone": null,
+      "established": "2024",
+      "type": "marketplace / creative collective",
+      "capacity": null,
+      "notable": "Creative collective and marketplace in Superior's historic Trade and Commerce building on Broadway, opened by the owner of Ritual Salad & Apothecary.",
+      "neighborhood": "Superior, WI (Downtown)",
+      "sources": [
+        "https://www.duluthnewstribune.com/news/local/ritual-marketplace-brings-creative-collective-to-historic-superior-building",
+        "https://visitduluth.com/venue/ritual-marketplace/"
+      ],
+      "licenses": {
+        "business": {
+          "url": null,
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "Ritual Marketplace is a creative collective / retail space opened 2024. Searched Wisconsin DOR Retail Alcohol Beverage License Search for Superior WI — 1323 Broadway is listed as 'SPIRIT ROOM, THE' (JEFFERY WILLIAM HELLER), a separate bar tenant in the same building. Ritual Marketplace itself does not appear in the WI DOR license database, consistent with its character as a marketplace/event space without its own liquor license. Wisconsin DFI corporate search not accessed directly; no registration info found."
+        },
+        "liquor": {
+          "url": null,
+          "license_type": "n/a",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "Marketplace / event venue. Not found as a licensee in WI DOR database for Superior WI. A separate entity (Spirit Room/Jeffery William Heller) holds a Class B license at 1323 Broadway — this appears to be a co-tenant bar, not Ritual Marketplace itself."
+        }
+      },
+      "lat": 46.726653970121,
+      "lon": -92.096711820575,
+      "logo_url": null,
+      "logo_source": null,
+      "markerType": "cube"
+    },
+    {
+      "name": "Sacred Heart Music Center",
+      "address": "201 W 4th St, Duluth, MN 55806",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://sacredheartmusic.org/",
+      "phone": "218-723-1895",
+      "established": "1896",
+      "type": "concert hall (deconsecrated cathedral)",
+      "capacity": 600,
+      "notable": "Deconsecrated Roman Catholic cathedral built 1894-1896; served as seat of the Diocese of Duluth until 1957. Since 1985 operated as a nonprofit performance hall prized for its stunning acoustics and original Felgemaker pipe organ. Listed on the National Register of Historic Places.",
+      "neighborhood": "Central Hillside",
+      "sources": [
+        "https://sacredheartmusic.org/",
+        "https://en.wikipedia.org/wiki/Sacred_Heart_Cathedral,_Sacred_Heart_School_and_Christian_Brothers_Home"
+      ],
+      "licenses": {
+        "business": {
+          "url": null,
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "Sacred Heart Music Center is a nonprofit performing arts organization. Not found on Duluth annual liquor licensee list. Searched duluthmn.gov Legistar and annual licensee PDFs. No liquor license expected for a concert hall of this type."
+        },
+        "liquor": {
+          "url": null,
+          "license_type": "n/a",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "Nonprofit concert hall in a deconsecrated cathedral. No liquor license found in Duluth annual licensee lists. May obtain temporary on-sale permits for specific events."
+        }
+      },
+      "lat": 46.787692520158,
+      "lon": -92.105160925143,
+      "logo_url": "https://sacredheartmusic.org/wp-content/uploads/2016/02/cropped-SacredHeart-Logo-Square-512-01-180x180.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Sir Benedict's Tavern on the Lake",
+      "address": "805 E Superior St, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://www.sirbens.com/",
+      "phone": "218-728-1192",
+      "established": null,
+      "type": "tavern / sandwich shop",
+      "capacity": null,
+      "notable": "Beloved British-style tavern and sandwich shop near the Lakewalk on the east end of downtown. Known for hosting acoustic folk and trad music in an intimate room, often with waterside patio seating.",
+      "neighborhood": "East Downtown / Lakewalk",
+      "sources": [
+        "https://www.sirbens.com/",
+        "https://www.yelp.com/biz/sir-benedicts-tavern-on-the-lake-duluth"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: SIR BENEDICTS IV, INC; DBA: SIR BENEDICT'S TAVERN ON THE LAKE"
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: SIR BENEDICTS IV, INC. Also confirmed on 2016 Temporary On-Sale Intoxicating list (Legistar File 16-0410R)."
+        }
+      },
+      "lat": 46.795302526675,
+      "lon": -92.08739354267,
+      "logo_url": "https://www.sirbens.com/apple-touch-icon.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Spirit of the Lake Community Arts",
+      "address": "5401 E Superior St, Duluth, MN 55804",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://www.spiritofthelakearts.org/",
+      "phone": "218-721-4236",
+      "established": null,
+      "type": "community arts venue",
+      "capacity": null,
+      "notable": "Community arts nonprofit in the Lakeside neighborhood offering classes, exhibitions, and small-scale performances. Formerly operated as the Spirit of the Lake Community School.",
+      "neighborhood": "Lakeside",
+      "sources": [
+        "https://www.spiritofthelakearts.org/",
+        "https://duluthhomegrown.org/venues/spirit-of-the-lake-community-arts/"
+      ],
+      "licenses": {
+        "business": {
+          "url": null,
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "Nonprofit community arts organization. Not found on Duluth annual liquor licensee list. Searched duluthmn.gov Legistar and annual licensee PDFs. No liquor license expected."
+        },
+        "liquor": {
+          "url": null,
+          "license_type": "n/a",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "Community arts nonprofit. No liquor license found."
+        }
+      },
+      "lat": 46.836579604547,
+      "lon": -92.015789835914,
+      "logo_url": "https://static1.squarespace.com/static/56214bffe4b0007a0000f879/t/655ce77842265f28fa78eb5f/1700587384896/002fd84a-2ba3-4df1-a903-3bb13fc6b6c3.png?format=1500w",
+      "logo_source": "og:image",
+      "markerType": "cube"
+    },
+    {
+      "name": "Studio Four",
+      "address": "506 W Michigan St, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://minnesotaballet.org/",
+      "phone": null,
+      "established": null,
+      "type": "dance studio / black-box theater",
+      "capacity": 140,
+      "notable": "Lower-level performance space at the Duluth Depot managed by the Minnesota Ballet; equipped as both a dance studio and a ~140-seat theater used for recitals, concerts, and festival programming.",
+      "neighborhood": "Downtown Duluth / Civic Center",
+      "sources": [
+        "https://www.duluthnewstribune.com/lifestyle/arts-and-entertainment/short-cuts-minnesota-ballet-teases-studio-four-in-depot",
+        "https://duluthhomegrown.org/venues/studio-four/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); MINNESOTA BALLET listed under Theater licenses at 506 W Michigan St (the Duluth Depot building). Also HISTORIC UNION DEPOT, INC holds on-sale intoxicating for the building.",
+          "note": "Studio Four is a performance space within the Depot building (506 W Michigan St). The on-sale intoxicating license for the Depot building is held by HISTORIC UNION DEPOT, INC. Minnesota Ballet holds a separate Theater license for its portion of the space."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "on-sale intoxicating (under Depot building license held by HISTORIC UNION DEPOT, INC)",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list; building license held by HISTORIC UNION DEPOT, INC; Minnesota Ballet holds Theater license separately"
+        }
+      },
+      "lat": 46.781687656685,
+      "lon": -92.103948115081,
+      "logo_url": "https://assets.minnesotaballet.org/wp-content/uploads/2023/01/26153947/cropped-mn-ballet_favicon-180x180.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Superior Tavern",
+      "address": "1224 Tower Ave, Superior, WI 54880",
+      "city": "Superior",
+      "state": "WI",
+      "website": "https://www.superiortavern.com/",
+      "phone": "715-718-0110",
+      "established": null,
+      "type": "bar / entertainment venue",
+      "capacity": null,
+      "notable": "Tower Avenue bar and entertainment venue in downtown Superior, part of the cluster of music bars along Tower Ave.",
+      "neighborhood": "Superior, WI (Tower Ave)",
+      "sources": [
+        "https://www.superiortavern.com/",
+        "https://www.yelp.com/biz/superior-tavern-superior"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://www.revenue.wi.gov/Pages/OnlineServices/Retail-Alcohol-Beverage-License-Search.aspx",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "Wisconsin DOR Retail Alcohol Beverage License Search API; legal entity: SUPERIOR TAVERN INC.; DBA: SUPERIOR TAVERN; address: 1224 TOWER AVENUE, SUPERIOR; expireDate: 2026-06-30; lastUpdated: 2026-03-26"
+        },
+        "liquor": {
+          "url": "https://www.revenue.wi.gov/Pages/OnlineServices/Retail-Alcohol-Beverage-License-Search.aspx",
+          "license_type": "Class B Beer + Class B Liquor (combination)",
+          "license_number": null,
+          "last_renewal": "2026-06-30",
+          "status": "active",
+          "source": "Wisconsin DOR Retail Alcohol Beverage License Search; legal entity: SUPERIOR TAVERN INC.; expireDate: 2026-06-30; lastUpdated: 2026-03-26"
+        }
+      },
+      "lat": 46.723953861043,
+      "lon": -92.10382440366,
+      "logo_url": "https://lirp.cdn-website.com/9185c3e0/dms3rep/multi/opt/Logo-78e952d4-1920w.png",
+      "logo_source": "site_logo_img",
+      "markerType": "cube"
+    },
+    {
+      "name": "The Main Club",
+      "address": "1217 Tower Ave, Superior, WI 54880",
+      "city": "Superior",
+      "state": "WI",
+      "website": "https://mainclubwi.com/",
+      "phone": "715-392-1756",
+      "established": null,
+      "type": "LGBTQ+ bar",
+      "capacity": null,
+      "notable": "Historic LGBTQ+ bar on Tower Avenue in downtown Superior, hosting drag shows (Fierce at the Main Club) and dance nights for the Twin Ports queer community.",
+      "neighborhood": "Superior, WI (Tower Ave)",
+      "sources": [
+        "https://mainclubwi.com/",
+        "https://www.yelp.com/biz/main-club-superior"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://www.revenue.wi.gov/Pages/OnlineServices/Retail-Alcohol-Beverage-License-Search.aspx",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "Wisconsin DOR Retail Alcohol Beverage License Search API; legal entity: ATYPICAL ENTERPRISES, INC; DBA: MAIN CLUB; address: 1217 TOWER AVENUE, SUPERIOR; expireDate: 2026-06-30; lastUpdated: 2026-03-26",
+          "note": "Legal entity name differs from DBA: ATYPICAL ENTERPRISES, INC operates The Main Club."
+        },
+        "liquor": {
+          "url": "https://www.revenue.wi.gov/Pages/OnlineServices/Retail-Alcohol-Beverage-License-Search.aspx",
+          "license_type": "Class B Beer + Class B Liquor (combination)",
+          "license_number": null,
+          "last_renewal": "2026-06-30",
+          "status": "active",
+          "source": "Wisconsin DOR Retail Alcohol Beverage License Search; legal entity: ATYPICAL ENTERPRISES, INC; expireDate: 2026-06-30; lastUpdated: 2026-03-26"
+        }
+      },
+      "lat": 46.724039468281,
+      "lon": -92.103990568045,
+      "logo_url": "https://img1.wsimg.com/isteam/ip/cd2c8ac5-2a5d-467f-acc6-e2a91b56f083/42347e31-1394-4c28-9b2f-bf1ca3c9de73.png",
+      "logo_source": "og:image",
+      "markerType": "cube"
+    },
+    {
+      "name": "The Moorish Room",
+      "address": "231 E Superior St, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://www.greysolonballroom.com/moorish-room/",
+      "phone": "218-727-7171",
+      "established": "1925",
+      "type": "historic event room",
+      "capacity": 200,
+      "capacity_source": {
+        "value": 200,
+        "method": "venue-stated (Greysolon Ballroom official site: 200 Capacity)",
+        "url": "https://www.greysolonballroom.com/moorish-room/",
+        "confidence": "venue-stated"
+      },
+      "notable": "Ornately decorated Moorish Revival room inside the 1925 Hotel Duluth (now Greysolon Plaza) off the main lobby. Originally the hotel's main restaurant; features hand-painted murals, chandeliers, and wall sconces. Operated by Greysolon Ballroom by Black Woods.",
+      "neighborhood": "Downtown Duluth",
+      "sources": [
+        "https://www.greysolonballroom.com/moorish-room/",
+        "https://www.yelp.com/biz/greysolon-ballroom-by-black-woods-duluth"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); BLACK WATER AT GREYSOLON appears on the on-sale intoxicating list at 231 E Superior St; DBA matches hotel address",
+          "note": "The Moorish Room is within the Greysolon Plaza / Hotel Duluth building at 231 E Superior St. Duluth's annual licensee list shows BLACK WATER AT GREYSOLON as licensee at this address (on-sale intoxicating). The Greysolon event spaces are operated by Black Woods Group."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity / DBA: BLACK WATER AT GREYSOLON; address: 231 E SUPERIOR ST"
+        }
+      },
+      "lat": 46.789192264585,
+      "lon": -92.095371942859,
+      "logo_url": "https://www.greysolonballroom.com/wp-content/uploads/2019/05/Greysolon-Logo-2019-300.png",
+      "logo_source": "site_logo_img",
+      "markerType": "cube"
+    },
+    {
+      "name": "Tower Avenue Tavern",
+      "address": "405 Tower Ave, Superior, WI 54880",
+      "city": "Superior",
+      "state": "WI",
+      "website": null,
+      "phone": "715-395-9707",
+      "established": null,
+      "type": "sports bar / tavern",
+      "capacity": null,
+      "notable": "Sports-bar-style tavern at the north end of Tower Avenue in Superior, with 14 TVs, extensive whiskey and tequila selections, pool, and darts.",
+      "neighborhood": "Superior, WI (Tower Ave)",
+      "sources": [
+        "https://www.yelp.com/biz/tower-ave-tavern-superior",
+        "https://www.facebook.com/toweravenuetavern/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://www.revenue.wi.gov/Pages/OnlineServices/Retail-Alcohol-Beverage-License-Search.aspx",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "Wisconsin DOR Retail Alcohol Beverage License Search API; legal entity: TOWER AVENUE TAVERN, INC.; DBA: TOWER AVENUE TAVERN; address: 405 TOWER AVENUE, SUPERIOR; expireDate: 2026-06-30; lastUpdated: 2026-03-26"
+        },
+        "liquor": {
+          "url": "https://www.revenue.wi.gov/Pages/OnlineServices/Retail-Alcohol-Beverage-License-Search.aspx",
+          "license_type": "Class B Beer + Class B Liquor (combination)",
+          "license_number": null,
+          "last_renewal": "2026-06-30",
+          "status": "active",
+          "source": "Wisconsin DOR Retail Alcohol Beverage License Search; legal entity: TOWER AVENUE TAVERN, INC.; expireDate: 2026-06-30; lastUpdated: 2026-03-26"
+        }
+      },
+      "lat": 46.733744614484,
+      "lon": -92.103941458626,
+      "logo_url": null,
+      "logo_source": null,
+      "markerType": "cube"
+    },
+    {
+      "name": "Ursa Minor Brewing",
+      "address": "2415 W Superior St, Duluth, MN 55806",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://www.ursaminorbrewing.com/",
+      "phone": "218-481-7886",
+      "established": "2018",
+      "type": "brewery / pizzeria",
+      "capacity": null,
+      "notable": "Small 5-barrel brewery and wood-fired pizzeria in the Lincoln Park Craft District. Hosts free live music every Friday and Saturday evening and Sunday afternoon.",
+      "neighborhood": "Lincoln Park / Craft District",
+      "sources": [
+        "https://www.ursaminorbrewing.com/",
+        "https://growlermag.com/the-mill-ursa-minor-brewing-to-open-in-duluth/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); listed under Breweries/Distilleries/Cideries as URSA MINOR BREWING, LLC; DBA: URSA MINOR BREWING"
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "brewer on-sale/off-sale (brewery taproom)",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: URSA MINOR BREWING, LLC"
+        }
+      },
+      "lat": 46.76393646514,
+      "lon": -92.128294263656,
+      "logo_url": "https://static.wixstatic.com/media/587157_a76db200c71243c2a18b3b2ef8297fd5%7Emv2.png/v1/fill/w_180%2Ch_180%2Clg_1%2Cusm_0.66_1.00_0.01/587157_a76db200c71243c2a18b3b2ef8297fd5%7Emv2.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Vikre Distillery",
+      "address": "525 S Lake Ave Ste 102, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://www.vikredistillery.com/",
+      "phone": "218-481-7401",
+      "established": "2013",
+      "type": "distillery / cocktail room",
+      "capacity": 30,
+      "capacity_source": {
+        "value": 30,
+        "method": "venue-stated (Vikre private events page: Back Bar up to 30 people; Rickhouse opening Summer 2026 at up to 100)",
+        "url": "https://www.vikredistillery.com/events",
+        "confidence": "venue-stated"
+      },
+      "notable": "Award-winning craft distillery in a Canal Park brick warehouse (formerly part of the Paulucci food empire) near the Aerial Lift Bridge, founded by Emily and Joel Vikre in 2013. Known for North Shore-inspired gins, aquavits, and whiskies.",
+      "neighborhood": "Canal Park",
+      "sources": [
+        "https://www.vikredistillery.com/",
+        "https://www.duluthnewstribune.com/business/vikre-celebrates-10-years-of-distilling-duluth"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); listed under Micro Distillery as VIKRE DISTILLERY, LLC; address: 525 LAKE AVE S STE 102"
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "micro distillery on-sale (cocktail room)",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: VIKRE DISTILLERY, LLC; also appears on On-Sale Wine list as VIKRE DISTILLERY"
+        }
+      },
+      "lat": 46.780328296151,
+      "lon": -92.093927524122,
+      "logo_url": "https://images.squarespace-cdn.com/content/v1/645a5c4ebb4f2037a95e06de/54167a0b-1f4e-4e59-8cfc-bbf54541b6e4/Layer_1+%282%29.png?format=500w",
+      "logo_source": "site_logo_img",
+      "markerType": "cube"
+    },
+    {
+      "name": "West Theatre",
+      "address": "319 N Central Ave, Duluth, MN 55807",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://www.thewesttheatre.com/",
+      "phone": "218-624-1800",
+      "established": "1937",
+      "type": "historic theater / concert hall",
+      "capacity": 250,
+      "capacity_source": {
+        "value": 250,
+        "method": "venue-stated (Perfect Duluth Day 2019 opening article: 'The theater will seat 250 people')",
+        "url": "https://www.perfectduluthday.com/2019/06/20/west-theater-struggles-through-restoration-opens-friday/",
+        "confidence": "venue-stated"
+      },
+      "notable": "Art Deco movie palace opened Christmas Day 1937, designed by architect Perry Crosier. After decades of closures and alternate uses, it was purchased in 2016 and restored as a movie theater and live-music/concert venue serving West Duluth's Spirit Valley business district.",
+      "neighborhood": "West Duluth / Spirit Valley",
+      "sources": [
+        "https://www.thewesttheatre.com/",
+        "https://cinematreasures.org/theaters/31069",
+        "https://www.businessnorth.com/businessnorth_exclusives/a-new-chapter-for-historic-duluth-theater/article_667745d8-b0ee-11ef-839e-5bf8d9e0c1ee.html"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); listed under Theaters as WEST THEATER, LLC; DBA: WEST THEATER"
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "on-sale intoxicating (theater)",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: WEST THEATER, LLC; listed under Theater licenses"
+        }
+      },
+      "lat": 46.737946892801,
+      "lon": -92.166609802754,
+      "logo_url": null,
+      "logo_source": null,
+      "markerType": "cube"
+    },
+    {
+      "name": "Wheeler Field 2",
+      "address": "3501 Grand Ave, Duluth, MN 55807",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://duluthmn.gov/parks/parks-listing/wheeler-athletic-complex/",
+      "phone": null,
+      "established": null,
+      "type": "athletic field / public park",
+      "capacity": null,
+      "capacity_source": null,
+      "notable": "Wheeler Athletic Complex multi-use athletic field at 35th Ave W & Grand Ave in West Duluth; 2026 Homegrown Kickball Classic venue (relocated from Chester Bowl).",
+      "neighborhood": "West Duluth",
+      "sources": [
+        "https://duluthmn.gov/parks/parks-listing/wheeler-athletic-complex/"
+      ],
+      "licenses": {
+        "business": {
+          "url": null,
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "City of Duluth public athletic complex; no commercial business license expected."
+        },
+        "liquor": {
+          "url": null,
+          "license_type": "n/a",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "City park / athletic field. Not on Duluth annual liquor licensee list."
+        }
+      },
+      "lat": 46.757175,
+      "lon": -92.150752,
+      "logo_url": null,
+      "logo_source": null,
+      "markerType": "sphere"
+    },
+    {
+      "name": "Wild State Cider",
+      "address": "2515 W Superior St, Duluth, MN 55806",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://wildstatecider.com/",
+      "phone": "218-606-1151",
+      "established": "2018",
+      "type": "cidery taproom",
+      "capacity": 99,
+      "capacity_source": {
+        "value": 99,
+        "method": "venue-stated (Eventective listing: Up to 99 guests; mezzanine seats 36 semi-privately)",
+        "url": "https://www.eventective.com/duluth-mn/wild-state-cider-707469.html",
+        "confidence": "venue-stated"
+      },
+      "notable": "Craft cidery taproom in the Lincoln Park Craft District serving natural ciders alongside Wrecktangle Pizza, Birdie hemp beverages, and Camp Creemee Vermont-style soft serve. Dog-friendly patio.",
+      "neighborhood": "Lincoln Park / Craft District",
+      "sources": [
+        "https://wildstatecider.com/taproom/",
+        "https://www.yelp.com/biz/wild-state-cider-duluth"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); listed under Breweries/Distilleries/Cideries as CAMP CIDER, LLC; DBA: WILD STATE CIDER",
+          "note": "Legal entity name differs from DBA: CAMP CIDER, LLC operates Wild State Cider taproom."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "brewer on-sale/off-sale (cidery taproom)",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: CAMP CIDER, LLC"
+        }
+      },
+      "lat": 46.762987383958,
+      "lon": -92.129530879399,
+      "logo_url": "https://wildstatecider.com/apple-touch-icon.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    },
+    {
+      "name": "Wussow's Concert Cafe",
+      "address": "324 N Central Ave, Duluth, MN 55807",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://wussows.com/",
+      "phone": "218-624-5957",
+      "established": null,
+      "type": "coffeehouse / concert cafe",
+      "capacity": null,
+      "notable": "West Duluth coffeehouse and listening room in Spirit Valley (previously operated as Beaner's Central). Hosts local and touring acoustic, folk, and indie acts most nights.",
+      "neighborhood": "West Duluth / Spirit Valley",
+      "sources": [
+        "https://wussows.com/",
+        "https://www.lakesuperior.com/locations/beaner's-central/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": null,
+          "note": "The older Duluth licensee list (Legistar PDF 7514795) shows BEANER'S CENTRAL, INC at this address with an on-sale wine & beer license. As of 2024 the venue rebranded as Wussow's Concert Cafe; searched both Legistar PDFs and the venue is not listed under the new name. May be operating under a new entity or renewed under the Beaner's Central license with a DBA change. Status assessed as unknown pending confirmation of current license holder."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/View.ashx?GUID=703A5AF3-87EB-4C9D-B18A-332C27DC0250&ID=7514795&M=F",
+          "license_type": "on-sale wine and beer (prior licensee: BEANER'S CENTRAL, INC)",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "unknown",
+          "source": "City of Duluth annual licensee list (Legistar PDF 7514795); BEANER'S CENTRAL, INC listed at same address with on-sale wine & beer license. Current status under Wussow's name unconfirmed.",
+          "note": "Venue rebranded as Wussow's Concert Cafe. Prior operator BEANER'S CENTRAL, INC held an on-sale wine & beer license at 324 N Central Ave. Current license holder and status unconfirmed."
+        }
+      },
+      "lat": 46.73801765972,
+      "lon": -92.166442180545,
+      "logo_url": "https://wussows.com/wp-content/uploads/2019/07/wussows-web.jpg",
+      "logo_source": "site_logo_img",
+      "markerType": "cube"
+    },
+    {
+      "name": "Zeitgeist Teatro",
+      "address": "222 E Superior St, Duluth, MN 55802",
+      "city": "Duluth",
+      "state": "MN",
+      "website": "https://zeitgeistarts.com/venue/zeitgeist-teatro/",
+      "phone": "218-722-9775",
+      "established": "2009",
+      "type": "performing arts theater",
+      "capacity": 120,
+      "notable": "120-seat performance theater inside the Zeitgeist Arts building (also home to Zeitgeist Zinema independent cinema and Zeitgeist Cafe/Bar) on East Superior Street. Home of the Renegade Theater Company (founded 1991). The full Zeitgeist Arts complex opened in 2009 in a restored historic downtown building.",
+      "neighborhood": "Downtown Duluth",
+      "sources": [
+        "https://zeitgeistarts.com/venue/zeitgeist-teatro/",
+        "https://visitduluth.com/listings/zeitgeist-arts/"
+      ],
+      "licenses": {
+        "business": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: ZEITGEIST ARTS, LLC; DBA: TEATRO/ZINEMA/ZA CAFÉ; address: 222 E SUPERIOR ST",
+          "note": "License covers the entire Zeitgeist Arts complex including the Teatro theater, Zinema cinema, and ZA Café/Bar."
+        },
+        "liquor": {
+          "url": "https://duluth-mn.legistar.com/gateway.aspx?M=F&ID=9191d6d4-8b75-4e29-830a-6fe288bb6c56.pdf",
+          "license_type": "on-sale intoxicating",
+          "license_number": null,
+          "last_renewal": null,
+          "status": "active",
+          "source": "City of Duluth annual licensee list (Legistar PDF); legal entity: ZEITGEIST ARTS, LLC"
+        }
+      },
+      "lat": 46.789044825132,
+      "lon": -92.095343973824,
+      "logo_url": "https://zeitgeistarts.com/apple-touch-icon.png",
+      "logo_source": "apple-touch-icon",
+      "markerType": "cube"
+    }
+  ]
+}

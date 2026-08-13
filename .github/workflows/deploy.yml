@@ -32,6 +32,11 @@ jobs:
       # bot-suspect than a residential IP — if a headless source flakes here, the run
       # still succeeds and simply omits it (adapters fail soft, per pipeline.ts).
       - run: npx playwright install --with-deps chromium
+      # Spec §347: the merge-count bound (and everything else — typecheck, dedupe/place-registry
+      # unit tests) must fail CI instead of quietly shipping. Runs before the build step so a
+      # failing gate blocks the deploy rather than shipping alongside it.
+      - run: npx tsc --noEmit
+      - run: npx vitest run
       - id: pages
         uses: actions/configure-pages@v5
       - run: npm run build:feeds

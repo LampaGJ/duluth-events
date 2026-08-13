@@ -42,7 +42,7 @@ describe("mapLegistarEvent", () => {
     expect(e).not.toBeNull();
     expect(e!.title).toBe("City Council — Public Meeting");
     expect(e!.start).toBe("2026-07-27T18:00:00-05:00"); // 6PM CDT
-    expect(e!.location.venueName).toBe("Council Chambers");
+    expect(e!.venueRaw).toBe("Council Chambers");
     expect(e!.source.extractionMethod).toBe("structured-api");
     expect(e!.source.confidence).toBe("high");
     expect(e!.source.verified).toBe(true);
@@ -84,7 +84,8 @@ describe("mapTribeEvent", () => {
     expect(e!.start).toBe("2026-07-25T19:00:00-05:00");
     expect(e!.end).toBe("2026-07-25T21:00:00-05:00");
     expect(e!.cost).toMatchObject({ kind: "paid", priceMin: 1, priceMax: 22 });
-    expect(e!.location).toMatchObject({ venueName: "Vista Fleet", street: "323 Harbor Dr" });
+    expect(e!.venueRaw).toBe("Vista Fleet");
+    expect(e!.location).toMatchObject({ street: "323 Harbor Dr" });
     expect(e!.description).toContain("Vista Star's deck & cruise");
     expect(e!.categories).toEqual(["Tours", "On the Water"]);
     expect(e!.source.confidence).toBe("medium");

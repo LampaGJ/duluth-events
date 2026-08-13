@@ -14,7 +14,15 @@
     "build:feeds": "tsx src/build.ts",
     "start": "tsx src/server.ts",
     "dev": "tsx watch src/server.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "places:osm": "node scripts/fetch-osm.mjs",
+    "places:arcgis": "node scripts/fetch-arcgis.mjs",
+    "places:overture": "tsx scripts/fetch-overture.mjs",
+    "places:propose": "tsx scripts/places-propose.mjs",
+    "trails:conditions": "tsx scripts/fetch-trailbot.mjs",
+    "trails:join-propose": "tsx scripts/trailbot-join-propose.mjs",
+    "aliases:harvest": "tsx scripts/harvest-aliases.mjs",
+    "merge:diff": "tsx scripts/merge-diff.mjs"
   },
   "dependencies": {
     "fastify": "^5.10.0",

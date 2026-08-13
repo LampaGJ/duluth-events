@@ -7,3 +7,9 @@ public/
 .DS_Store
 *.log
 WORK-STATE.md
+
+# Probe/report artifacts (regenerable; the committed seed artifact lives in src/)
+reports/
+
+# Subagent-driven-development scratch (ledger, briefs, review packages)
+.superpowers/

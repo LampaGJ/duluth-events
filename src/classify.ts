@@ -1,6 +1,8 @@
 import type { DuluthEvent, EventType } from "./schema.js";
-import { deriveFacets, extractLeadingCity, extractTicketUrl, haystack, normalizedCategories, parseAgeBand } from "./facets.js";
+import { deriveFacets, extractTicketUrl, haystack, normalizedCategories, parseAgeBand } from "./facets.js";
 import { cleanText } from "./normalize.js";
+import { parseVenueString } from "./place-resolve.js";
+import { resolvePlaceForEvent, PLACE_INDEX } from "./place-registry.js";
 
 /**
  * Deterministic typification: source categories first, then title/description vocabulary.
@@ -154,40 +156,50 @@ export function isMultiDay(startIso: string, endIso?: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// Location resolution
-// ---------------------------------------------------------------------------
-
-/**
- * Recover the true city when a source packed it into the venue string. UMD athletics writes away
- * games as `"Bismarck, ND, MDU Resources Community Bowl"` in the venue while the city field keeps
- * the default "Duluth" — which shipped 59 out-of-state games inside `duluth-proper.ics`.
- */
-export function resolveLocation(loc: DuluthEvent["location"]): DuluthEvent["location"] {
-  const found = extractLeadingCity(loc.venueName);
-  if (!found) return loc;
-  return {
-    ...loc,
-    venueName: found.rest || found.city,
-    city: found.city,
-    state: found.state,
-    inDuluth: /^duluth$/i.test(found.city),
-  };
-}
-
-// ---------------------------------------------------------------------------
 // Finalization
 // ---------------------------------------------------------------------------
 
 /**
- * The one place an event becomes fully tagged: resolve location, assign the type, recompute
- * duration, derive every facet, and backfill `age`/`ticketUrl` when the source stated them in prose
- * but carried no field. Adapters that already KNOW the type (Legistar meetings, rec1 classes) set it
- * explicitly and keep it.
+ * The one place an event becomes fully tagged: resolve the venue string into a place + an address,
+ * assign the type, recompute duration, derive every facet, and backfill `age`/`ticketUrl` when the
+ * source stated them in prose but carried no field. Adapters that already KNOW the type (Legistar
+ * meetings, rec1 classes) set it explicitly and keep it.
+ *
+ * The old `resolveLocation()` lived here to un-pack `"<City>, <ST>, <Venue>"` strings a source had
+ * crammed into `venueName`. It is gone: `parseVenueString` now splits the raw claim into the RIGHT
+ * fields — the city/state land on `location`, the name lands on `place` — instead of rewriting one
+ * conflated field. A leading city in the raw venue string is authoritative over the adapter's
+ * default, which is what keeps 59 out-of-state games out of `duluth-proper.ics`.
  */
 export function finalizeEvent(e: DuluthEvent): DuluthEvent {
-  const location = resolveLocation(e.location);
-  const eventType = e.eventType !== "other" ? e.eventType : classifyEventType(e.title, e.categories, "community", [location.venueName, location.room].filter(Boolean).join(" "));
-  const withLoc: DuluthEvent = { ...e, location, eventType, multiDay: isMultiDay(e.start, e.end) };
+  const parsed = parseVenueString(e.venueRaw ?? "");
+  const location: DuluthEvent["location"] = {
+    ...e.location,
+    ...(parsed.city ? { city: parsed.city, state: parsed.state ?? e.location.state, inDuluth: /^duluth$/i.test(parsed.city) } : {}),
+  };
+  // `resolvePlaceForEvent` (not the raw `resolvePlace`) so the location-city signal a bare
+  // city-shaped venue string needs — see `isCityOnlyVenue` in place-registry.ts — cannot be silently
+  // dropped by a future edit here. Passed `{ venueRaw, location }` rather than `e` because `location`
+  // is the just-recomputed value above, which can differ from `e.location` when the venue string
+  // itself carried a leading city (the away-game case).
+  const place = resolvePlaceForEvent({ venueRaw: e.venueRaw, location });
+  // Enrichment: fill address gaps from the registry, NEVER overwrite what the source stated. Only a
+  // REGISTERED place (place.provisional === false) has a verified address — a provisional place's id
+  // is auto-derived and, by construction, absent from PLACE_INDEX.byId, so `canonical` guards both
+  // conditions even though the `!place.provisional` check alone would already exclude provisionals.
+  const canonical = place && !place.provisional ? PLACE_INDEX.byId.get(place.id) : undefined;
+  const enriched: DuluthEvent["location"] = canonical
+    ? {
+        ...location,
+        street: location.street ?? canonical.address.street,
+        zip: location.zip ?? canonical.address.zip,
+        geo: location.geo ?? canonical.address.geo,
+      }
+    : location;
+  const eventType = e.eventType !== "other" ? e.eventType : classifyEventType(e.title, e.categories, "community", place?.name ?? e.venueRaw ?? "");
+  // `place` is folded in HERE, not at the return, because deriveFacets reads `e.place?.name` —
+  // leaving it for the return would make that read permanently undefined.
+  const withLoc: DuluthEvent = { ...e, location: enriched, place, eventType, multiDay: isMultiDay(e.start, e.end) };
 
   const facets = deriveFacets(withLoc, { isAthletics: eventType === "sports" });
 

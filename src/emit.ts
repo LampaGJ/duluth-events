@@ -1,10 +1,10 @@
 import ical, { ICalEventStatus, type ICalCalendar } from "ical-generator";
-import type { AgeSchema, CostSchema, DuluthEvent, FeedMeta, LocationSchema } from "./schema.js";
+import type { AgeSchema, CostSchema, DuluthEvent, FeedMeta } from "./schema.js";
 import type { z } from "zod";
+import { decodeEntities } from "./normalize.js";
 
 type Cost = z.infer<typeof CostSchema>;
 type Age = z.infer<typeof AgeSchema>;
-type Loc = z.infer<typeof LocationSchema>;
 
 /**
  * DuluthEvent -> RFC 5545 VEVENT property mapping:
@@ -39,9 +39,10 @@ function formatAge(age: Age): string {
   return `${base}${age.note ? ` (${age.note})` : ""}`;
 }
 
-function formatLocation(loc: Loc): string {
+function formatLocation(e: DuluthEvent): string {
+  const loc = e.location;
   const cityLine = `${loc.city}, ${loc.state}${loc.zip ? ` ${loc.zip}` : ""}`;
-  return [loc.venueName, loc.room, loc.street, cityLine].filter(Boolean).join(", ");
+  return [e.place?.name ?? e.venueRaw, e.place?.room, loc.street, cityLine].filter(Boolean).join(", ");
 }
 
 function mapStatus(s: DuluthEvent["status"]): ICalEventStatus {
@@ -102,6 +103,12 @@ function buildXProps(e: DuluthEvent): { key: string; value: string }[] {
   if (f.homeAway) x.push({ key: "X-HOME-AWAY", value: f.homeAway });
   if (f.institutionalNotice) x.push({ key: "X-INSTITUTIONAL-NOTICE", value: "true" });
   if (f.rescheduled) x.push({ key: "X-RESCHEDULED", value: "true" });
+
+  if (e.place) {
+    x.push({ key: "X-PLACE-ID", value: e.place.id });
+    x.push({ key: "X-PLACE-NAME", value: e.place.name });
+    x.push({ key: "X-PLACE-PROVISIONAL", value: String(e.place.provisional) });
+  }
   return x;
 }
 
@@ -125,14 +132,21 @@ export function emitFeed(events: DuluthEvent[], meta: FeedMeta): string {
       start: new Date(e.start),
       end: e.end ? new Date(e.end) : undefined,
       allDay: e.allDay,
-      summary: e.title,
-      description: buildDescription(e),
+      // Entities are decoded HERE, at the emission boundary, and nowhere upstream. Sources hand us
+      // CMS-encoded text ("Lydia Boyum &#038; Ryan Lane"); `cleanText` already decodes it for every
+      // MATCHING surface (classify/facets/place-resolve) but the stored model deliberately keeps the
+      // publisher's bytes verbatim. An ICS file is not HTML, so an HTML entity that survives to a
+      // subscriber's calendar app is displayed literally — decoding is a reformat of an encoding
+      // artifact, not a change to what the publisher said. Doing it here rather than at ingestion
+      // keeps dedupe's inputs byte-identical, so this cannot move a merge decision.
+      summary: decodeEntities(e.title),
+      description: decodeEntities(buildDescription(e)),
       location: {
-        title: formatLocation(e.location),
+        title: decodeEntities(formatLocation(e)),
         geo: e.location.geo ? { lat: e.location.geo.lat, lon: e.location.geo.lon } : undefined,
       },
       status: mapStatus(e.status),
-      categories: e.categories.map((name) => ({ name })),
+      categories: e.categories.map((name) => ({ name: decodeEntities(name) })),
       stamp,
       x: buildXProps(e),
     });

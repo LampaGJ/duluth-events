@@ -1,11 +1,12 @@
 import { EVENT_TYPES } from "./schema.js";
 import type { FeedFilter } from "./feed.js";
+import { PLACE_INDEX } from "./place-registry.js";
 
 /**
  * Landing-page grouping. Feeds are curated per group, not emitted as a blind cross-product: a
  * subscriber scans a page, and 200 combinatorial rows is the same as no page at all.
  */
-export const GROUPS = ["Start here", "By kind", "Who it's for", "What it costs", "Getting in", "When", "Where", "Provenance"] as const;
+export const GROUPS = ["Start here", "By kind", "Who it's for", "What it costs", "Getting in", "When", "Where", "By venue", "Provenance"] as const;
 export type Group = (typeof GROUPS)[number];
 
 export interface FeedSpec {
@@ -84,4 +85,18 @@ export const SPECS: FeedSpec[] = [
   { file: "corroborated.ics", title: "Corroborated", desc: "Confirmed by 2+ independent sources.", group: "Provenance", filter: { corroborated: true } },
   { file: "notices.ics", title: "Institutional notices", desc: "Academic-calendar rows that are not public events — kept, not discarded.", group: "Provenance", filter: { institutionalNotice: true } },
 ];
+
+/**
+ * One feed per REGISTERED place. Provisional places are excluded by construction — they have no
+ * stable id, so a URL built on one could break.
+ */
+export function placeSpecs(): FeedSpec[] {
+  return PLACE_INDEX.all.map((p) => ({
+    file: `place/${p.id}.ics`,
+    title: p.name,
+    desc: `Everything at ${p.name}${p.address.city ? ` (${p.address.city}, ${p.address.state})` : ""}.`,
+    group: "By venue" as Group,
+    filter: { placeId: p.id },
+  }));
+}
 

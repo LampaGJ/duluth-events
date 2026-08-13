@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { classifyEventType, isMultiDay, finalizeEvent, resolveLocation } from "../src/classify.js";
+import { classifyEventType, isMultiDay, finalizeEvent } from "../src/classify.js";
 import { makeEvent } from "./factory.js";
 
 describe("classifyEventType", () => {
@@ -60,22 +60,35 @@ describe("isMultiDay", () => {
   });
 });
 
-describe("resolveLocation", () => {
-  it("recovers an away city packed into the venue string", () => {
-    const loc = resolveLocation({ venueName: "Bismarck, ND, MDU Resources Community Bowl", city: "Duluth", state: "MN", inDuluth: true });
-    expect(loc.city).toBe("Bismarck");
-    expect(loc.state).toBe("ND");
-    expect(loc.venueName).toBe("MDU Resources Community Bowl");
-    expect(loc.inDuluth).toBe(false);
+describe("away-game location (formerly resolveLocation)", () => {
+  it("puts an out-of-state game outside Duluth proper", () => {
+    const e = finalizeEvent(
+      makeEvent({
+        title: "University of Minnesota Duluth Volleyball at Colorado State University Pueblo",
+        categories: ["Athletics", "Sports and Recreation"],
+        venueRaw: "Pueblo, CO, Massari Arena",
+        location: { city: "Duluth", state: "MN" },
+      }),
+    );
+    expect(e.eventType).toBe("sports");
+    expect(e.location.city).toBe("Pueblo");
+    expect(e.location.state).toBe("CO");
+    expect(e.location.inDuluth).toBe(false);
+    expect(e.facets.geoScope).toBe("distant");
+    expect(e.facets.homeAway).toBe("away");
+    expect(e.place?.name).toBe("Massari Arena");
   });
-  it("handles a bare city+state venue and AP-style abbreviations", () => {
-    expect(resolveLocation({ venueName: "River Falls, WI", city: "Duluth", state: "MN", inDuluth: true }).city).toBe("River Falls");
-    expect(resolveLocation({ venueName: "St. Cloud, Minn., Herb Brooks National Hockey Center", city: "Duluth", state: "MN", inDuluth: true }).state).toBe("MN");
+
+  it("handles AP-style abbreviations", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "St. Cloud, Minn., Herb Brooks National Hockey Center", location: { city: "Duluth", state: "MN" } }));
+    expect(e.location.city).toBe("St. Cloud");
+    expect(e.location.state).toBe("MN");
   });
-  it("leaves an ordinary Duluth venue alone", () => {
-    const loc = resolveLocation({ venueName: "Lake Superior Estuarium", city: "Superior", state: "WI", inDuluth: false });
-    expect(loc.venueName).toBe("Lake Superior Estuarium");
-    expect(loc.city).toBe("Superior");
+
+  it("leaves an ordinary venue's stated address alone", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "Lake Superior Estuarium", location: { city: "Superior", state: "WI", inDuluth: false } }));
+    expect(e.location.city).toBe("Superior");
+    expect(e.place?.id).toBe("lake-superior-estuarium");
   });
 });
 
@@ -94,7 +107,8 @@ describe("finalizeEvent", () => {
       makeEvent({
         title: "University of Minnesota Duluth Volleyball at Colorado State University Pueblo",
         categories: ["Athletics", "Sports and Recreation"],
-        location: { venueName: "Pueblo, CO, Massari Arena", city: "Duluth", state: "MN" },
+        venueRaw: "Pueblo, CO, Massari Arena",
+        location: { city: "Duluth", state: "MN" },
       }),
     );
     expect(e.eventType).toBe("sports");
@@ -114,5 +128,44 @@ describe("finalizeEvent", () => {
     const e = finalizeEvent(makeEvent({ title: "Concerts on the Pier (Rescheduled date)" }));
     expect(e.facets.rescheduled).toBe(true);
     expect(e.status).toBe("tentative");
+  });
+});
+
+describe("finalizeEvent place resolution", () => {
+  it("resolves a registered venue and preserves the raw claim", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "Wussow's Concert Cafe" }));
+    expect(e.place?.id).toBe("wussows-concert-cafe");
+    expect(e.place?.provisional).toBe(false);
+    expect(e.venueRaw).toBe("Wussow's Concert Cafe");
+  });
+
+  it("leaves place undefined for a sentinel venue", () => {
+    expect(finalizeEvent(makeEvent({ venueRaw: "See listing" })).place).toBeUndefined();
+  });
+});
+
+describe("address enrichment from a resolved place", () => {
+  it("fills missing street and geo from the registry", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "Wussow's Concert Cafe", location: { city: "Duluth", state: "MN" } }));
+    expect(e.location.street).toBe("324 North Central Avenue");
+    expect(e.location.geo).toEqual({ lat: 46.7386, lon: -92.1662 });
+  });
+
+  it("NEVER overwrites what the source stated", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "Wussow's Concert Cafe", location: { street: "999 Source Says This St", city: "Duluth", state: "MN" } }));
+    expect(e.location.street).toBe("999 Source Says This St");
+  });
+
+  it("does not enrich from a provisional place", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "Some Unregistered Venue", location: { city: "Duluth", state: "MN" } }));
+    expect(e.location.street).toBeUndefined();
+  });
+
+  it("does not enrich when there is no place at all (sentinel venue)", () => {
+    const e = finalizeEvent(makeEvent({ venueRaw: "See listing", location: { city: "Duluth", state: "MN" } }));
+    expect(e.place).toBeUndefined();
+    expect(e.location.street).toBeUndefined();
+    expect(e.location.zip).toBeUndefined();
+    expect(e.location.geo).toBeUndefined();
   });
 });
